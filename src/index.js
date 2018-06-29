@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { app, Menu, Tray, BrowserWindow } from 'electron'
+import { app, Menu, Tray, shell, BrowserWindow } from 'electron'
 import path from 'path'
 import mergeImg from 'merge-img'
 import fetch from 'node-fetch'
@@ -27,17 +27,16 @@ const createWindow = () => {
 	tray.setToolTip('Mansen lämpötila');
 	tray.setContextMenu(contextMenu);
 
-	mainWindow = new BrowserWindow({
-		width: 800,
-		height: 600,
-	});
+	// mainWindow = new BrowserWindow({
+	// 	width: 800,
+	// 	height: 600,
+	// });
+	// mainWindow.loadURL(`file://${__dirname}/index.html`);
+	// mainWindow.webContents.openDevTools();
+	// mainWindow.on('closed', () => {
+	// 	mainWindow = null;
+	// });
 
-	mainWindow.loadURL(`file://${__dirname}/index.html`);
-	mainWindow.webContents.openDevTools();
-
-	mainWindow.on('closed', () => {
-		mainWindow = null;
-	});
 	setTimeout(() => {
 		console.log('timeout')
 		fetchWeather('tampere')
@@ -60,7 +59,6 @@ app.on('activate', () => {
 });
 
 function updateTrayIconWithCode(code, tray) {
-	
 	const numberPaths = code.split('')
 		.map(n => {
 			if (n === '-') {
@@ -99,6 +97,12 @@ function fetchWeather(city) {
 				{ label: `Wind: ${json.wind.speed} m/s @ ${json.wind.deg}°` },
 				{ label: `Sunrise: ${parseTime(new Date(json.sys.sunrise * 1000).getHours())}:${parseTime(new Date(json.sys.sunrise * 1000).getMinutes())}` },
 				{ label: `Sunset: ${parseTime(new Date(json.sys.sunset * 1000).getHours())}:${parseTime(new Date(json.sys.sunset * 1000).getMinutes())}` },
+				{
+					label: 'Data from openweathermap.org',
+					click() {
+						shell.openExternal(`https://openweathermap.org/city/634964`)
+					}
+				},
 				{
 					label: 'Quit app',
 					click() {
