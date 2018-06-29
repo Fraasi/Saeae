@@ -91,14 +91,18 @@ function fetchWeather(city) {
 			console.log('Weather fetched:')
 			updateTrayIconWithCode(Math.round(json.main.temp).toString(), tray)
 			const contextMenu = Menu.buildFromTemplate([
-				{ label: 'Item1', type: 'radio' },
-				{ label: 'Item2', type: 'radio' },
-				{ label: 'Item3', type: 'radio', checked: true },
-				{ label: 'Item4', type: 'radio' },
-				, {
+				{ label: `Weather: ${json.weather[0].description}` },
+				{ label: `Clouds: ${json.clouds.all}%` },
+				{ label: `Visibility: ${json.visibility}m` },
+				{ label: `Humidity: ${json.main.humidity}%` },
+				{ label: `Pressure: ${json.main.pressure} hPa` },
+				{ label: `Wind: ${json.wind.speed} m/s @ ${json.wind.deg}°` },
+				{ label: `Sunrise: ${parseTime(new Date(json.sys.sunrise * 1000).getHours())}:${parseTime(new Date(json.sys.sunrise * 1000).getMinutes())}` },
+				{ label: `Sunset: ${parseTime(new Date(json.sys.sunset * 1000).getHours())}:${parseTime(new Date(json.sys.sunset * 1000).getMinutes())}` },
+				{
 					label: 'Quit app',
 					click() {
-						trayIcon.destroy()
+						tray.destroy()
 						app.quit()
 					}
 				}
@@ -109,4 +113,8 @@ function fetchWeather(city) {
 		.catch((err) => {
 			console.error('Error: ', err)
 		})
+}
+
+function parseTime(time) {
+	return (time < 10) ? `0${time}` : time;
 }
