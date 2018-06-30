@@ -1,7 +1,8 @@
 ### Sää
 
 Electron app to show city temperature in the notification area.
-Right click for more weather info.
+Right click icon for more weather info and to change city.
 
 #### todo
- [ ] option to change city and store it
+ [ ] timer
+ [ ] better 'font'
