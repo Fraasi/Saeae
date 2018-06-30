@@ -1,7 +1,8 @@
-import { app, Menu, Tray, shell } from 'electron'
+import { app, Menu, Tray, shell, BrowserWindow } from 'electron'
 import path from 'path'
 import mergeImg from 'merge-img'
 import fetch from 'node-fetch'
+import prompt from 'electron-prompt'
 import dotenv from 'dotenv'
 
 dotenv.config()
@@ -13,10 +14,30 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 let mainWindow
 let tray = null
-const city = 'tampere'
+let city = 'tampere'
 
 function parseTime(time) {
   return (time < 10) ? `0${time}` : time
+}
+
+function promptCity() {
+  prompt({
+    allwaysOnTop: true,
+    title: 'Sää',
+    label: `Current city: ${city}`,
+    type: 'input',
+    inputAttrs: {
+      type: 'text',
+      placeholder: 'Choose a city',
+    },
+  })
+    .then((input) => {
+      // null if window was closed or user clicked Cancel
+      if (input === null) return
+      city = input
+      fetchWeather()
+    })
+    .catch(console.error);
 }
 
 function buildContextMenu(json) {
@@ -40,6 +61,12 @@ function buildContextMenu(json) {
       label: 'Sää authored by Fraasi',
       click() {
         shell.openExternal('https://github.com/Fraasi')
+      },
+    },
+    {
+      label: 'Change city',
+      click() {
+        promptCity()
       },
     },
     {
@@ -89,10 +116,17 @@ function fetchWeather() {
         { label: 'Something went terribly wrong fetching weather data' },
         { label: err.message },
         { label: 'Try restarting the app and/or check your internet connection' },
+        { label: `Or maybe you just misspelled your city (${city}) wrong` },
         {
           label: 'You can file a bug report at github.com/Fraasi/Saeae',
           click() {
             shell.openExternal('https://github.com/Fraasi/Saeae')
+          },
+        },
+        {
+          label: 'Change city',
+          click() {
+            promptCity()
           },
         },
         {
@@ -111,16 +145,17 @@ function fetchWeather() {
 }
 
 function createTray() {
-  // save for debugging
-  // mainWindow = new BrowserWindow({
-  // width: 800,
-  // height: 600,
-  // })
+  // keep mainWindow, otherwise promptWindow closes whole app
+  mainWindow = new BrowserWindow({
+    width: 100,
+    height: 100,
+    show: false,
+  })
   // mainWindow.loadURL(`file://${__dirname}/index.html`)
   // mainWindow.webContents.openDevTools()
-  // mainWindow.on('closed', () => {
-  // mainWindow = null
-  // })
+  mainWindow.on('closed', () => {
+    mainWindow = null
+  })
 
   const trayIconPath = path.join(__dirname, './assets/weather-cloudy.png')
   tray = new Tray(trayIconPath)
@@ -132,14 +167,9 @@ function createTray() {
 
 app.on('ready', createTray)
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-});
-
 app.on('activate', () => {
   if (mainWindow === null) {
     createTray()
   }
 });
+
