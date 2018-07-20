@@ -24,6 +24,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 let mainWindow
 let tray = null
 let city = store.get('weatherCity')
+let interval
 
 function parseTime(time) {
   return (time < 10) ? `0${time}` : time
@@ -39,6 +40,7 @@ function promptCity() {
       type: 'text',
       placeholder: 'City',
     },
+    icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
   })
     .then((input) => {
       // null if window was closed or user clicked Cancel
@@ -105,10 +107,9 @@ function updateTrayIcon(numString) {
 
   mergeImg(numberPaths, { margin: '0 5 0 0' })
     .then((img) => {
-      // maybe put numicon at app.getPath('userData') ?
-      const numericalIcon = path.join(app.getPath('userData'), 'numerical-icon.png')
-      img.write(numericalIcon, () => {
-        tray.setImage(numericalIcon)
+      const numericalIconPath = path.join(app.getPath('userData'), 'numerical-icon.png')
+      img.write(numericalIconPath, () => {
+        tray.setImage(numericalIconPath)
       })
     })
 }
@@ -122,8 +123,11 @@ function fetchWeather() {
       return response.json()
     })
     .then((json) => {
+      clearInterval(interval)
+      tray.setToolTip('Sää')
       updateTrayIcon(Math.round(json.main.temp).toString())
       buildContextMenu(json)
+      interval = setInterval(fetchWeather, 1000 * 60 * 20)
     })
     .catch(() => {
       const contextMenu = Menu.buildFromTemplate([
@@ -131,7 +135,7 @@ function fetchWeather() {
         { label: 'Something went terribly wrong fetching weather data' },
         // { label: err.message }, // needed?
         { label: 'Try restarting the app and/or check your internet connection' },
-        { label: `Or maybe you just misspelled your city wrong (${city})` },
+        { label: `Or maybe you just misspelled your city (${city})` },
         { type: 'separator' },
         {
           label: 'You can file a bug report at github.com/Fraasi/Saeae',
@@ -166,7 +170,6 @@ function createTray() {
     width: 100,
     height: 100,
     show: false,
-    icon: path.join(__dirname, 'assets/numerical-icon.png'), // not working?
   })
   // mainWindow.loadURL(`file://${__dirname}/index.html`)  // not needed!
   // mainWindow.webContents.openDevTools()
@@ -176,10 +179,7 @@ function createTray() {
 
   const trayIconPath = path.join(__dirname, './assets/weather-cloudy.png')
   tray = new Tray(trayIconPath)
-  tray.setToolTip('Sää')
-  setTimeout(() => {
-    fetchWeather()
-  }, 1000)
+  fetchWeather()
 }
 
 app.on('ready', createTray)

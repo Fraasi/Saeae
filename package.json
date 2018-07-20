@@ -1,8 +1,8 @@
 {
   "name": "saeae",
   "productName": "saeae",
-  "version": "0.0.2",
-  "description": "My Electron application description",
+  "version": "0.5.5",
+  "description": "Weather app in your tray",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -53,7 +53,7 @@
   "dependencies": {
     "dotenv": "^6.0.0",
     "electron-compile": "^6.4.3",
-    "electron-prompt": "^0.5.0",
+    "electron-prompt": "^1.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^2.0.0",
     "merge-img": "^2.1.2",

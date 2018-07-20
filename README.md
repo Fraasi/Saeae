@@ -1,8 +1,13 @@
 ### Sää
 
-Electron app to show city temperature in the notification area.
+Electron app to show weather temperature in the notification area/system tray.  
 Right click icon for more weather info and to change city.
 
 #### todo
- [ ] timer
- [ ] better 'font'
+- [ ] better 'font'  
+
+Tray  
+ ![Tray pic](2018-07-20_1531.png)
+
+ On right click  
+ ![right click](2018-07-20_1532.png)
