@@ -1,189 +1,125 @@
-import { app, Menu, Tray, shell, BrowserWindow } from 'electron'
-import path from 'path'
-import mergeImg from 'merge-img'
-import fetch from 'node-fetch'
-import prompt from 'electron-prompt'
+import { ipcRenderer } from 'electron'
+import SunCalc from 'suncalc'
 import Store from 'electron-store'
-import dotenv from 'dotenv'
+import { phase_hunt } from './assets/lune.js'
 
-dotenv.config()
 
-const store = new Store({
-  name: 'saeae-city',
-  defaults: {
-    storePath: app.getPath('userData'),
-    weatherCity: 'tampere',
-  },
+const store = new Store({ name: 'saeae-city' })
+
+function getZodiacSign(day, month) {
+  if ((month === 1 && day <= 20) || (month === 12 && day >= 22)) {
+    return 'capricorn';
+  } else if ((month === 1 && day >= 21) || (month === 2 && day <= 18)) {
+    return 'aquarius';
+  } else if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) {
+    return 'pisces';
+  } else if ((month === 3 && day >= 21) || (month === 4 && day <= 20)) {
+    return 'aries';
+  } else if ((month === 4 && day >= 21) || (month === 5 && day <= 20)) {
+    return 'taurus';
+  } else if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) {
+    return 'gemini';
+  } else if ((month === 6 && day >= 22) || (month === 7 && day <= 22)) {
+    return 'cancer';
+  } else if ((month === 7 && day >= 23) || (month === 8 && day <= 23)) {
+    return 'leo';
+  } else if ((month === 8 && day >= 24) || (month === 9 && day <= 23)) {
+    return 'virgo';
+  } else if ((month === 9 && day >= 24) || (month === 10 && day <= 23)) {
+    return 'libra';
+  } else if ((month === 10 && day >= 24) || (month === 11 && day <= 22)) {
+    return 'scorpio';
+  } else if ((month === 11 && day >= 23) || (month === 12 && day <= 21)) {
+    return 'sagittarius';
+  }
+  return 'zodiac not found'
+}
+
+function getData(lat, lon) {
+  const date = new Date()
+  const day = date.getDate()
+  const monthFromNow = date.getMonth() + 1
+
+  return {
+    date,
+    illumination: SunCalc.getMoonIllumination(date),
+    moonTimes: SunCalc.getMoonTimes(date, lat, lon),
+    moonPosition: SunCalc.getMoonPosition(date, lat, lon),
+    sunTimes: SunCalc.getTimes(date, lat, lon),
+    sunPosition: SunCalc.getPosition(date, lat, lon),
+    zodiac: getZodiacSign(day, monthFromNow),
+    luneJS: phase_hunt(new Date(new Date().setMonth(monthFromNow))),
+  }
+}
+
+function getPhase(p) {
+  if (p === 0) return 'New Moon'
+  else if (p < 0.25) return 'Waxing Crescent'
+  else if (p === 0.25) return 'First Quarter'
+  else if (p < 0.5) return 'Waxing Gibbous'
+  else if (p === 0.5) return 'Full Moon'
+  else if (p < 0.75) return 'Waning Gibbous'
+  else if (p === 0.75) return 'Last Quarter'
+  else if (p < 1) return 'Waning Crescent'
+  return 'New Moon'
+}
+
+function update(err) {
+  const city = store.get('weatherCity')
+  const latitude = store.get('lat')
+  const longitude = store.get('lon')
+  const data = getData(latitude, longitude)
+  if (err) {
+    document.querySelector('.legend').innerHTML = ` ${city} - ${data.date.toLocaleString('DE').replace(/\./g, '/')}`
+
+    document.querySelector('.moon').innerHTML = `
+    message: ${err.msg} </br> stack: ${err.stack}
+    `
+    document.querySelector('.sun').innerHTML = ''
+    return
+  }
+  console.log('indexData', data)
+
+  document.querySelector('.legend').innerHTML = ` ${city.charAt(0).toUpperCase() + city.slice(1)} - ${data.date.toLocaleString('DE').replace(/\./g, '/')}`
+
+  const { moonPosition, moonTimes, illumination, zodiac } = data
+  document.querySelector('.moon').innerHTML = `
+Moon Phase: ${getPhase(data.illumination.phase)} </br>
+Moon Illumination: ${(illumination.fraction * 100).toFixed(1)}% </br>
+Moon Azimuth: ${(moonPosition.azimuth * 180 / Math.PI + 180).toFixed(1)/* to degrees */}&deg; </br>
+Moon Altitude: ${(moonPosition.altitude * 180 / Math.PI).toFixed(1)}&deg; </br>
+Moon Distance: ${moonPosition.distance.toFixed(1)} km </br>
+Moonrise: ${moonTimes.rise ? moonTimes.rise.toLocaleTimeString('DE') : 'N/A'} <br />
+Moonset: ${moonTimes.set ? moonTimes.set.toLocaleTimeString('DE') : 'N/A'} <br />
+New Moon: ${data.luneJS.new_date.toLocaleString('DE').replace(/\./g, '/')} </br>
+Full Moon ${data.luneJS.full_date.toLocaleString('DE').replace(/\./g, '/')} </br>
+Zodiac: ${zodiac} </br>
+`
+
+  const {
+    goldenHour, goldenHourEnd, sunriseEnd, sunsetStart, sunrise, sunset,
+  } = data.sunTimes
+  const sunRisePos = SunCalc.getPosition(sunrise, latitude, longitude)
+  const sunSetPos = SunCalc.getPosition(sunset, latitude, longitude)
+
+  document.querySelector('.sun').innerHTML = `
+GoldenHour AM: ${sunriseEnd.toLocaleTimeString('DE')} - ${goldenHourEnd.toLocaleTimeString('DE')}<br />
+GoldenHour PM: ${goldenHour.toLocaleTimeString('DE')} - ${sunsetStart.toLocaleTimeString('DE')} <br />
+Sunrise Azimuth: ${(sunRisePos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</br>
+Sunset Azimuth: ${(sunSetPos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</br>
+Sun Altitude: ${(data.sunPosition.altitude * 180 / Math.PI).toFixed(1)}&deg; </br>
+Sunrise: ${sunrise.toLocaleTimeString('DE')} <br />
+Sunset: ${sunset.toLocaleTimeString('DE')} <br />
+`
+}
+
+ipcRenderer.on('intervalUpdate', (sender, msg) => {
+  console.log('intervalUpdate', sender, msg)
+  update()
+})
+ipcRenderer.on('fetchError', (sender, err) => {
+  console.log('fetchError', err)
+  update(err)
 })
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
-  app.quit()
-}
-
-let mainWindow
-let tray = null
-let city = store.get('weatherCity')
-let interval
-
-function parseTime(time) {
-  return (time < 10) ? `0${time}` : time
-}
-
-function promptCity() {
-  prompt({
-    alwaysOnTop: true,
-    title: 'Sää',
-    label: `Current city: ${city}`,
-    type: 'input',
-    inputAttrs: {
-      type: 'text',
-      placeholder: 'City',
-    },
-    icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
-  })
-    .then((input) => {
-      // null if window was closed or user clicked Cancel
-      if (input === null) return
-      city = input
-      store.set('weatherCity', city)
-      fetchWeather()
-    })
-    .catch(console.error);
-}
-
-function buildContextMenu(json) {
-  const contextMenu = Menu.buildFromTemplate([
-    { label: `${json.name} weather` },
-    { label: `${json.weather[0].description}` },
-    { label: `Clouds: ${json.clouds.all}%` },
-    { label: `Visibility: ${json.visibility}m` },
-    { label: `Humidity: ${json.main.humidity}%` },
-    { label: `Pressure: ${json.main.pressure} hPa` },
-    { label: `Wind: ${json.wind.speed} m/s @ ${json.wind.deg}°` },
-    { label: `Sunrise: ${parseTime(new Date(json.sys.sunrise * 1000).getHours())}:${parseTime(new Date(json.sys.sunrise * 1000).getMinutes())}` },
-    { label: `Sunset: ${parseTime(new Date(json.sys.sunset * 1000).getHours())}:${parseTime(new Date(json.sys.sunset * 1000).getMinutes())}` },
-    { type: 'separator' },
-    {
-      label: 'Data from openweathermap.org',
-      click() {
-        shell.openExternal(`https://openweathermap.org/city/${city}`)
-      },
-    },
-    {
-      label: 'Change city',
-      click() {
-        promptCity()
-      },
-    },
-    { type: 'separator' },
-    {
-      label: 'Sää authored by Fraasi',
-      click() {
-        shell.openExternal('https://github.com/Fraasi')
-      },
-    },
-    { type: 'separator' },
-    {
-      label: 'Quit app',
-      click() {
-        tray.destroy()
-        app.quit()
-      },
-    },
-  ])
-  tray.setContextMenu(contextMenu)
-}
-
-function updateTrayIcon(numString) {
-  const numberPaths = numString.split('')
-    .map((n) => {
-      if (n === '-') {
-        return path.join(__dirname, 'assets/numbers/minus.png')
-      }
-      return path.join(__dirname, `assets/numbers/${n}.png`)
-    })
-  numberPaths.push(path.join(__dirname, 'assets/numbers/deg.png'))
-
-  mergeImg(numberPaths, { margin: '0 5 0 0' })
-    .then((img) => {
-      const numericalIconPath = path.join(app.getPath('userData'), 'numerical-icon.png')
-      img.write(numericalIconPath, () => {
-        tray.setImage(numericalIconPath)
-      })
-    })
-}
-
-function fetchWeather() {
-  tray.setImage(path.join(__dirname, './assets/weather-cloudy.png'))
-  const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.OPENWEATHER_APIKEY}&units=metric`
-  fetch(url)
-    .then((response) => {
-      if (!response.ok) throw new Error('404')
-      return response.json()
-    })
-    .then((json) => {
-      clearInterval(interval)
-      tray.setToolTip('Sää')
-      updateTrayIcon(Math.round(json.main.temp).toString())
-      buildContextMenu(json)
-      interval = setInterval(fetchWeather, 1000 * 60 * 20)
-    })
-    .catch(() => {
-      const contextMenu = Menu.buildFromTemplate([
-        { label: 'Bad Weather at the intertubes' },
-        { label: 'Something went terribly wrong fetching weather data' },
-        // { label: err.message }, // needed?
-        { label: 'Try restarting the app and/or check your internet connection' },
-        { label: `Or maybe you just misspelled your city (${city})` },
-        { type: 'separator' },
-        {
-          label: 'You can file a bug report at github.com/Fraasi/Saeae',
-          click() {
-            shell.openExternal('https://github.com/Fraasi/Saeae')
-          },
-        },
-        {
-          label: 'Change city',
-          click() {
-            promptCity()
-          },
-        },
-        {
-          label: 'Quit app',
-          click() {
-            tray.destroy()
-            app.quit()
-          },
-        },
-      ])
-      tray.setContextMenu(contextMenu)
-      tray.setToolTip('Bad weather, rigth click for more info')
-      const badWeather = path.join(__dirname, 'assets/weather-downpour.png')
-      tray.setImage(badWeather)
-    })
-}
-
-function createTray() {
-  // keep mainWindow, otherwise promptWindow closes whole app
-  mainWindow = new BrowserWindow({
-    width: 100,
-    height: 100,
-    show: false,
-  })
-  // mainWindow.loadURL(`file://${__dirname}/index.html`)  // not needed!
-  // mainWindow.webContents.openDevTools()
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
-
-  const trayIconPath = path.join(__dirname, './assets/weather-cloudy.png')
-  tray = new Tray(trayIconPath)
-  fetchWeather()
-}
-
-app.on('ready', createTray)
-
-app.on('activate', () => {
-  if (mainWindow === null) createTray()
-})
+update()
