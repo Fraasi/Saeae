@@ -69,7 +69,7 @@ function buildContextMenu(json) {
     {
       label: 'Data from openweathermap.org',
       click() {
-        shell.openExternal(`https://openweathermap.org/city/${city}`)
+        shell.openExternal(`https://openweathermap.org/city/${store.get('cityId')}`)
       },
     },
     {
@@ -99,18 +99,24 @@ function buildContextMenu(json) {
 }
 
 function updateTrayIcon(numString) {
-  const numberPaths = numString.split('')
-    .map((n) => {
-      if (n === '-') {
-        return path.join(__dirname, 'assets/numbers/minus.png')
-      }
-      return path.join(__dirname, `assets/numbers/${n}.png`)
-    })
-  numberPaths.push(path.join(__dirname, 'assets/numbers/deg.png'))
+  if (numString[0] !== '-') numString = `+${numString}`
+  if (numString.length === 2) numString = ` ${numString}`
+  const numberPaths = numString.split('').map((n) => {
+    if (n === '-') {
+      return path.join(__dirname, 'assets/digits/minus.png')
+    } else if (n === '+') {
+      return path.join(__dirname, 'assets/digits/plus.png')
+    } else if (n === ' ') {
+      return path.join(__dirname, 'assets/digits/empty.png')
+    }
+    return path.join(__dirname, `assets/digits/${n}.png`)
+  })
+  numberPaths.push(path.join(__dirname, 'assets/digits/deg.png'))
 
-  mergeImg(numberPaths, { margin: '0 5 0 0' })
+  mergeImg(numberPaths, { offset: 10, color: 0x0000ff })
     .then((img) => {
-      const numericalIconPath = path.join(app.getPath('userData'), 'numerical-icon.png')
+      const numericalIconPath = path.join(app.getPath('userData'), 'saeae-temperature.png')
+      img.resize(32, 32)
       img.write(numericalIconPath, () => {
         tray.setImage(numericalIconPath)
       })
@@ -127,7 +133,8 @@ function fetchWeather() {
       clearInterval(interval)
       store.set('lat', json.coord.lat)
       store.set('lon', json.coord.lon)
-      tray.setToolTip('Sää')
+      store.set('cityId', json.id)
+      tray.setToolTip(`Sää for ${json.name}`)
       updateTrayIcon(Math.round(json.main.temp).toString())
       buildContextMenu(json)
       mainWindow.webContents.send('intervalUpdate', 'ok')
