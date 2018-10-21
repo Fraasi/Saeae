@@ -2,9 +2,10 @@ import { ipcRenderer } from 'electron'
 import SunCalc from 'suncalc'
 import Store from 'electron-store'
 import { phase_hunt } from './assets/lune.js'
-
+import createTempImage from './assets/create-temp-image'
 
 const store = new Store({ name: 'saeae-city' })
+
 
 function getZodiacSign(day, month) {
   if ((month === 1 && day <= 20) || (month === 12 && day >= 22)) {
@@ -113,13 +114,12 @@ Sunset: ${sunset.toLocaleTimeString('DE')} <br />
 `
 }
 
-ipcRenderer.on('intervalUpdate', (sender, msg) => {
-  console.log('intervalUpdate', sender, msg)
-  update()
-})
 ipcRenderer.on('fetchError', (sender, err) => {
   console.log('fetchError', err)
   update(err)
 })
-
-update()
+ipcRenderer.on('create-new-tray-icon', (sender, numString) => {
+  const dataUrl = createTempImage(numString)
+  ipcRenderer.send('tray-update-data-url', dataUrl)
+  update()
+})

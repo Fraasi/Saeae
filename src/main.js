@@ -1,12 +1,12 @@
-import { app, Menu, Tray, shell, BrowserWindow } from 'electron'
+import { app, Menu, Tray, shell, BrowserWindow, ipcMain, nativeImage } from 'electron'
 import path from 'path'
-import mergeImg from 'merge-img'
 import fetch from 'node-fetch'
 import prompt from 'electron-prompt'
 import Store from 'electron-store'
 import dotenv from 'dotenv'
 
 dotenv.config()
+
 
 const store = new Store({
   name: 'saeae-city',
@@ -98,31 +98,6 @@ function buildContextMenu(json) {
   tray.setContextMenu(contextMenu)
 }
 
-function updateTrayIcon(numString) {
-  if (numString[0] !== '-') numString = `+${numString}`
-  if (numString.length === 2) numString = ` ${numString}`
-  const numberPaths = numString.split('').map((n) => {
-    if (n === '-') {
-      return path.join(__dirname, 'assets/digits/minus.png')
-    } else if (n === '+') {
-      return path.join(__dirname, 'assets/digits/plus.png')
-    } else if (n === ' ') {
-      return path.join(__dirname, 'assets/digits/empty.png')
-    }
-    return path.join(__dirname, `assets/digits/${n}.png`)
-  })
-  numberPaths.push(path.join(__dirname, 'assets/digits/deg.png'))
-
-  mergeImg(numberPaths, { offset: 10, color: 0x0000ff })
-    .then((img) => {
-      const numericalIconPath = path.join(app.getPath('userData'), 'saeae-temperature.png')
-      img.resize(32, 32)
-      img.write(numericalIconPath, () => {
-        tray.setImage(numericalIconPath)
-      })
-    })
-}
-
 function fetchWeather() {
   tray.setImage(path.join(__dirname, './assets/weather-cloudy.png'))
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.OPENWEATHER_APIKEY}&units=metric`
@@ -135,9 +110,8 @@ function fetchWeather() {
       store.set('lon', json.coord.lon)
       store.set('cityId', json.id)
       tray.setToolTip(`Sää for ${json.name}`)
-      updateTrayIcon(Math.round(json.main.temp).toString())
       buildContextMenu(json)
-      mainWindow.webContents.send('intervalUpdate', 'ok')
+      mainWindow.webContents.send('create-new-tray-icon', Math.round(json.main.temp).toString())
       interval = setInterval(fetchWeather, 1000 * 60 * 20)
     })
     .catch((err) => {
@@ -209,11 +183,16 @@ function createTray() {
       mainWindow.show()
     }
   })
-  fetchWeather()
+  mainWindow.webContents.on('did-finish-load', fetchWeather)
 }
 
 app.on('ready', createTray)
 
 app.on('activate', () => {
   if (mainWindow === null) createTray()
+})
+
+ipcMain.on('tray-update-data-url', (event, dataUrl) => {
+  const url = nativeImage.createFromDataURL(dataUrl)
+  tray.setImage(url)
 })

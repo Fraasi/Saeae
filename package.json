@@ -56,7 +56,6 @@
     "electron-prompt": "^1.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^2.0.0",
-    "merge-img": "^2.1.2",
     "node-fetch": "^2.1.2",
     "suncalc": "^1.8.0"
   },
