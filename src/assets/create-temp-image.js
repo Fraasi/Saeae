@@ -56,8 +56,8 @@ export default function createTempImage(num) {
 
   function getColor(hex, shift) {
     let r = minus ? 100 : 255
-    let g = minus ? 100 : 45
-    let b = minus ? 255 : 0
+    let g = minus ? 100 : 50
+    let b = minus ? 255 : 50
     let a = ((hex >> shift) & 1) ? 1 : 0.1
     return `rgba(${r}, ${g}, ${b}, ${a})`
   }
