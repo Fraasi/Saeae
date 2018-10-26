@@ -3,40 +3,40 @@ export default function createTempImage(num) {
   const hexadecimals = [0x7E, 0x30, 0x6D, 0x79, 0x33, 0x5B, 0x5F, 0x70, 0x7F, 0x7B]
   const canvas = document.createElement('canvas') // memoryleak over time?
   const ctx = canvas.getContext('2d')
-  canvas.width = '50'
-  canvas.height = '45'
-  ctx.fillStyle = 'rgba(0,0,0,0.5)' // black, 0.5 alpha seems about right
-  ctx.fillRect(0, 0, 50, 45)
-  ctx.scale(0.4, 0.4)
+  canvas.width = '32'
+  canvas.height = '32'
+  ctx.fillStyle = 'rgba(0, 0, 0, 0)' // black, 0.5 alpha seems about right
+  ctx.fillRect(0, 0, 32, 32)
+  ctx.scale(0.082, 0.105)
   let minus = false
 
   function sevenSegment(hex) {
-    // A
-    roundedRect(10, 10, 40, 8, 5)
+      // A
+    roundedRect(40, 20, 78, 18, 10);
     ctx.fillStyle = getColor(hex, 6)
     ctx.fill()
-    // B
-    roundedRect(47, 15, 8, 40, 5)
+      // B
+    roundedRect(120, 40, 18, 98, 10);
     ctx.fillStyle = getColor(hex, 5)
     ctx.fill()
-    // C
-    roundedRect(47, 55, 8, 40, 5)
+      // C
+    roundedRect(120, 160, 18, 98, 10);
     ctx.fillStyle = getColor(hex, 4)
     ctx.fill()
-    // D
-    roundedRect(10, 92, 40, 8, 5)
+      // D
+    roundedRect(40, 260, 78, 18, 10);
     ctx.fillStyle = getColor(hex, 3)
     ctx.fill()
-    // E
-    roundedRect(5, 55, 8, 40, 5)
+      // E
+    roundedRect(20, 160, 18, 98, 10);
     ctx.fillStyle = getColor(hex, 2)
     ctx.fill()
-    // F
-    roundedRect(5, 15, 8, 40, 5)
+      // F
+    roundedRect(20, 40, 18, 98, 10);
     ctx.fillStyle = getColor(hex, 1)
     ctx.fill()
-    // G
-    roundedRect(10, 50, 40, 8, 5)
+      // G
+    roundedRect(40, 140, 78, 18, 10)
     ctx.fillStyle = getColor(hex, 0)
     ctx.fill()
   }
@@ -69,8 +69,15 @@ export default function createTempImage(num) {
 
   const nums = num.split('')
   sevenSegment(hexadecimals[nums[1]] ? hexadecimals[nums[0]] : 0x7E)
-  ctx.translate(63, 0)
+  ctx.translate(150, 0)
   sevenSegment(hexadecimals[nums[1]] ? hexadecimals[nums[1]] : hexadecimals[nums[0]])
+  ctx.translate(200, 0)
+  ctx.beginPath()
+  ctx.arc(0, 50, 30, 0, 2 * Math.PI)
+  ctx.lineWidth = 15
+  ctx.strokeStyle = getColor(2, 1)
+  ctx.stroke()
+  document.querySelector('body').appendChild(canvas)
 
   const dataUrl = canvas.toDataURL()
   canvas.remove()

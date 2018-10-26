@@ -54,17 +54,18 @@ function promptCity() {
 }
 
 function buildContextMenu(json) {
+  const { name, weather, main, sys, wind } = json
   const contextMenu = Menu.buildFromTemplate([
-    { label: `${json.name} weather` },
-    { label: `${json.weather[0].description}` },
-    { label: `Temperature: ${json.main.temp.toFixed(1)}°C` },
+    { label: `${name} weather` },
+    { label: `${weather[0].description.charAt(0).toUpperCase() + weather[0].description.slice(1)}` },
+    { label: `Temperature: ${main.temp.toFixed(1)}°C` },
     { label: `Clouds: ${json.clouds.all}%` },
     { label: `Visibility: ${json.visibility}m` },
-    { label: `Humidity: ${json.main.humidity}%` },
-    { label: `Pressure: ${json.main.pressure} hPa` },
-    { label: `Wind: ${json.wind.speed} m/s @ ${json.wind.deg}°` },
-    { label: `Sunrise: ${parseTime(new Date(json.sys.sunrise * 1000).getHours())}:${parseTime(new Date(json.sys.sunrise * 1000).getMinutes())}` },
-    { label: `Sunset: ${parseTime(new Date(json.sys.sunset * 1000).getHours())}:${parseTime(new Date(json.sys.sunset * 1000).getMinutes())}` },
+    { label: `Humidity: ${main.humidity}%` },
+    { label: `Pressure: ${main.pressure} hPa` },
+    { label: `Wind: ${wind.speed} m/s @ ${wind.deg}°` },
+    { label: `Sunrise: ${parseTime(new Date(sys.sunrise * 1000).getHours())}:${parseTime(new Date(sys.sunrise * 1000).getMinutes())}` },
+    { label: `Sunset: ${parseTime(new Date(sys.sunset * 1000).getHours())}:${parseTime(new Date(sys.sunset * 1000).getMinutes())}` },
     { type: 'separator' },
     {
       label: 'Data from openweathermap.org',
@@ -109,7 +110,7 @@ function fetchWeather() {
       store.set('lat', json.coord.lat)
       store.set('lon', json.coord.lon)
       store.set('cityId', json.id)
-      tray.setToolTip(`Sää for ${json.name}`)
+      tray.setToolTip(`Sää for ${json.name} ${json.main.temp.toFixed(1)}°C`)
       buildContextMenu(json)
       mainWindow.webContents.send('create-new-tray-icon', Math.round(json.main.temp).toString())
       interval = setInterval(fetchWeather, 1000 * 60 * 20)
@@ -194,5 +195,6 @@ app.on('activate', () => {
 
 ipcMain.on('tray-update-data-url', (event, dataUrl) => {
   const url = nativeImage.createFromDataURL(dataUrl)
+  url.resize({ width: 16, height: 16 })
   tray.setImage(url)
 })

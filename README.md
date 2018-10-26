@@ -2,10 +2,13 @@
 
 Electron app to show weather temperature in the notification area/system tray.  
 Right click icon for more weather info and to change city or quit app.  
-Double click icon for a pop-up for even more info on sun and moon.
+Double click icon for a pop-up for even more info on sun and moon.  
+Red color for over 0&deg;C & blue for under.
 
 #### todo
-- [ ] better 'font'  
+- bumb version
+- update readme
+- package
 
 Tray  
  ![Tray pic](2018-07-20_1531.png)

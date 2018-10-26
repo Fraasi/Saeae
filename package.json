@@ -11,8 +11,7 @@
     "publish": "electron-forge publish",
     "lint": "eslint src --color"
   },
-  "keywords": [],
-  "author": "Fra.AS.I",
+  "keywords": ["weather", "sää", "saeae", "tray", "temperature"],
   "license": "MIT",
   "config": {
     "forge": {
