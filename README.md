@@ -16,3 +16,13 @@ On right click
 
 On double click  
 ![right click](pics/2018-08-01_1941.png)  
+
+
+#### Todo before next release
+* [ ] new browserwindow for left click, put weather info there, same style as doubleclick, 'forecast at openweathermap'
+* [ ] right click menu only github/fraasi, change city & quit app
+* [ ] input should also take city code, inform about country code if city not found or wrong
+* [ ] better font & some styles (lets see if J comes up with anything)
+* [ ] all error codes to left click
+* [ ] electron-positioner to position both windows to right corner
+* [ ] close windows on blur

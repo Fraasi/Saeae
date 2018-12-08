@@ -2,7 +2,7 @@
   "name": "saeae",
   "productName": "saeae",
   "version": "0.6.5",
-  "author": "Fraasi <fraasi.gh@gmail.com>",
+  "author": "Fraasi <fraasi.gh@gmail.com> (https://github.com/fraasi)",
   "description": "Weather app in your tray",
   "main": "src/main.js",
   "scripts": {
@@ -31,7 +31,7 @@
       "electronPackagerConfig": {
         "packageManager": "npm",
         "asar": true,
-        "icon": "./assets/fraasi-64x64.ico"
+        "icon": "./src/assets/fraasi-64x64.ico"
       },
       "electronWinstallerConfig": {
         "name": "saeae"
