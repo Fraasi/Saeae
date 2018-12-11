@@ -64,6 +64,7 @@
     "electron-prompt": "^1.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^2.0.0",
+    "futility": "github:fraasi/futility",
     "node-fetch": "^2.3.0",
     "suncalc": "^1.8.0"
   },

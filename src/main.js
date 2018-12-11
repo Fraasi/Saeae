@@ -1,9 +1,12 @@
-import { app, Menu, Tray, shell, BrowserWindow, ipcMain, nativeImage } from 'electron'
+import {
+  app, Menu, Tray, shell, BrowserWindow, ipcMain, nativeImage,
+} from 'electron'
 import path from 'path'
 import fetch from 'node-fetch'
 import prompt from 'electron-prompt'
 import Store from 'electron-store'
 import dotenv from 'dotenv'
+import deBounce from 'futility/lib/deBounce'
 
 dotenv.config()
 const store = new Store({
@@ -53,7 +56,9 @@ function promptCity() {
 }
 
 function buildContextMenu(json) {
-  const { name, weather, main, sys, wind } = json
+  const {
+    name, weather, main, sys, wind,
+  } = json
   const contextMenu = Menu.buildFromTemplate([
     { label: `${name} weather` },
     { label: `${weather[0].description.charAt(0).toUpperCase() + weather[0].description.slice(1)}` },
@@ -152,17 +157,17 @@ function fetchWeather() {
 }
 
 function createApp() {
-// weatherWindow
+  // weatherWindow
   weatherWindow = new BrowserWindow({
     width: 330,
     height: 410,
     icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
     title: 'Sää',
     show: false,
-    resizable: false,
+    resizable: true,
   })
-  weatherWindow.loadURL(`file://${__dirname}/astro.html`)
-  // weatherWindow.webContents.openDevTools()
+  weatherWindow.loadURL(`file://${__dirname}/weather.html`)
+  weatherWindow.webContents.openDevTools()
   weatherWindow.on('close', (e) => {
     if (!close) {
       e.preventDefault()
@@ -183,10 +188,10 @@ function createApp() {
     icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
     title: 'Sää',
     show: false,
-    resizable: false,
+    resizable: true,
   })
   astroWindow.loadURL(`file://${__dirname}/astro.html`)
-  // astroWindow.webContents.openDevTools()
+  astroWindow.webContents.openDevTools()
   astroWindow.on('close', (e) => {
     if (!close) {
       e.preventDefault()
@@ -203,19 +208,24 @@ function createApp() {
 
   const trayIconPath = path.join(__dirname, './assets/weather-cloudy.png')
   tray = new Tray(trayIconPath)
-  tray.on('click', () => {
-    if (weatherWindow.isVisible()) {
-      weatherWindow.hide()
-    } else {
-      weatherWindow.show()
-    }
+
+  let dblClick = false
+
+  tray.on('click', (e) => {
+    dblClick = false
+    deBounce(() => {
+      weatherWindow.webContents.send('eee', e)
+      if (!dblClick) {
+        if (weatherWindow.isVisible()) weatherWindow.hide()
+        else weatherWindow.show()
+      }
+    }, 300)
   })
-  tray.on('double-click', () => {
-    if (astroWindow.isVisible()) {
-      astroWindow.hide()
-    } else {
-      astroWindow.show()
-    }
+  tray.on('double-click', (e) => {
+    dblClick = true
+    astroWindow.webContents.send('eee', e)
+    if (astroWindow.isVisible()) astroWindow.hide()
+    else astroWindow.show()
   })
 }
 

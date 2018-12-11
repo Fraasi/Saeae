@@ -8,31 +8,18 @@ const store = new Store({ name: 'saeae-city' })
 
 
 function getZodiacSign(day, month) {
-  if ((month === 1 && day <= 20) || (month === 12 && day >= 22)) {
-    return 'capricorn';
-  } else if ((month === 1 && day >= 21) || (month === 2 && day <= 18)) {
-    return 'aquarius';
-  } else if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) {
-    return 'pisces';
-  } else if ((month === 3 && day >= 21) || (month === 4 && day <= 20)) {
-    return 'aries';
-  } else if ((month === 4 && day >= 21) || (month === 5 && day <= 20)) {
-    return 'taurus';
-  } else if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) {
-    return 'gemini';
-  } else if ((month === 6 && day >= 22) || (month === 7 && day <= 22)) {
-    return 'cancer';
-  } else if ((month === 7 && day >= 23) || (month === 8 && day <= 23)) {
-    return 'leo';
-  } else if ((month === 8 && day >= 24) || (month === 9 && day <= 23)) {
-    return 'virgo';
-  } else if ((month === 9 && day >= 24) || (month === 10 && day <= 23)) {
-    return 'libra';
-  } else if ((month === 10 && day >= 24) || (month === 11 && day <= 22)) {
-    return 'scorpio';
-  } else if ((month === 11 && day >= 23) || (month === 12 && day <= 21)) {
-    return 'sagittarius';
-  }
+  if ((month === 1 && day <= 20) || (month === 12 && day >= 22)) return 'capricorn'
+  if ((month === 1 && day >= 21) || (month === 2 && day <= 18)) return 'aquarius'
+  if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return 'pisces'
+  if ((month === 3 && day >= 21) || (month === 4 && day <= 20)) return 'aries'
+  if ((month === 4 && day >= 21) || (month === 5 && day <= 20)) return 'taurus'
+  if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return 'gemini'
+  if ((month === 6 && day >= 22) || (month === 7 && day <= 22)) return 'cancer'
+  if ((month === 7 && day >= 23) || (month === 8 && day <= 23)) return 'leo'
+  if ((month === 8 && day >= 24) || (month === 9 && day <= 23)) return 'virgo'
+  if ((month === 9 && day >= 24) || (month === 10 && day <= 23)) return 'libra'
+  if ((month === 10 && day >= 24) || (month === 11 && day <= 22)) return 'scorpio'
+  if ((month === 11 && day >= 23) || (month === 12 && day <= 21)) return 'sagittarius'
   return 'zodiac not found'
 }
 
@@ -55,13 +42,13 @@ function getData(lat, lon) {
 
 function getPhase(p) {
   if (p === 0) return 'New Moon'
-  else if (p < 0.25) return 'Waxing Crescent'
-  else if (p === 0.25) return 'First Quarter'
-  else if (p < 0.5) return 'Waxing Gibbous'
-  else if (p === 0.5) return 'Full Moon'
-  else if (p < 0.75) return 'Waning Gibbous'
-  else if (p === 0.75) return 'Last Quarter'
-  else if (p < 1) return 'Waning Crescent'
+  if (p < 0.25) return 'Waxing Crescent'
+  if (p === 0.25) return 'First Quarter'
+  if (p < 0.5) return 'Waxing Gibbous'
+  if (p === 0.5) return 'Full Moon'
+  if (p < 0.75) return 'Waning Gibbous'
+  if (p === 0.75) return 'Last Quarter'
+  if (p < 1) return 'Waning Crescent'
   return 'New Moon'
 }
 
