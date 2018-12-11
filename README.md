@@ -22,7 +22,14 @@ On double click
 * [ ] new browserwindow for left click, put weather info there, same style as doubleclick, 'forecast at openweathermap'
 * [ ] right click menu only github/fraasi, change city & quit app
 * [ ] input should also take city code, inform about country code if city not found or wrong
-* [ ] better font & some styles (lets see if J comes up with anything)
+* [ ] better font & some styles & logo (lets see if J comes up with anything)
 * [ ] all error codes to left click
 * [ ] electron-positioner to position both windows to right corner
 * [ ] close windows on blur
+* [ ] different icons for diff wins?
+* [ ] update deps
+* [ ] temp background
+* [ ] click firing when double cicking, file an issue
+* [ ] readme:
+  * [ ] inform suncalc not always accurate
+

@@ -6,8 +6,6 @@ import Store from 'electron-store'
 import dotenv from 'dotenv'
 
 dotenv.config()
-
-
 const store = new Store({
   name: 'saeae-city',
   defaults: {
@@ -21,7 +19,8 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
   app.quit()
 }
 
-let mainWindow
+let astroWindow
+let weatherWindow
 let tray = null
 let city = store.get('weatherCity')
 let interval
@@ -112,7 +111,7 @@ function fetchWeather() {
       store.set('cityId', json.id)
       tray.setToolTip(`Sää for ${json.name} ${json.main.temp.toFixed(1)}°C`)
       buildContextMenu(json)
-      mainWindow.webContents.send('create-new-tray-icon', Math.round(json.main.temp).toString())
+      astroWindow.webContents.send('create-new-tray-icon', Math.round(json.main.temp).toString())
       interval = setInterval(fetchWeather, 1000 * 60 * 20)
     })
     .catch((err) => {
@@ -148,12 +147,13 @@ function fetchWeather() {
       tray.setToolTip('Bad weather, rigth click for more info')
       const badWeather = path.join(__dirname, 'assets/weather-downpour.png')
       tray.setImage(badWeather)
-      mainWindow.webContents.send('fetchError', { msg: err.message, stack: err.stack })
+      astroWindow.webContents.send('fetchError', { msg: err.message, stack: err.stack })
     })
 }
 
-function createTray() {
-  mainWindow = new BrowserWindow({
+function createApp() {
+// weatherWindow
+  weatherWindow = new BrowserWindow({
     width: 330,
     height: 410,
     icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
@@ -161,36 +161,68 @@ function createTray() {
     show: false,
     resizable: false,
   })
-  mainWindow.loadURL(`file://${__dirname}/index.html`)
-  // mainWindow.webContents.openDevTools()
-  mainWindow.on('close', (e) => {
+  weatherWindow.loadURL(`file://${__dirname}/astro.html`)
+  // weatherWindow.webContents.openDevTools()
+  weatherWindow.on('close', (e) => {
     if (!close) {
       e.preventDefault()
-      mainWindow.hide()
+      weatherWindow.hide()
       return false
     }
   })
-  mainWindow.on('closed', () => {
-    if (close) mainWindow = null
+  weatherWindow.on('closed', () => {
+    if (close) weatherWindow = null
   })
-  mainWindow.setMenu(null)
+  weatherWindow.setMenu(null)
+  weatherWindow.webContents.on('did-finish-load', fetchWeather)
+
+  // astroWindow
+  astroWindow = new BrowserWindow({
+    width: 330,
+    height: 410,
+    icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
+    title: 'Sää',
+    show: false,
+    resizable: false,
+  })
+  astroWindow.loadURL(`file://${__dirname}/astro.html`)
+  // astroWindow.webContents.openDevTools()
+  astroWindow.on('close', (e) => {
+    if (!close) {
+      e.preventDefault()
+      astroWindow.hide()
+      return false
+    }
+  })
+  astroWindow.on('closed', () => {
+    if (close) astroWindow = null
+  })
+  astroWindow.setMenu(null)
+  astroWindow.webContents.on('did-finish-load', fetchWeather)
+
 
   const trayIconPath = path.join(__dirname, './assets/weather-cloudy.png')
   tray = new Tray(trayIconPath)
-  tray.on('double-click', () => {
-    if (mainWindow.isVisible()) {
-      mainWindow.hide()
+  tray.on('click', () => {
+    if (weatherWindow.isVisible()) {
+      weatherWindow.hide()
     } else {
-      mainWindow.show()
+      weatherWindow.show()
     }
   })
-  mainWindow.webContents.on('did-finish-load', fetchWeather)
+  tray.on('double-click', () => {
+    if (astroWindow.isVisible()) {
+      astroWindow.hide()
+    } else {
+      astroWindow.show()
+    }
+  })
 }
 
-app.on('ready', createTray)
+app.on('ready', createApp)
 
 app.on('activate', () => {
-  if (mainWindow === null) createTray()
+  if (astroWindow === null) createApp()
 })
 
 ipcMain.on('tray-update-data-url', (event, dataUrl) => {
