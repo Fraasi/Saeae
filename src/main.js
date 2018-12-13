@@ -10,10 +10,14 @@ import deBounce from 'futility/lib/deBounce'
 
 dotenv.config()
 const store = new Store({
-  name: 'saeae-city',
+  name: 'saeae',
   defaults: {
     storePath: app.getPath('userData'),
     weatherCity: 'tampere',
+    lat: 61.5,
+    lon: 23.76,
+    cityId: 634964,
+    input: '',
   },
 })
 
@@ -25,69 +29,48 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 let astroWindow
 let weatherWindow
 let tray = null
-let city = store.get('weatherCity')
-let interval
+let updateInterval
 let close = false
-
-function parseTime(time) {
-  return (time < 10) ? `0${time}` : time
-}
 
 function promptCity() {
   prompt({
     alwaysOnTop: true,
     title: 'Sää',
-    label: `Current city: ${city}`,
+    label: `Current city: ${store.get('weatherCity')}`,
     type: 'input',
     inputAttrs: {
       type: 'text',
-      placeholder: 'New city',
+      placeholder: 'New city or city id',
     },
     icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
   })
     .then((input) => {
       // null if window was closed or user clicked Cancel
       if (input === null) return
-      city = input
-      store.set('weatherCity', city)
-      fetchWeather()
+      store.set('input', input)
+      fetchWeather(input)
     })
     .catch(console.error);
 }
 
-function buildContextMenu(json) {
-  const {
-    name, weather, main, sys, wind,
-  } = json
+function buildContextMenu() {
   const contextMenu = Menu.buildFromTemplate([
-    { label: `${name} weather` },
-    { label: `${weather[0].description.charAt(0).toUpperCase() + weather[0].description.slice(1)}` },
-    { label: `Temperature: ${main.temp.toFixed(1)}°C` },
-    { label: `Clouds: ${json.clouds.all}%` },
-    { label: `Visibility: ${json.visibility}m` },
-    { label: `Humidity: ${main.humidity}%` },
-    { label: `Pressure: ${main.pressure} hPa` },
-    { label: `Wind: ${wind.speed} m/s @ ${wind.deg}°` },
-    { label: `Sunrise: ${parseTime(new Date(sys.sunrise * 1000).getHours())}:${parseTime(new Date(sys.sunrise * 1000).getMinutes())}` },
-    { label: `Sunset: ${parseTime(new Date(sys.sunset * 1000).getHours())}:${parseTime(new Date(sys.sunset * 1000).getMinutes())}` },
-    { type: 'separator' },
+    {
+      label: 'Sää authored by Fraasi',
+      click() {
+        shell.openExternal('https://github.com/Fraasi/Saeae')
+      },
+    },
     {
       label: 'Data from openweathermap.org',
       click() {
-        shell.openExternal(`https://openweathermap.org/city/${store.get('cityId')}`)
+        shell.openExternal('https://openweathermap.org/')
       },
     },
     {
       label: 'Change city',
       click() {
         promptCity()
-      },
-    },
-    { type: 'separator' },
-    {
-      label: 'Sää authored by Fraasi',
-      click() {
-        shell.openExternal('https://github.com/Fraasi')
       },
     },
     { type: 'separator' },
@@ -103,56 +86,46 @@ function buildContextMenu(json) {
   tray.setContextMenu(contextMenu)
 }
 
-function fetchWeather() {
+function fetchWeather(input) {
   tray.setImage(path.join(__dirname, './assets/weather-cloudy.png'))
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.OPENWEATHER_APIKEY}&units=metric`
+  const queryOrId = isNaN(parseInt(input, 10)) ? 'q' : 'id'
+  const url = `https://api.openweathermap.org/data/2.5/weather?${queryOrId}=${input}&units=metric&appid=${process.env.OPENWEATHER_APIKEY}`
+  weatherWindow.webContents.send('log', { input, url })
   fetch(url)
     .then(response => response.json())
     .then((json) => {
+      clearInterval(updateInterval)
       if (json.cod !== 200) throw new Error(`${json.cod}, ${json.message}`)
-      clearInterval(interval)
-      store.set('lat', json.coord.lat)
-      store.set('lon', json.coord.lon)
-      store.set('cityId', json.id)
+      store.set({
+        lat: json.coord.lat,
+        lon: json.coord.lon,
+        cityId: json.id,
+        weatherCity: json.name,
+      })
       tray.setToolTip(`Sää for ${json.name} ${json.main.temp.toFixed(1)}°C`)
-      buildContextMenu(json)
-      astroWindow.webContents.send('create-new-tray-icon', Math.round(json.main.temp).toString())
-      interval = setInterval(fetchWeather, 1000 * 60 * 20)
+
+      weatherWindow.webContents.send('update-info', json)
+      astroWindow.webContents.send('update-info', json)
+      updateInterval = setInterval(fetchWeather.bind(null, store.get('weatherCity')), 1000 * 60 * 20)
     })
     .catch((err) => {
-      const contextMenu = Menu.buildFromTemplate([
-        { label: 'Bad Weather at the intertubes' },
-        { label: 'Something went terribly wrong fetching weather data' },
-        { label: 'Double click icon to see error message' }, // needed?
-        { label: 'Try restarting the app and/or check your internet connection' },
-        { label: `Or maybe you just misspelled your city (${city})` },
-        { type: 'separator' },
-        {
-          label: 'You can file a bug report at github.com/Fraasi/Saeae',
-          click() {
-            shell.openExternal('https://github.com/Fraasi/Saeae')
-          },
-        },
-        {
-          label: 'Change city',
-          click() {
-            promptCity()
-          },
-        },
-        {
-          label: 'Quit app',
-          click() {
-            close = true
-            tray.destroy()
-            app.quit()
-          },
-        },
-      ])
-      tray.setContextMenu(contextMenu)
-      tray.setToolTip('Bad weather, rigth click for more info')
+      const error = {
+        errText: `
+          Bad Weather at the intertubes<br />
+          Something went terribly wrong fetching weather data<br />
+          Try restarting the app and/or check your internet connection<br />
+          Or maybe you just misspelled your city (${store.get('input')})
+        `,
+        bugReport: 'You can file a bug report at <span class="link">github.com/Fraasi/Saeae</span>',
+        errMsg: err.message,
+        errStack: err.stack,
+      }
+
+      tray.setToolTip('Bad weather, click for more info')
       const badWeather = path.join(__dirname, 'assets/weather-downpour.png')
       tray.setImage(badWeather)
-      astroWindow.webContents.send('fetchError', { msg: err.message, stack: err.stack })
+      weatherWindow.webContents.send('fetch-error', error)
+      astroWindow.webContents.send('fetch-error', error)
     })
 }
 
@@ -179,7 +152,7 @@ function createApp() {
     if (close) weatherWindow = null
   })
   weatherWindow.setMenu(null)
-  weatherWindow.webContents.on('did-finish-load', fetchWeather)
+  weatherWindow.webContents.on('did-finish-load', fetchWeather.bind(null, store.get('weatherCity') ))
 
   // astroWindow
   astroWindow = new BrowserWindow({
@@ -203,27 +176,23 @@ function createApp() {
     if (close) astroWindow = null
   })
   astroWindow.setMenu(null)
-  astroWindow.webContents.on('did-finish-load', fetchWeather)
 
-
-  const trayIconPath = path.join(__dirname, './assets/weather-cloudy.png')
-  tray = new Tray(trayIconPath)
+  // tray
+  tray = new Tray(path.join(__dirname, './assets/weather-cloudy.png'))
+  buildContextMenu()
 
   let dblClick = false
-
-  tray.on('click', (e) => {
+  tray.on('click', () => {
     dblClick = false
     deBounce(() => {
-      weatherWindow.webContents.send('eee', e)
       if (!dblClick) {
         if (weatherWindow.isVisible()) weatherWindow.hide()
         else weatherWindow.show()
       }
-    }, 300)
+    }, 250)
   })
-  tray.on('double-click', (e) => {
+  tray.on('double-click', () => {
     dblClick = true
-    astroWindow.webContents.send('eee', e)
     if (astroWindow.isVisible()) astroWindow.hide()
     else astroWindow.show()
   })
@@ -232,10 +201,10 @@ function createApp() {
 app.on('ready', createApp)
 
 app.on('activate', () => {
-  if (astroWindow === null) createApp()
+  if (weatherWindow === null) createApp()
 })
 
-ipcMain.on('tray-update-data-url', (event, dataUrl) => {
+ipcMain.on('update-tray-data-url', (event, dataUrl) => {
   const url = nativeImage.createFromDataURL(dataUrl)
   url.resize({ width: 16, height: 16 })
   tray.setImage(url)

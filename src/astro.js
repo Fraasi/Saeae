@@ -2,9 +2,8 @@ import { ipcRenderer } from 'electron'
 import SunCalc from 'suncalc'
 import Store from 'electron-store'
 import { phase_hunt } from './assets/lune.js'
-import createTempImage from './assets/create-temp-image'
 
-const store = new Store({ name: 'saeae-city' })
+const store = new Store({ name: 'saeae' })
 
 
 function getZodiacSign(day, month) {
@@ -58,31 +57,31 @@ function update(err) {
   const longitude = store.get('lon')
   const data = getData(latitude, longitude)
   if (err) {
-    document.querySelector('.legend').innerHTML = ` ${city} - ${data.date.toLocaleString('DE').replace(/\./g, '/')}`
+    document.querySelector('.legend').innerHTML = `Error - ${data.date.toLocaleString('DE').replace(/\./g, '/')}`
 
     document.querySelector('.moon').innerHTML = `
-    message: ${err.msg} </br> stack: ${err.stack}
+    message: ${err.errMsg} </br> stack: ${err.errStack}
     `
     document.querySelector('.sun').innerHTML = ''
     return
   }
   console.log('indexData', data)
 
-  document.querySelector('.legend').innerHTML = ` ${city.charAt(0).toUpperCase() + city.slice(1)} - ${data.date.toLocaleString('DE').replace(/\./g, '/')}`
+  document.querySelector('.legend').innerHTML = `${city} - ${data.date.toLocaleString('DE').replace(/\./g, '/')}`
 
   const { moonPosition, moonTimes, illumination, zodiac } = data
   document.querySelector('.moon').innerHTML = `
-Moon Phase: ${getPhase(data.illumination.phase)} </br>
-Moon Illumination: ${(illumination.fraction * 100).toFixed(1)}% </br>
-Moon Azimuth: ${(moonPosition.azimuth * 180 / Math.PI + 180).toFixed(1)/* to degrees */}&deg; </br>
-Moon Altitude: ${(moonPosition.altitude * 180 / Math.PI).toFixed(1)}&deg; </br>
-Moon Distance: ${moonPosition.distance.toFixed(1)} km </br>
-Moonrise: ${moonTimes.rise ? moonTimes.rise.toLocaleTimeString('DE') : 'N/A'} <br />
-Moonset: ${moonTimes.set ? moonTimes.set.toLocaleTimeString('DE') : 'N/A'} <br />
-New Moon: ${data.luneJS.new_date.toLocaleString('DE').replace(/\./g, '/')} </br>
-Full Moon ${data.luneJS.full_date.toLocaleString('DE').replace(/\./g, '/')} </br>
-Zodiac: ${zodiac} </br>
-`
+    Moon Phase: ${getPhase(data.illumination.phase)} </br>
+    Moon Illumination: ${(illumination.fraction * 100).toFixed(1)}% </br>
+    Moon Azimuth: ${(moonPosition.azimuth * 180 / Math.PI + 180).toFixed(1)/* to degrees */}&deg; </br>
+    Moon Altitude: ${(moonPosition.altitude * 180 / Math.PI).toFixed(1)}&deg; </br>
+    Moon Distance: ${moonPosition.distance.toFixed(1)} km </br>
+    Moonrise: ${moonTimes.rise ? moonTimes.rise.toLocaleTimeString('DE') : 'N/A'} <br />
+    Moonset: ${moonTimes.set ? moonTimes.set.toLocaleTimeString('DE') : 'N/A'} <br />
+    New Moon: ${data.luneJS.new_date.toLocaleString('DE').replace(/\./g, '/')} </br>
+    Full Moon ${data.luneJS.full_date.toLocaleString('DE').replace(/\./g, '/')} </br>
+    Zodiac: ${zodiac} </br>
+  `
 
   const {
     goldenHour, goldenHourEnd, sunriseEnd, sunsetStart, sunrise, sunset,
@@ -91,22 +90,20 @@ Zodiac: ${zodiac} </br>
   const sunSetPos = SunCalc.getPosition(sunset, latitude, longitude)
 
   document.querySelector('.sun').innerHTML = `
-GoldenHour AM: ${sunriseEnd.toLocaleTimeString('DE')} - ${goldenHourEnd.toLocaleTimeString('DE')}<br />
-GoldenHour PM: ${goldenHour.toLocaleTimeString('DE')} - ${sunsetStart.toLocaleTimeString('DE')} <br />
-Sunrise Azimuth: ${(sunRisePos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</br>
-Sunset Azimuth: ${(sunSetPos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</br>
-Sun Altitude: ${(data.sunPosition.altitude * 180 / Math.PI).toFixed(1)}&deg; </br>
-Sunrise: ${sunrise.toLocaleTimeString('DE')} <br />
-Sunset: ${sunset.toLocaleTimeString('DE')} <br />
-`
+    GoldenHour AM: ${sunriseEnd.toLocaleTimeString('DE')} - ${goldenHourEnd.toLocaleTimeString('DE')}<br />
+    GoldenHour PM: ${goldenHour.toLocaleTimeString('DE')} - ${sunsetStart.toLocaleTimeString('DE')} <br />
+    Sunrise Azimuth: ${(sunRisePos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</br>
+    Sunset Azimuth: ${(sunSetPos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</br>
+    Sun Altitude: ${(data.sunPosition.altitude * 180 / Math.PI).toFixed(1)}&deg; </br>
+    Sunrise: ${sunrise.toLocaleTimeString('DE')} <br />
+    Sunset: ${sunset.toLocaleTimeString('DE')} <br />
+  `
 }
 
-ipcRenderer.on('fetchError', (sender, err) => {
+ipcRenderer.on('fetch-error', (sender, err) => {
   console.log('fetchError', err)
   update(err)
 })
-ipcRenderer.on('create-new-tray-icon', (sender, numString) => {
-  const dataUrl = createTempImage(numString)
-  ipcRenderer.send('tray-update-data-url', dataUrl)
+ipcRenderer.on('update-info', (n) => {
   update()
 })
