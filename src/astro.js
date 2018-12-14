@@ -35,7 +35,7 @@ function getData(lat, lon) {
     sunTimes: SunCalc.getTimes(date, lat, lon),
     sunPosition: SunCalc.getPosition(date, lat, lon),
     zodiac: getZodiacSign(day, monthFromNow),
-    luneJS: phase_hunt(new Date(new Date().setMonth(monthFromNow))),
+    luneJS: phase_hunt(new Date(new Date().setMonth(monthFromNow - 1))),
   }
 }
 
@@ -57,7 +57,7 @@ function update(err) {
   const longitude = store.get('lon')
   const data = getData(latitude, longitude)
   if (err) {
-    document.querySelector('.legend').innerHTML = `Error - ${data.date.toLocaleString('DE').replace(/\./g, '/')}`
+    document.querySelector('.legend').innerHTML = `Error - ${data.date.toLocaleString('en-GB')}`
 
     document.querySelector('.moon').innerHTML = `
     message: ${err.errMsg} </br> stack: ${err.errStack}
@@ -67,7 +67,7 @@ function update(err) {
   }
   console.log('indexData', data)
 
-  document.querySelector('.legend').innerHTML = `${city} - ${data.date.toLocaleString('DE').replace(/\./g, '/')}`
+  document.querySelector('.legend').innerHTML = `${city} - ${data.date.toLocaleString('en-GB')}`
 
   const { moonPosition, moonTimes, illumination, zodiac } = data
   document.querySelector('.moon').innerHTML = `
@@ -78,8 +78,8 @@ function update(err) {
     Moon Distance: ${moonPosition.distance.toFixed(1)} km </br>
     Moonrise: ${moonTimes.rise ? moonTimes.rise.toLocaleTimeString('DE') : 'N/A'} <br />
     Moonset: ${moonTimes.set ? moonTimes.set.toLocaleTimeString('DE') : 'N/A'} <br />
-    New Moon: ${data.luneJS.new_date.toLocaleString('DE').replace(/\./g, '/')} </br>
-    Full Moon ${data.luneJS.full_date.toLocaleString('DE').replace(/\./g, '/')} </br>
+    New Moon: ${data.luneJS.new_date.toLocaleString('en-GB')} </br>
+    Full Moon ${data.luneJS.full_date.toLocaleString('en-GB')} </br>
     Zodiac: ${zodiac} </br>
   `
 
@@ -90,20 +90,15 @@ function update(err) {
   const sunSetPos = SunCalc.getPosition(sunset, latitude, longitude)
 
   document.querySelector('.sun').innerHTML = `
-    GoldenHour AM: ${sunriseEnd.toLocaleTimeString('DE')} - ${goldenHourEnd.toLocaleTimeString('DE')}<br />
-    GoldenHour PM: ${goldenHour.toLocaleTimeString('DE')} - ${sunsetStart.toLocaleTimeString('DE')} <br />
+    GoldenHour AM: ${sunriseEnd.toLocaleTimeString('en-GB')} - ${goldenHourEnd.toLocaleTimeString('en-GB')}<br />
+    GoldenHour PM: ${goldenHour.toLocaleTimeString('en-GB')} - ${sunsetStart.toLocaleTimeString('en-GB')} <br />
     Sunrise Azimuth: ${(sunRisePos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</br>
     Sunset Azimuth: ${(sunSetPos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</br>
     Sun Altitude: ${(data.sunPosition.altitude * 180 / Math.PI).toFixed(1)}&deg; </br>
-    Sunrise: ${sunrise.toLocaleTimeString('DE')} <br />
-    Sunset: ${sunset.toLocaleTimeString('DE')} <br />
+    Sunrise: ${sunrise.toLocaleTimeString('en-GB')} <br />
+    Sunset: ${sunset.toLocaleTimeString('en-GB')} <br />
   `
 }
 
-ipcRenderer.on('fetch-error', (sender, err) => {
-  console.log('fetchError', err)
-  update(err)
-})
-ipcRenderer.on('update-info', (n) => {
-  update()
-})
+ipcRenderer.on('fetch-error', (sender, err) => { update(err) })
+ipcRenderer.on('update-info', () => { update() })

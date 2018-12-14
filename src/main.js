@@ -4,6 +4,7 @@ import {
 import path from 'path'
 import fetch from 'node-fetch'
 import prompt from 'electron-prompt'
+import Positioner from 'electron-positioner'
 import Store from 'electron-store'
 import dotenv from 'dotenv'
 import deBounce from 'futility/lib/deBounce'
@@ -57,6 +58,7 @@ function buildContextMenu() {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Sää authored by Fraasi',
+      icon: path.join(__dirname, 'assets/fraasi-16x16.png'),
       click() {
         shell.openExternal('https://github.com/Fraasi/Saeae')
       },
@@ -90,7 +92,7 @@ function fetchWeather(input) {
   tray.setImage(path.join(__dirname, './assets/weather-cloudy.png'))
   const queryOrId = isNaN(parseInt(input, 10)) ? 'q' : 'id'
   const url = `https://api.openweathermap.org/data/2.5/weather?${queryOrId}=${input}&units=metric&appid=${process.env.OPENWEATHER_APIKEY}`
-  weatherWindow.webContents.send('log', { input, url })
+  // weatherWindow.webContents.send('log', { input, url })
   fetch(url)
     .then(response => response.json())
     .then((json) => {
@@ -116,8 +118,8 @@ function fetchWeather(input) {
           Try restarting the app and/or check your internet connection<br />
           Or maybe you just misspelled your city (${store.get('input')})
         `,
-        bugReport: 'You can file a bug report at <span class="link">github.com/Fraasi/Saeae</span>',
-        errMsg: err.message,
+        bugReport: 'You can file a bug report at ',
+        errMsg: err.message.replace('c99ed4', ''), // do not expose full api in error message
         errStack: err.stack,
       }
 
@@ -152,7 +154,9 @@ function createApp() {
     if (close) weatherWindow = null
   })
   weatherWindow.setMenu(null)
-  weatherWindow.webContents.on('did-finish-load', fetchWeather.bind(null, store.get('weatherCity') ))
+  const weatherPos = new Positioner(weatherWindow)
+  weatherPos.move('bottomRight')
+  weatherWindow.webContents.on('did-finish-load', fetchWeather.bind(null, store.get('weatherCity')))
 
   // astroWindow
   astroWindow = new BrowserWindow({
@@ -176,6 +180,11 @@ function createApp() {
     if (close) astroWindow = null
   })
   astroWindow.setMenu(null)
+  const astroPos = new Positioner(astroWindow)
+  astroPos.move('topRight')
+  astroWindow.webContents.on('did-finish-load', () => {
+    astroWindow.webContents.send('update-info', null)
+  })
 
   // tray
   tray = new Tray(path.join(__dirname, './assets/weather-cloudy.png'))

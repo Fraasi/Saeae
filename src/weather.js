@@ -4,6 +4,7 @@ import createTempImage from './assets/create-temp-image'
 
 // const store = new Store({ name: 'saeae' })
 
+
 function parseTime(time) {
   return (time < 10) ? `0${time}` : time
 }
@@ -12,33 +13,43 @@ function _qs(id) {
   return document.querySelector(id)
 }
 
+// get elements
+const legend = _qs('.legend')
+const weatherEl = _qs('.weather')
+const forecast = _qs('.forecast')
+const link = _qs('.link')
+const bugReport = _qs('.bug-report')
+let cityId
+
+forecast.addEventListener('click', () => {
+  shell.openExternal(`https://openweathermap.org/city/${cityId}`)
+})
+link.addEventListener('click', () => {
+  shell.openExternal('https://github.com/Fraasi/Saeae/issues')
+})
+
 function update(json) {
   const date = new Date()
   const { name, weather, main, sys, wind, id } = json
-
+  cityId = id
   // if error
   if (json.errMsg) {
-    _qs('.legend').innerHTML = ` Error - ${date.toLocaleString('DE').replace(/\./g, '/')}`
-
-    _qs('.weather').innerHTML = `
+    legend.innerHTML = ` Error - ${date.toLocaleString('en-GB')}`
+    weatherEl.innerHTML = `
       ${json.errText}
       <hr>
       message: ${json.errMsg}<br />
       stack: ${json.errStack}
     `
-
-    _qs('.forecast').innerHTML = json.bugReport
-    _qs('.link').innerHTML = 'github.com/Fraasi/Saeae/issues'
-    _qs('.link').addEventListener('click', () => {
-      console.log('link clicked');
-      shell.openExternal('github.com/Fraasi/Saeae/issues')
-    })
+    forecast.innerHTML = ''
+    bugReport.innerHTML = json.bugReport
+    link.innerHTML = 'github.com/Fraasi/Saeae/issues'
     return
   }
 
-  _qs('.legend').innerHTML = ` ${name} - ${date.toLocaleString('DE').replace(/\./g, '/')}`
-
-  _qs('.weather').innerHTML = `
+  legend.innerHTML = ` ${name} - ${date.toLocaleString('en-GB')}`
+  weatherEl.innerHTML = `
+    &#128712; &#8505; and &#9432; &#x1F6C8</br>
     ${weather[0].description.charAt(0).toUpperCase() + weather[0].description.slice(1)}<br />
     Temperature: ${main.temp.toFixed(1)}°C<br />
     Clouds: ${json.clouds.all}%<br />
@@ -49,11 +60,9 @@ function update(json) {
     Sunrise: ${parseTime(new Date(sys.sunrise * 1000).getHours())}:${parseTime(new Date(sys.sunrise * 1000).getMinutes())}<br />
     Sunset: ${parseTime(new Date(sys.sunset * 1000).getHours())}:${parseTime(new Date(sys.sunset * 1000).getMinutes())}
   `
-
-  _qs('.forecast').innerHTML = 'Forecast at openweathermap.org'
-  _qs('.forecast').addEventListener('click', () => {
-    shell.openExternal(`https://openweathermap.org/city/${id}`)
-  })
+  bugReport.innerHTML = ''
+  link.innerHTML = ''
+  forecast.innerHTML = 'Forecast at openweathermap.org'
 }
 
 
