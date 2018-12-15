@@ -1,9 +1,17 @@
-### Sää
-
+## Saeae (Sää)  
 Electron app to show weather temperature in the notification area/system tray.  
-Right click icon for more weather info and to change city or quit app.  
-Double click icon for a pop-up for even more info on sun and moon.  
-Red color for over 0&deg;C & blue for under.
+
+[![https://github.com/Fraasi/Saeae/releases/latest](https://img.shields.io/github/release/fraasi/saeae.svg)](https://github.com/Fraasi/Saeae/releases/latest)  
+Windows release only at this time (sorry).
+
+### How to? (updated to coming next [release](#todo-before-next-release))  
+Download installer from above link. Running the installer should put a shortcut to your desktop to launch the app. To have it run on startup, you can put the shortcut here (win10) `C:\Users\<USER_NAME>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`.  
+
+Left click tray icon to show/hide weather info window,  
+double click to show/hide sun and moon info window.  
+Right click icon for menu to change city or quit app.  
+
+There's no minus or plus sign to keep the font size as big and clear as possible, so red color for over 0&deg;C & blue for under.
 
 As for the city input, you can use just a city name, a city name with country code separated by comma or city id number from openweathermap.org.  
 For example  
@@ -14,8 +22,7 @@ are all valid inputs for the city of Dresden in Germany.
 
 **Note:** The sun and moon information are calculated using [sunCalc](https://github.com/mourner/suncalc) & [lune.js](https://github.com/ryanseys/lune) and might not be entirely accurate.
 
-[Latest release](https://github.com/Fraasi/Saeae/releases/latest)
-
+### Pics
 
 In tray  
 ![Tray pic](pics/2018-10-26_1541.png)
@@ -40,5 +47,6 @@ On double click
 * [ ] click firing when double cicking, file an issue
 * [x] inform suncalc not always accurate
 * [ ] input window fixes
+* [ ] update pics & readme
 
 <!-- icons from https://www.s-ings.com/typicons/ & material.io/tools/icons-->
