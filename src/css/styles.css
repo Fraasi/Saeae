@@ -1,0 +1,9 @@
+
+body {
+    font-family: Cambria, Georgia, Times, 'Times New Roman', serif;
+  }
+
+.forecast:hover, .link:hover {
+  cursor: pointer;
+  background-color: beige;
+}

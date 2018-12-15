@@ -1,6 +1,6 @@
 import { ipcRenderer, shell } from 'electron'
 // import Store from 'electron-store'
-import createTempImage from './assets/create-temp-image'
+import createTempImage from './assets/create-temp-image-test'
 
 // const store = new Store({ name: 'saeae' })
 
@@ -47,16 +47,15 @@ function update(json) {
     return
   }
 
-  legend.innerHTML = ` ${name} - ${date.toLocaleString('en-GB')}`
+  legend.innerHTML = `${name} - ${date.toLocaleString('en-GB')}`
   weatherEl.innerHTML = `
-    &#128712; &#8505; and &#9432; &#x1F6C8</br>
     ${weather[0].description.charAt(0).toUpperCase() + weather[0].description.slice(1)}<br />
     Temperature: ${main.temp.toFixed(1)}°C<br />
     Clouds: ${json.clouds.all}%<br />
     Visibility: ${json.visibility}m<br />
     Humidity: ${main.humidity}%<br />
     Pressure: ${main.pressure} hPa<br />
-    Wind: ${wind.speed} m/s @ ${wind.deg}°<br />
+    Wind: ${wind.speed} m/s @ ${wind.deg ? wind.deg : 'N/A'}°<br />
     Sunrise: ${parseTime(new Date(sys.sunrise * 1000).getHours())}:${parseTime(new Date(sys.sunrise * 1000).getMinutes())}<br />
     Sunset: ${parseTime(new Date(sys.sunset * 1000).getHours())}:${parseTime(new Date(sys.sunset * 1000).getMinutes())}
   `

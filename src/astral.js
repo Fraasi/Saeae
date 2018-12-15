@@ -25,8 +25,8 @@ function getZodiacSign(day, month) {
 function getData(lat, lon) {
   const date = new Date()
   const day = date.getDate()
-  const monthFromNow = date.getMonth() + 1
-
+  const month = date.getMonth()
+  console.log('suntimes params: ', date, lat, lon)
   return {
     date,
     illumination: SunCalc.getMoonIllumination(date),
@@ -34,8 +34,10 @@ function getData(lat, lon) {
     moonPosition: SunCalc.getMoonPosition(date, lat, lon),
     sunTimes: SunCalc.getTimes(date, lat, lon),
     sunPosition: SunCalc.getPosition(date, lat, lon),
-    zodiac: getZodiacSign(day, monthFromNow),
-    luneJS: phase_hunt(new Date(new Date().setMonth(monthFromNow - 1))),
+    zodiac: getZodiacSign(day, month + 1),
+    luneJS: phase_hunt(date),
+    // luneJS: phase_hunt(new Date(new Date().setMonth(month + 1))),
+    // hmm, if fullmoon over, show next month?
   }
 }
 
@@ -69,17 +71,18 @@ function update(err) {
 
   document.querySelector('.legend').innerHTML = `${city} - ${data.date.toLocaleString('en-GB')}`
 
-  const { moonPosition, moonTimes, illumination, zodiac } = data
+  const { moonPosition, moonTimes, illumination, zodiac, luneJS } = data
+
   document.querySelector('.moon').innerHTML = `
-    Moon Phase: ${getPhase(data.illumination.phase)} </br>
+    Moon Phase: ${getPhase(illumination.phase)} </br>
     Moon Illumination: ${(illumination.fraction * 100).toFixed(1)}% </br>
     Moon Azimuth: ${(moonPosition.azimuth * 180 / Math.PI + 180).toFixed(1)/* to degrees */}&deg; </br>
     Moon Altitude: ${(moonPosition.altitude * 180 / Math.PI).toFixed(1)}&deg; </br>
     Moon Distance: ${moonPosition.distance.toFixed(1)} km </br>
     Moonrise: ${moonTimes.rise ? moonTimes.rise.toLocaleTimeString('DE') : 'N/A'} <br />
     Moonset: ${moonTimes.set ? moonTimes.set.toLocaleTimeString('DE') : 'N/A'} <br />
-    New Moon: ${data.luneJS.new_date.toLocaleString('en-GB')} </br>
-    Full Moon ${data.luneJS.full_date.toLocaleString('en-GB')} </br>
+    New Moon: ${luneJS.nextnew_date.toLocaleString('en-GB')} </br>
+    Full Moon ${luneJS.full_date.toLocaleString('en-GB')} </br>
     Zodiac: ${zodiac} </br>
   `
 

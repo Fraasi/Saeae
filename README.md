@@ -10,9 +10,9 @@ For example
 `dresden`  
 `dresden, de`  
 `2935022`  
-are all valid inputs for the city of Dresden in Germany
+are all valid inputs for the city of Dresden in Germany.
 
-**Note:** The sun and moon information are calculated using [sunCalc](https://github.com/mourner/suncalc) and might not be entirely accurate.
+**Note:** The sun and moon information are calculated using [sunCalc](https://github.com/mourner/suncalc) & [lune.js](https://github.com/ryanseys/lune) and might not be entirely accurate.
 
 [Latest release](https://github.com/Fraasi/Saeae/releases/latest)
 
@@ -31,14 +31,14 @@ On double click
 * [x] new browserwindow for left click, put weather info there, same style as doubleclick, 'data from & forecast at openweathermap'
 * [x] right click menu only github/fraasi, change city & quit app
 * [x] input should also take city code, inform about country code if city not found or wrong (notification use?)
-* [ ] better font & some styles & logo (lets see if J comes up with anything)
+* [x] better tray icon font
+* [ ] some styles & logo (lets see if J comes up with anything)
 * [x] all error codes to left click
 * [x] electron-positioner to position both windows to right corner
-* [ ] different icons for diff wins?
+* [x] different icons for diff wins?
 * [x] update deps
-* [ ] temp background
 * [ ] click firing when double cicking, file an issue
-* [ ] readme:
-  * [x] inform suncalc not always accurate
-* [ ] fullmoon month -1
+* [x] inform suncalc not always accurate
+* [ ] input window fixes
 
+<!-- icons from https://www.s-ings.com/typicons/ & material.io/tools/icons-->

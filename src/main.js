@@ -27,7 +27,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
   app.quit()
 }
 
-let astroWindow
+let astralWindow
 let weatherWindow
 let tray = null
 let updateInterval
@@ -104,10 +104,10 @@ function fetchWeather(input) {
         cityId: json.id,
         weatherCity: json.name,
       })
-      tray.setToolTip(`Sää for ${json.name} ${json.main.temp.toFixed(1)}°C`)
+      tray.setToolTip(`Saeae for ${json.name} ${json.main.temp.toFixed(1)}°C`)
 
       weatherWindow.webContents.send('update-info', json)
-      astroWindow.webContents.send('update-info', json)
+      astralWindow.webContents.send('update-info', json)
       updateInterval = setInterval(fetchWeather.bind(null, store.get('weatherCity')), 1000 * 60 * 20)
     })
     .catch((err) => {
@@ -127,18 +127,18 @@ function fetchWeather(input) {
       const badWeather = path.join(__dirname, 'assets/weather-downpour.png')
       tray.setImage(badWeather)
       weatherWindow.webContents.send('fetch-error', error)
-      astroWindow.webContents.send('fetch-error', error)
+      astralWindow.webContents.send('fetch-error', error)
     })
 }
 
 function createApp() {
   // weatherWindow
   weatherWindow = new BrowserWindow({
-    width: 330,
-    height: 410,
+    width: 630,
+    height: 370,
     icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
-    title: 'Sää',
-    show: false,
+    title: 'Saeae Weather',
+    show: true,
     resizable: true,
   })
   weatherWindow.loadURL(`file://${__dirname}/weather.html`)
@@ -158,32 +158,32 @@ function createApp() {
   weatherPos.move('bottomRight')
   weatherWindow.webContents.on('did-finish-load', fetchWeather.bind(null, store.get('weatherCity')))
 
-  // astroWindow
-  astroWindow = new BrowserWindow({
-    width: 330,
+  // astralWindow
+  astralWindow = new BrowserWindow({
+    width: 530,
     height: 410,
-    icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
-    title: 'Sää',
+    icon: path.join(__dirname, 'assets/baseline_brightness_high_black_18dp.png'),
+    title: 'Saeae Astral',
     show: false,
     resizable: true,
   })
-  astroWindow.loadURL(`file://${__dirname}/astro.html`)
-  astroWindow.webContents.openDevTools()
-  astroWindow.on('close', (e) => {
+  astralWindow.loadURL(`file://${__dirname}/astral.html`)
+  astralWindow.webContents.openDevTools()
+  astralWindow.on('close', (e) => {
     if (!close) {
       e.preventDefault()
-      astroWindow.hide()
+      astralWindow.hide()
       return false
     }
   })
-  astroWindow.on('closed', () => {
-    if (close) astroWindow = null
+  astralWindow.on('closed', () => {
+    if (close) astralWindow = null
   })
-  astroWindow.setMenu(null)
-  const astroPos = new Positioner(astroWindow)
+  astralWindow.setMenu(null)
+  const astroPos = new Positioner(astralWindow)
   astroPos.move('topRight')
-  astroWindow.webContents.on('did-finish-load', () => {
-    astroWindow.webContents.send('update-info', null)
+  astralWindow.webContents.on('did-finish-load', () => {
+    astralWindow.webContents.send('update-info', null)
   })
 
   // tray
@@ -202,8 +202,8 @@ function createApp() {
   })
   tray.on('double-click', () => {
     dblClick = true
-    if (astroWindow.isVisible()) astroWindow.hide()
-    else astroWindow.show()
+    if (astralWindow.isVisible()) astralWindow.hide()
+    else astralWindow.show()
   })
 }
 

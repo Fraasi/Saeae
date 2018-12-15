@@ -11,34 +11,27 @@ export default function createTempImage(num) {
   let minus = false
 
   function sevenSegment(hex) {
-      // A
-    roundedRect(40, 20, 78, 18, 10);
+    // A
     ctx.fillStyle = getColor(hex, 6)
-    ctx.fill()
-      // B
-    roundedRect(120, 40, 18, 98, 10);
+    ctx.fillRect(40, 20, 78, 18);
+    // B
     ctx.fillStyle = getColor(hex, 5)
-    ctx.fill()
-      // C
-    roundedRect(120, 160, 18, 98, 10);
+    ctx.fillRect(120, 40, 18, 98)
+    // C
     ctx.fillStyle = getColor(hex, 4)
-    ctx.fill()
-      // D
-    roundedRect(40, 260, 78, 18, 10);
+    ctx.fillRect(120, 160, 18, 98)
+    // D
     ctx.fillStyle = getColor(hex, 3)
-    ctx.fill()
-      // E
-    roundedRect(20, 160, 18, 98, 10);
+    ctx.fillRect(40, 260, 78, 18)
+    // E
     ctx.fillStyle = getColor(hex, 2)
-    ctx.fill()
-      // F
-    roundedRect(20, 40, 18, 98, 10);
+    ctx.fillRect(20, 160, 18, 98)
+    // F
     ctx.fillStyle = getColor(hex, 1)
-    ctx.fill()
-      // G
-    roundedRect(40, 140, 78, 18, 10)
+    ctx.fillRect(20, 40, 18, 98)
+    // G
     ctx.fillStyle = getColor(hex, 0)
-    ctx.fill()
+    ctx.fillRect(40, 140, 78, 18)
   }
 
   function roundedRect(x, y, width, height, radius) {
