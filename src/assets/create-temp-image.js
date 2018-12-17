@@ -1,76 +1,42 @@
 
 export default function createTempImage(num) {
-  const hexadecimals = [0x7E, 0x30, 0x6D, 0x79, 0x33, 0x5B, 0x5F, 0x70, 0x7F, 0x7B]
-  const canvas = document.createElement('canvas') // memoryleak over time?
-  const ctx = canvas.getContext('2d')
-  canvas.width = '32'
-  canvas.height = '32'
-  ctx.fillStyle = 'rgba(0, 0, 0, 0)' // black, 0.5 alpha seems about right
-  ctx.fillRect(0, 0, 32, 32)
-  ctx.scale(0.082, 0.105)
+  let ctx
   let minus = false
 
-  function sevenSegment(hex) {
-    // A
-    ctx.fillStyle = getColor(hex, 6)
-    ctx.fillRect(40, 20, 78, 18);
-    // B
-    ctx.fillStyle = getColor(hex, 5)
-    ctx.fillRect(120, 40, 18, 98)
-    // C
-    ctx.fillStyle = getColor(hex, 4)
-    ctx.fillRect(120, 160, 18, 98)
-    // D
-    ctx.fillStyle = getColor(hex, 3)
-    ctx.fillRect(40, 260, 78, 18)
-    // E
-    ctx.fillStyle = getColor(hex, 2)
-    ctx.fillRect(20, 160, 18, 98)
-    // F
-    ctx.fillStyle = getColor(hex, 1)
-    ctx.fillRect(20, 40, 18, 98)
-    // G
-    ctx.fillStyle = getColor(hex, 0)
-    ctx.fillRect(40, 140, 78, 18)
+  if (num.charAt(0) === '-') {
+    num = num.slice(1)
+    minus = true
   }
+  if (num.length === 1) num = `0${num}`
 
-  function roundedRect(x, y, width, height, radius) {
-    ctx.beginPath();
-    ctx.moveTo(x, y + radius);
-    ctx.lineTo(x, y + height - radius);
-    ctx.arcTo(x, y + height, x + radius, y + height, radius);
-    ctx.lineTo(x + width - radius, y + height);
-    ctx.arcTo(x + width, y + height, x + width, y + height - radius, radius);
-    ctx.lineTo(x + width, y + radius);
-    ctx.arcTo(x + width, y, x + width - radius, y, radius);
-    ctx.lineTo(x + radius, y);
-    ctx.arcTo(x, y, x, y + radius, radius);
-  }
-
-  function getColor(hex, shift) {
+  function _getColor() {
     let r = minus ? 100 : 255
     let g = minus ? 100 : 50
     let b = minus ? 255 : 50
-    let a = ((hex >> shift) & 1) ? 1 : 0.1
-    return `rgba(${r}, ${g}, ${b}, ${a})`
+    return `rgba(${r}, ${g}, ${b}, 1)`
   }
 
-  if (num.charAt(0) === '-') {
-    minus = true
-    num = num.slice(1)
-  }
+  const canvas = document.createElement('canvas')
+  ctx = canvas.getContext('2d')
+  canvas.width = '32'
+  canvas.height = '32'
+  // ctx.fillStyle = 'rgba(0,0,0,0)' // no need for bg anymore
+  // ctx.fillRect(0, 0, 32, 32)
 
-  const nums = num.split('')
-  sevenSegment(hexadecimals[nums[1]] ? hexadecimals[nums[0]] : 0x7E)
-  ctx.translate(150, 0)
-  sevenSegment(hexadecimals[nums[1]] ? hexadecimals[nums[1]] : hexadecimals[nums[0]])
-  ctx.translate(200, 0)
-  ctx.beginPath()
-  ctx.arc(0, 50, 30, 0, 2 * Math.PI)
-  ctx.lineWidth = 15
-  ctx.strokeStyle = getColor(2, 1)
-  ctx.stroke()
-  document.querySelector('body').appendChild(canvas)
+
+  // ctx.font = '38px Inconsolata' // best
+  // ctx.font = '38px Arial' // äää
+  // ctx.font = '38px Courier' // ok
+  // ctx.font = '38px Consolas' // ok
+  ctx.font = '38px Segoe UI' //
+
+  ctx.shadowColor = 'black'
+  ctx.shadowBlur = 4
+  ctx.strokeStyle = 'white'
+  ctx.lineWidth = 1 // 0 total shit, 2 a bit too much
+  ctx.fillStyle = _getColor()
+  ctx.strokeText(`${num}\xB0`, 1, 27, 32)
+  ctx.fillText(`${num}\xB0`, 1, 27, 32)
 
   const dataUrl = canvas.toDataURL()
   canvas.remove()

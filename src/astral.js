@@ -7,26 +7,26 @@ const store = new Store({ name: 'saeae' })
 
 
 function getZodiacSign(day, month) {
-  if ((month === 1 && day <= 20) || (month === 12 && day >= 22)) return 'capricorn'
-  if ((month === 1 && day >= 21) || (month === 2 && day <= 18)) return 'aquarius'
-  if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return 'pisces'
-  if ((month === 3 && day >= 21) || (month === 4 && day <= 20)) return 'aries'
-  if ((month === 4 && day >= 21) || (month === 5 && day <= 20)) return 'taurus'
-  if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return 'gemini'
-  if ((month === 6 && day >= 22) || (month === 7 && day <= 22)) return 'cancer'
-  if ((month === 7 && day >= 23) || (month === 8 && day <= 23)) return 'leo'
-  if ((month === 8 && day >= 24) || (month === 9 && day <= 23)) return 'virgo'
-  if ((month === 9 && day >= 24) || (month === 10 && day <= 23)) return 'libra'
-  if ((month === 10 && day >= 24) || (month === 11 && day <= 22)) return 'scorpio'
-  if ((month === 11 && day >= 23) || (month === 12 && day <= 21)) return 'sagittarius'
-  return 'zodiac not found'
+  if ((month === 1 && day <= 20) || (month === 12 && day >= 22)) return 'Capricorn'
+  if ((month === 1 && day >= 21) || (month === 2 && day <= 18)) return 'Aquarius'
+  if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return 'Pisces'
+  if ((month === 3 && day >= 21) || (month === 4 && day <= 20)) return 'Aries'
+  if ((month === 4 && day >= 21) || (month === 5 && day <= 20)) return 'Taurus'
+  if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return 'Gemini'
+  if ((month === 6 && day >= 22) || (month === 7 && day <= 22)) return 'Cancer'
+  if ((month === 7 && day >= 23) || (month === 8 && day <= 23)) return 'Leo'
+  if ((month === 8 && day >= 24) || (month === 9 && day <= 23)) return 'Virgo'
+  if ((month === 9 && day >= 24) || (month === 10 && day <= 23)) return 'Libra'
+  if ((month === 10 && day >= 24) || (month === 11 && day <= 22)) return 'Scorpio'
+  if ((month === 11 && day >= 23) || (month === 12 && day <= 21)) return 'Sagittarius'
+  return 'Zodiac not found'
 }
 
 function getData(lat, lon) {
   const date = new Date()
   const day = date.getDate()
   const month = date.getMonth()
-  console.log('suntimes params: ', date, lat, lon)
+  // console.log('suntimes params: ', date, lat, lon)
   return {
     date,
     illumination: SunCalc.getMoonIllumination(date),
@@ -67,39 +67,40 @@ function update(err) {
     document.querySelector('.sun').innerHTML = ''
     return
   }
-  console.log('indexData', data)
+  console.log('Data', data)
 
-  document.querySelector('.legend').innerHTML = `${city} - ${data.date.toLocaleString('en-GB')}`
+  document.querySelector('.legend').innerHTML = `${city} - ${data.date.toLocaleString('en-GB').slice(0, -3)}`
 
   const { moonPosition, moonTimes, illumination, zodiac, luneJS } = data
 
   document.querySelector('.moon').innerHTML = `
-    Moon Phase: ${getPhase(illumination.phase)} </br>
-    Moon Illumination: ${(illumination.fraction * 100).toFixed(1)}% </br>
-    Moon Azimuth: ${(moonPosition.azimuth * 180 / Math.PI + 180).toFixed(1)/* to degrees */}&deg; </br>
-    Moon Altitude: ${(moonPosition.altitude * 180 / Math.PI).toFixed(1)}&deg; </br>
-    Moon Distance: ${moonPosition.distance.toFixed(1)} km </br>
-    Moonrise: ${moonTimes.rise ? moonTimes.rise.toLocaleTimeString('DE') : 'N/A'} <br />
-    Moonset: ${moonTimes.set ? moonTimes.set.toLocaleTimeString('DE') : 'N/A'} <br />
-    New Moon: ${luneJS.nextnew_date.toLocaleString('en-GB')} </br>
-    Full Moon ${luneJS.full_date.toLocaleString('en-GB')} </br>
-    Zodiac: ${zodiac} </br>
+    Moon Phase: <span class="ta-right">${getPhase(illumination.phase)}</span> </br>
+    Moon Illumination: <span class="ta-right">${(illumination.fraction * 100).toFixed(1)}%</span> </br>
+    Moon Azimuth: <span class="ta-right">${(moonPosition.azimuth * 180 / Math.PI + 180).toFixed(1)/* to degrees */}&deg;</span> </br>
+    Moon Altitude: <span class="ta-right">${(moonPosition.altitude * 180 / Math.PI).toFixed(1)}&deg;</span> </br>
+    Moon Distance: <span class="ta-right">${moonPosition.distance.toFixed(1)} km</span> </br>
+    Moonrise: <span class="ta-right">${moonTimes.rise ? moonTimes.rise.toLocaleTimeString('en-GB').slice(0, -3) : 'N/A'}</span> <br />
+    Moonset: <span class="ta-right">${moonTimes.set ? moonTimes.set.toLocaleTimeString('en-GB').slice(0, -3) : 'N/A'}</span> <br />
+    New Moon: <span class="ta-right">${luneJS.nextnew_date.toLocaleString('en-GB').slice(0, -3)}</span> </br>
+    Full Moon <span class="ta-right">${luneJS.full_date.toLocaleString('en-GB').slice(0, -3)}</span> </br>
+    Zodiac: <span class="ta-right">${zodiac}</span> </br>
   `
 
   const {
-    goldenHour, goldenHourEnd, sunriseEnd, sunsetStart, sunrise, sunset,
+    goldenHour, goldenHourEnd, sunriseEnd, sunsetStart, sunrise, sunset, solarNoon,
   } = data.sunTimes
   const sunRisePos = SunCalc.getPosition(sunrise, latitude, longitude)
   const sunSetPos = SunCalc.getPosition(sunset, latitude, longitude)
 
   document.querySelector('.sun').innerHTML = `
-    GoldenHour AM: ${sunriseEnd.toLocaleTimeString('en-GB')} - ${goldenHourEnd.toLocaleTimeString('en-GB')}<br />
-    GoldenHour PM: ${goldenHour.toLocaleTimeString('en-GB')} - ${sunsetStart.toLocaleTimeString('en-GB')} <br />
-    Sunrise Azimuth: ${(sunRisePos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</br>
-    Sunset Azimuth: ${(sunSetPos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</br>
-    Sun Altitude: ${(data.sunPosition.altitude * 180 / Math.PI).toFixed(1)}&deg; </br>
-    Sunrise: ${sunrise.toLocaleTimeString('en-GB')} <br />
-    Sunset: ${sunset.toLocaleTimeString('en-GB')} <br />
+    GoldenHour AM: <span class="ta-right">${sunriseEnd.toLocaleTimeString('en-GB').slice(0, -3)} - ${goldenHourEnd == 'Invalid Date' ? 'N/A' : goldenHourEnd.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
+    GoldenHour PM: <span class="ta-right">${goldenHour == 'Invalid Date' ? 'N/A' : goldenHour.toLocaleTimeString('en-GB').slice(0, -3)} - ${sunsetStart.toLocaleTimeString('en-GB').slice(0, -3)}</span> <br />
+    Sunrise Azimuth: <span class="ta-right">${(sunRisePos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</span></br>
+    Sunset Azimuth: <span class="ta-right">${(sunSetPos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</span></br>
+    Sun Altitude: <span class="ta-right">${(data.sunPosition.altitude * 180 / Math.PI).toFixed(1)}&deg;</span></br>
+    Solar noon: <span class="ta-right">${solarNoon.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
+    Sunrise: <span class="ta-right">${sunrise.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
+    Sunset: <span class="ta-right">${sunset.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
   `
 }
 

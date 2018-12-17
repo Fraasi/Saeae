@@ -1,8 +1,5 @@
 import { ipcRenderer, shell } from 'electron'
-// import Store from 'electron-store'
-import createTempImage from './assets/create-temp-image-test'
-
-// const store = new Store({ name: 'saeae' })
+import createTempImage from './assets/create-temp-image'
 
 
 function parseTime(time) {
@@ -47,17 +44,17 @@ function update(json) {
     return
   }
 
-  legend.innerHTML = `${name} - ${date.toLocaleString('en-GB')}`
+  legend.innerHTML = `${name} - ${date.toLocaleString('en-GB').slice(0, -3)}`
   weatherEl.innerHTML = `
     ${weather[0].description.charAt(0).toUpperCase() + weather[0].description.slice(1)}<br />
-    Temperature: ${main.temp.toFixed(1)}°C<br />
-    Clouds: ${json.clouds.all}%<br />
-    Visibility: ${json.visibility}m<br />
-    Humidity: ${main.humidity}%<br />
-    Pressure: ${main.pressure} hPa<br />
-    Wind: ${wind.speed} m/s @ ${wind.deg ? wind.deg : 'N/A'}°<br />
-    Sunrise: ${parseTime(new Date(sys.sunrise * 1000).getHours())}:${parseTime(new Date(sys.sunrise * 1000).getMinutes())}<br />
-    Sunset: ${parseTime(new Date(sys.sunset * 1000).getHours())}:${parseTime(new Date(sys.sunset * 1000).getMinutes())}
+    Temperature: <span class="ta-right">${main.temp.toFixed(1)}°C</span><br />
+    Clouds: <span class="ta-right">${json.clouds.all}%</span><br />
+    Visibility: <span class="ta-right">${json.visibility ? json.visibility : 'N/A'}m</span><br />
+    Humidity: <span class="ta-right">${main.humidity}%</span><br />
+    Pressure: <span class="ta-right">${main.pressure}hPa</span><br />
+    Wind: <span class="ta-right">${wind.speed}m/s @ ${wind.deg ? wind.deg : 'N/A'}°</span><br />
+    Sunrise: <span class="ta-right">${parseTime(new Date(sys.sunrise * 1000).getHours())}:${parseTime(new Date(sys.sunrise * 1000).getMinutes())}</span><br />
+    Sunset: <span class="ta-right">${parseTime(new Date(sys.sunset * 1000).getHours())}:${parseTime(new Date(sys.sunset * 1000).getMinutes())}</span>
   `
   bugReport.innerHTML = ''
   link.innerHTML = ''
@@ -70,7 +67,7 @@ ipcRenderer.on('fetch-error', (sender, err) => {
   update(err)
 })
 ipcRenderer.on('update-info', (sender, json) => {
-  console.log('json', json);
+  console.log('json', json)
   const numString = Math.round(json.main.temp).toString()
   const dataUrl = createTempImage(numString)
   ipcRenderer.send('update-tray-data-url', dataUrl)

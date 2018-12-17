@@ -36,19 +36,21 @@ let close = false
 function promptCity() {
   prompt({
     alwaysOnTop: true,
-    title: 'Sää',
+    height: 170,
+    title: 'Saeae - input new city or city id',
     label: `Current city: ${store.get('weatherCity')}`,
     type: 'input',
     inputAttrs: {
       type: 'text',
-      placeholder: 'New city or city id',
+      placeholder: store.get('input'),
     },
     icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
   })
     .then((input) => {
       // null if window was closed or user clicked Cancel
       if (input === null) return
-      store.set('input', input)
+      if (input === '') input = store.get('input')
+      else store.set('input', input)
       fetchWeather(input)
     })
     .catch(console.error);
@@ -134,12 +136,13 @@ function fetchWeather(input) {
 function createApp() {
   // weatherWindow
   weatherWindow = new BrowserWindow({
-    width: 630,
-    height: 370,
+    width: 330, // 330
+    height: 320, // 325
     icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
     title: 'Saeae Weather',
-    show: true,
-    resizable: true,
+    backgroundColor: 'rgb(51 ,51, 71)',
+    show: false,
+    resizable: false,
   })
   weatherWindow.loadURL(`file://${__dirname}/weather.html`)
   weatherWindow.webContents.openDevTools()
@@ -160,15 +163,16 @@ function createApp() {
 
   // astralWindow
   astralWindow = new BrowserWindow({
-    width: 530,
-    height: 410,
+    width: 330, // 360
+    height: 492, // 437
     icon: path.join(__dirname, 'assets/baseline_brightness_high_black_18dp.png'),
     title: 'Saeae Astral',
+    backgroundColor: 'rgb(51 ,51, 71)',
     show: false,
     resizable: true,
   })
   astralWindow.loadURL(`file://${__dirname}/astral.html`)
-  astralWindow.webContents.openDevTools()
+  // astralWindow.webContents.openDevTools()
   astralWindow.on('close', (e) => {
     if (!close) {
       e.preventDefault()
