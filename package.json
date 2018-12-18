@@ -1,8 +1,12 @@
 {
   "name": "saeae",
-  "productName": "saeae",
+  "productName": "Saeae",
   "version": "0.7.0",
-  "author": "Fraasi <fraasi.gh@gmail.com> (https://github.com/fraasi)",
+  "author": {
+    "name": "Fraasi",
+    "email": "fraasi.gh@gmail.com",
+    "url": "https://github.com/fraasi)"
+  },
   "description": "Weather app in your tray",
   "main": "src/main.js",
   "scripts": {
@@ -56,6 +60,9 @@
       }
     }
   },
+  "private": true,
+  "homepage": "https://github.com/fraasi/saeae",
+  "bugs": "https://github.com/fraasi/saeae/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/fraasi/saeae.git"
