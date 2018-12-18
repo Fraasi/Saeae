@@ -14,11 +14,11 @@ const store = new Store({
   name: 'saeae',
   defaults: {
     storePath: app.getPath('userData'),
-    weatherCity: 'tampere',
+    weatherCity: 'Tampere',
     lat: 61.5,
     lon: 23.76,
     cityId: 634964,
-    input: '',
+    lastInput: 'last input',
   },
 })
 
@@ -36,30 +36,29 @@ let close = false
 function promptCity() {
   prompt({
     alwaysOnTop: true,
-    height: 170,
+    height: 150,
     title: 'Saeae - input new city or city id',
     label: `Current city: ${store.get('weatherCity')}`,
     type: 'input',
     inputAttrs: {
       type: 'text',
-      placeholder: store.get('input'),
+      placeholder: `last input: ${store.get('lastInput')}`,
     },
     icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
   })
-    .then((input) => {
-      // null if window was closed or user clicked Cancel
+    .then((input) => { // null if window was closed or user clicked Cancel
       if (input === null) return
-      if (input === '') input = store.get('input')
-      else store.set('input', input)
+      if (input === '') input = store.get('lastInput') ? store.get('lastInput') : store.get('weatherCity')
+      else store.set('lastInput', input)
       fetchWeather(input)
     })
-    .catch(console.error);
+    .catch(console.error)
 }
 
 function buildContextMenu() {
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Sää authored by Fraasi',
+      label: `Saeae v${app.getVersion()} by Fraasi`,
       icon: path.join(__dirname, 'assets/fraasi-16x16.png'),
       click() {
         shell.openExternal('https://github.com/Fraasi/Saeae')
@@ -115,17 +114,17 @@ function fetchWeather(input) {
     .catch((err) => {
       const error = {
         errText: `
-          Bad Weather at the intertubes<br />
-          Something went terribly wrong fetching weather data<br />
-          Try restarting the app and/or check your internet connection<br />
-          Or maybe you just misspelled your city (${store.get('input')})
+          Bad Weather at the intertubes.<br />
+          Something went terribly wrong fetching weather data.<br />
+          Try restarting the app and/or check your internet connection.<br />
+          Or maybe you just misspelled your city (${store.get('lastInput')}).
         `,
         bugReport: 'You can file a bug report at ',
-        errMsg: err.message.replace('c99ed4', ''), // do not expose full api in error message
+        errMsg: err.message.replace(/&appid=.+2eb/, ''), // hide api in error message
         errStack: err.stack,
       }
 
-      tray.setToolTip('Bad weather, click for more info')
+      tray.setToolTip('Bad weather, click for error info')
       const badWeather = path.join(__dirname, 'assets/weather-downpour.png')
       tray.setImage(badWeather)
       weatherWindow.webContents.send('fetch-error', error)
@@ -137,7 +136,7 @@ function createApp() {
   // weatherWindow
   weatherWindow = new BrowserWindow({
     width: 330, // 330
-    height: 320, // 325
+    height: 317, // 317
     icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
     title: 'Saeae Weather',
     backgroundColor: 'rgb(51 ,51, 71)',
@@ -145,7 +144,7 @@ function createApp() {
     resizable: false,
   })
   weatherWindow.loadURL(`file://${__dirname}/weather.html`)
-  weatherWindow.webContents.openDevTools()
+  // weatherWindow.webContents.openDevTools()
   weatherWindow.on('close', (e) => {
     if (!close) {
       e.preventDefault()
@@ -163,13 +162,13 @@ function createApp() {
 
   // astralWindow
   astralWindow = new BrowserWindow({
-    width: 330, // 360
-    height: 492, // 437
+    width: 330, // 330
+    height: 485, // 485
     icon: path.join(__dirname, 'assets/baseline_brightness_high_black_18dp.png'),
     title: 'Saeae Astral',
     backgroundColor: 'rgb(51 ,51, 71)',
     show: false,
-    resizable: true,
+    resizable: false,
   })
   astralWindow.loadURL(`file://${__dirname}/astral.html`)
   // astralWindow.webContents.openDevTools()
@@ -185,7 +184,7 @@ function createApp() {
   })
   astralWindow.setMenu(null)
   const astroPos = new Positioner(astralWindow)
-  astroPos.move('topRight')
+  astroPos.move('bottomRight')
   astralWindow.webContents.on('did-finish-load', () => {
     astralWindow.webContents.send('update-info', null)
   })

@@ -21,7 +21,9 @@ For example
 are all valid inputs for the city of Dresden in Germany.  
 No umlauts. So Köln becomes Koeln and Münster Munster for example.
 
-**Note:** The sun and moon information are calculated using [sunCalc](https://github.com/mourner/suncalc) & [lune.js](https://github.com/ryanseys/lune) and might not be entirely accurate.
+**Note:** The sun and moon information are calculated using [sunCalc](https://github.com/mourner/suncalc) & [lune.js](https://github.com/ryanseys/lune) and might not be entirely accurate.  
+
+Updates every twenty minutes or when the city is changed. To manually update weather data simply enter nothing to change city input.
 
 ### Pics
 
@@ -36,7 +38,7 @@ On double click
 
 
 #### Todo before next release
-* [ ] some styles & logo (lets see if J comes up with anything)
+* [x] some styles
 * [x] new browserwindow for left click, put weather info there, same style as doubleclick, 'data from & forecast at openweathermap'
 * [x] right click menu only github/fraasi, change city & quit app
 * [x] input should also take city code, inform about country code if city not found or wrong (notification use?)
@@ -49,6 +51,7 @@ On double click
 * [x] input window fixes
 * [ ] update pics & readme
 * [ ] cleanup
+* [ ] prompt styling
 
 Bugs found in others
 * [ ] click firing when double cicking, file an issue
