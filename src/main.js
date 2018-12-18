@@ -116,14 +116,15 @@ function fetchWeather(input) {
         errText: `
           Bad Weather at the intertubes.<br />
           Something went terribly wrong fetching weather data.<br />
-          Try restarting the app and/or check your internet connection.<br />
-          Or maybe you just misspelled your city (${store.get('lastInput')}).
+          Check your internet connection, or maybe you just misspelled your city (${store.get('lastInput')})?<br />
+          See error below.
         `,
         bugReport: 'You can file a bug report at ',
         errMsg: err.message.replace(/&appid=.+2eb/, ''), // hide api in error message
         errStack: err.stack,
       }
 
+      store.set('weatherCity', '<error>')
       tray.setToolTip('Bad weather, click for error info')
       const badWeather = path.join(__dirname, 'assets/weather-downpour.png')
       tray.setImage(badWeather)

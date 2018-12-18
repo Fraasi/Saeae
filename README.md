@@ -4,8 +4,8 @@ Electron app to show weather temperature in the notification area/system tray.
 [![https://github.com/Fraasi/Saeae/releases/latest](https://img.shields.io/github/release/fraasi/saeae.svg)](https://github.com/Fraasi/Saeae/releases/latest)  
 Windows release only at this time (sorry).
 
-### How to? (updated to coming next [release](#todo-before-next-release))  
-Download installer from above link. Running the installer should put a shortcut to your desktop to launch the app. To have it run on startup, you can put the shortcut here (win10) `C:\Users\<USER_NAME>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`.  
+### How to?  
+Download installer from above link. Running the installer should put a shortcut to your desktop and launch the app. To have it run on startup, you can put the shortcut here (win10) `C:\Users\<USER_NAME>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`.  
 
 Left click tray icon to show/hide weather info window,  
 double click to show/hide sun and moon info window.  
@@ -19,42 +19,26 @@ For example
 `dresden, de`  
 `2935022`  
 are all valid inputs for the city of Dresden in Germany.  
-No umlauts. So Köln becomes Koeln and Münster Munster for example.
+No umlauts: ä -> ae, ö -> oe, ü -> ue.
 
 **Note:** The sun and moon information are calculated using [sunCalc](https://github.com/mourner/suncalc) & [lune.js](https://github.com/ryanseys/lune) and might not be entirely accurate.  
 
-Updates every twenty minutes or when the city is changed. To manually update weather data simply enter nothing to change city input.
+Updates data on launch or when the city is changed and then automatically every twenty minutes.  
 
 ### Pics
 
-In tray  
-![Tray pic](pics/2018-10-26_1541.png)
+Weather info window   
+![Tray pic](pics\2018-12-18_2114.png)
 
-On right click  
-![right click](pics/2018-10-26_1538.png)  
+Astral info window  
+![right click](pics\2018-12-18_2120.png)  
 
-On double click  
-![right click](pics/2018-08-01_1941.png)  
+Right click menu  
+![right click](pics\2018-12-18_2122.png)  
 
 
-#### Todo before next release
-* [x] some styles
-* [x] new browserwindow for left click, put weather info there, same style as doubleclick, 'data from & forecast at openweathermap'
-* [x] right click menu only github/fraasi, change city & quit app
-* [x] input should also take city code, inform about country code if city not found or wrong (notification use?)
-* [x] better tray icon font
-* [x] all error codes to left click
-* [x] electron-positioner to position both windows to right corner
-* [x] different icons for diff wins?
-* [x] update deps
-* [x] inform suncalc not always accurate
-* [x] input window fixes
-* [ ] update pics & readme
-* [ ] cleanup
-* [ ] prompt styling
+#### Todo 
+* [ ] input prompt styling whenever electron-prompt updates to support it.
 
-Bugs found in others
-* [ ] click firing when double cicking, file an issue
-* [ ] pull request prompt readme to include icon
 
 <!-- icons from https://www.s-ings.com/typicons/ & material.io/tools/icons-->

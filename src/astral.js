@@ -62,7 +62,7 @@ function update(err) {
     document.querySelector('.legend').innerHTML = `Error - ${data.date.toLocaleString('en-GB')}`
 
     document.querySelector('.moon').innerHTML = `
-    message: ${err.errMsg} </br> stack: ${err.errStack}
+    message: ${err.errMsg} <br /> stack: ${err.errStack}
     `
     document.querySelector('.sun').innerHTML = ''
     return
@@ -74,16 +74,16 @@ function update(err) {
   const { moonPosition, moonTimes, illumination, zodiac, luneJS } = data
 
   document.querySelector('.moon').innerHTML = `
-    Moon Phase: <span class="ta-right">${getPhase(illumination.phase)}</span> </br>
-    Moon Illumination: <span class="ta-right">${(illumination.fraction * 100).toFixed(1)}%</span> </br>
-    Moon Azimuth: <span class="ta-right">${(moonPosition.azimuth * 180 / Math.PI + 180).toFixed(1)/* to degrees */}&deg;</span> </br>
-    Moon Altitude: <span class="ta-right">${(moonPosition.altitude * 180 / Math.PI).toFixed(1)}&deg;</span> </br>
-    Moon Distance: <span class="ta-right">${moonPosition.distance.toFixed(1)} km</span> </br>
+    Moon Phase: <span class="ta-right">${getPhase(illumination.phase)}</span> <br />
+    Moon Illumination: <span class="ta-right">${(illumination.fraction * 100).toFixed(1)}%</span> <br />
+    Moon Azimuth: <span class="ta-right">${(moonPosition.azimuth * 180 / Math.PI + 180).toFixed(1)/* to degrees */}&deg;</span> <br />
+    Moon Altitude: <span class="ta-right">${(moonPosition.altitude * 180 / Math.PI).toFixed(1)}&deg;</span> <br />
+    Moon Distance: <span class="ta-right">${moonPosition.distance.toFixed(1)} km</span> <br />
     Moonrise: <span class="ta-right">${moonTimes.rise ? moonTimes.rise.toLocaleTimeString('en-GB').slice(0, -3) : 'N/A'}</span> <br />
     Moonset: <span class="ta-right">${moonTimes.set ? moonTimes.set.toLocaleTimeString('en-GB').slice(0, -3) : 'N/A'}</span> <br />
-    New Moon: <span class="ta-right">${luneJS.nextnew_date.toLocaleString('en-GB').slice(0, -3)}</span> </br>
-    Full Moon <span class="ta-right">${luneJS.full_date.toLocaleString('en-GB').slice(0, -3)}</span> </br>
-    Zodiac: <span class="ta-right">${zodiac}</span> </br>
+    New Moon: <span class="ta-right">${luneJS.nextnew_date.toLocaleString('en-GB').slice(0, -3)}</span> <br />
+    Full Moon <span class="ta-right">${luneJS.full_date.toLocaleString('en-GB').slice(0, -3)}</span> <br />
+    Zodiac: <span class="ta-right">${zodiac}</span> <br /><hr />
   `
 
   const {
@@ -95,9 +95,9 @@ function update(err) {
   document.querySelector('.sun').innerHTML = `
     GoldenHour AM: <span class="ta-right">${sunriseEnd.toLocaleTimeString('en-GB').slice(0, -3)} - ${goldenHourEnd == 'Invalid Date' ? 'N/A' : goldenHourEnd.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
     GoldenHour PM: <span class="ta-right">${goldenHour == 'Invalid Date' ? 'N/A' : goldenHour.toLocaleTimeString('en-GB').slice(0, -3)} - ${sunsetStart.toLocaleTimeString('en-GB').slice(0, -3)}</span> <br />
-    Sunrise Azimuth: <span class="ta-right">${(sunRisePos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</span></br>
-    Sunset Azimuth: <span class="ta-right">${(sunSetPos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</span></br>
-    Sun Altitude: <span class="ta-right">${(data.sunPosition.altitude * 180 / Math.PI).toFixed(1)}&deg;</span></br>
+    Sunrise Azimuth: <span class="ta-right">${(sunRisePos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</span><br />
+    Sunset Azimuth: <span class="ta-right">${(sunSetPos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</span><br />
+    Sun Altitude: <span class="ta-right">${(data.sunPosition.altitude * 180 / Math.PI).toFixed(1)}&deg;</span><br />
     Solar noon: <span class="ta-right">${solarNoon.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
     Sunrise: <span class="ta-right">${sunrise.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
     Sunset: <span class="ta-right">${sunset.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />

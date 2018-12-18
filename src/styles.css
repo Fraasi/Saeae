@@ -1,0 +1,60 @@
+@import('./assets/SEGOEUI.TTF');
+body {
+  font-family: 'Segoe UI', Cambria, Georgia, Times, serif;
+  font-size: 16px;
+  color: whitesmoke;
+  background-color: #333842;
+  word-break: break-word;
+}
+
+/* body {
+  background: #333842;
+  background: radial-gradient(ellipse at center, #333842 0%, #333842 88%, #000000 100%);
+  background-size: 10px 10px;
+} */
+
+#bg-radial {
+  width: inherit;
+  height: inherit;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.ta-right {
+  float: right;
+}
+
+.forecast, .link, .bug-report {
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.forecast:after, .link:after {
+	content: "";
+	position: absolute;
+	background: rgba(255, 255, 255, 0.4);
+	top: 50%;
+	left: 50%;
+	width: 5px;
+	height: 5px;
+	border-radius: 100%;
+	opacity: 0;
+}
+
+.forecast:hover:after, .link:hover:after {
+  animation: ripple 0.5s ease-out;
+}
+@keyframes ripple {
+  0% {
+    opacity: 1;
+    transform: scale(0,0);
+  } 
+  100% {
+    transform: scale(50,50);
+    opacity: 0;
+   }
+ }
+
+.forecast:hover, .link:hover {
+  cursor: pointer;
+}
