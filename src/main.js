@@ -18,7 +18,7 @@ const store = new Store({
     lat: 61.5,
     lon: 23.76,
     cityId: 634964,
-    lastInput: 'last input',
+    lastInput: 'tampere',
   },
 })
 
