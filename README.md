@@ -28,13 +28,13 @@ Updates data on launch or when the city is changed and then automatically every 
 ### Pics
 
 Weather info window   
-![Tray pic](pics\2018-12-18_2114.png)
+![Tray pic](pics/2018-12-18_2114.png)
 
 Astral info window  
-![right click](pics\2018-12-18_2120.png)  
+![right click](pics/2018-12-18_2120.png)  
 
 Right click menu  
-![right click](pics\2018-12-18_2122.png)  
+![right click](pics/2018-12-18_2122.png)  
 
 
 #### Todo 
