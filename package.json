@@ -71,7 +71,7 @@
     "dotenv": "^6.2.0",
     "electron-compile": "^6.4.3",
     "electron-positioner": "^4.1.0",
-    "electron-prompt": "^1.2.0",
+    "electron-prompt": "^1.3.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^2.0.0",
     "futility": "github:fraasi/futility",

@@ -45,6 +45,7 @@ function promptCity() {
       placeholder: `last input: ${store.get('lastInput')}`,
     },
     icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
+    customStylesheet: path.join(__dirname, 'styles.css'),
   })
     .then((input) => { // null if window was closed or user clicked Cancel
       if (input === null) return
