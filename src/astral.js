@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, shell } from 'electron'
 import SunCalc from 'suncalc'
 import Store from 'electron-store'
 import { phase_hunt } from './assets/lune.js'
@@ -53,27 +53,41 @@ function getPhase(p) {
   return 'New Moon'
 }
 
+function _q(id) {
+  return document.querySelector(id)
+}
+
+const cityEl = _q('.city')
+const time = _q('.time')
+const moon = _q('.moon')
+const sun = _q('.sun')
+
+time.addEventListener('click', () => {
+  shell.openExternal('https://www.timeanddate.com/moon/phases/')
+})
+
 function update(err) {
   const city = store.get('weatherCity')
   const latitude = store.get('lat')
   const longitude = store.get('lon')
   const data = getData(latitude, longitude)
   if (err) {
-    document.querySelector('.legend').innerHTML = `Error - ${data.date.toLocaleString('en-GB')}`
-
-    document.querySelector('.moon').innerHTML = `
+    cityEl.innerHTML = 'Error - '
+    time.innerHTML = data.date.toLocaleString('en-GB').slice(0, -3)
+    moon.innerHTML = `
     message: ${err.errMsg} <br /> stack: ${err.errStack}
     `
-    document.querySelector('.sun').innerHTML = ''
+    sun.innerHTML = ''
     return
   }
   console.log('Data', data)
 
-  document.querySelector('.legend').innerHTML = `${city} - ${data.date.toLocaleString('en-GB').slice(0, -3)}`
+  cityEl.innerHTML = `${city} - `
+  time.innerHTML = data.date.toLocaleString('en-GB').slice(0, -3)
 
   const { moonPosition, moonTimes, illumination, zodiac, luneJS } = data
 
-  document.querySelector('.moon').innerHTML = `
+  moon.innerHTML = `
     Moon Phase: <span class="ta-right">${getPhase(illumination.phase)}</span> <br />
     Moon Illumination: <span class="ta-right">${(illumination.fraction * 100).toFixed(1)}%</span> <br />
     Moon Azimuth: <span class="ta-right">${(moonPosition.azimuth * 180 / Math.PI + 180).toFixed(1)/* to degrees */}&deg;</span> <br />

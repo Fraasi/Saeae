@@ -3,3 +3,4 @@ out
 .env
 assets/numerical-icon.png
 saeae-temperature*
+semver-test.js

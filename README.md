@@ -37,4 +37,10 @@ Right click menu
 ![right click](pics/2018-12-18_2122.png)  
 
 
+## Todo
+- [ ] test
+- [ ] update readme & pics
+
+
+
 <!-- icons from https://www.s-ings.com/typicons/ & material.io/tools/icons-->

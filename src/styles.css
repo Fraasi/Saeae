@@ -23,13 +23,13 @@ body {
   float: right;
 }
 
-.forecast, .link, .bug-report {
-  text-align: center;
+.link {
   position: relative;
   overflow: hidden;
+  display: inline-grid;
 }
 
-.forecast:after, .link:after {
+.link:after {
 	content: "";
 	position: absolute;
 	background: rgba(255, 255, 255, 0.4);
@@ -41,7 +41,7 @@ body {
 	opacity: 0;
 }
 
-.forecast:hover:after, .link:hover:after {
+.link:hover:after {
   animation: ripple 0.5s ease-out;
 }
 @keyframes ripple {
@@ -55,6 +55,6 @@ body {
    }
  }
 
-.forecast:hover, .link:hover {
+.link:hover {
   cursor: pointer;
 }
