@@ -23,6 +23,7 @@
     "no-underscore-dangle": 0,
     "no-restricted-globals": 0,
     "eqeqeq": 0,
-    "no-restricted-properties": 0
+    "no-restricted-properties": 0,
+    "space-before-function-paren": 0
   }
 }

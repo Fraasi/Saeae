@@ -1,6 +1,7 @@
 import { ipcRenderer, shell } from 'electron'
 import createTempImage from './assets/create-temp-image'
 import taupunkt from './assets/taupunkt'
+import resizeWindow from './assets/resizeWindow'
 
 function parseTime(time) {
   return (time < 10) ? `0${time}` : time
@@ -34,8 +35,7 @@ function update(json) {
     weatherEl.innerHTML = `
       ${json.errText}
       <hr>
-      message: ${json.errMsg}<br />
-      stack: ${json.errStack}
+      ${json.errStack}
       <hr>
       ${json.bugReport}
       `
@@ -60,6 +60,7 @@ function update(json) {
   `
   githubLink.innerHTML = ''
   githubLink.style.display = 'none'
+  resizeWindow()
 }
 
 ipcRenderer.on('fetch-error', (sender, err) => {

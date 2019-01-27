@@ -39,6 +39,7 @@ Right click menu
 
 ## Todo
 - [ ] test
+- [ ] if fullmoon over, show next month?
 - [ ] update readme & pics
 
 

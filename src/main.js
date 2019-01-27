@@ -122,7 +122,7 @@ function fetchWeather(input) {
         `,
         bugReport: 'You can file a bug report at ',
         errMsg: err.message.replace(/&appid=.+2eb/, ''), // hide api in error message
-        errStack: err.stack,
+        errStack: err.stack.replace(/&appid=.+2eb/, ''),
       }
 
       store.set('weatherCity', '<error>')

@@ -2,6 +2,7 @@ import { ipcRenderer, shell } from 'electron'
 import SunCalc from 'suncalc'
 import Store from 'electron-store'
 import { phase_hunt } from './assets/lune.js'
+import resizeWindow from './assets/resizeWindow'
 
 const store = new Store({ name: 'saeae' })
 
@@ -36,7 +37,7 @@ function getData(lat, lon) {
     sunPosition: SunCalc.getPosition(date, lat, lon),
     zodiac: getZodiacSign(day, month + 1),
     luneJS: phase_hunt(date),
-    // luneJS: phase_hunt(new Date(new Date().setMonth(month + 1))),
+    // luneJS: phase_hunt(new Date(date.setMonth(month + 1))),
     // hmm, if fullmoon over, show next month?
   }
 }
@@ -106,7 +107,7 @@ function update(err) {
   const sunRisePos = SunCalc.getPosition(sunrise, latitude, longitude)
   const sunSetPos = SunCalc.getPosition(sunset, latitude, longitude)
 
-  document.querySelector('.sun').innerHTML = `
+  sun.innerHTML = `
     GoldenHour AM: <span class="ta-right">${sunriseEnd.toLocaleTimeString('en-GB').slice(0, -3)} - ${goldenHourEnd == 'Invalid Date' ? 'N/A' : goldenHourEnd.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
     GoldenHour PM: <span class="ta-right">${goldenHour == 'Invalid Date' ? 'N/A' : goldenHour.toLocaleTimeString('en-GB').slice(0, -3)} - ${sunsetStart.toLocaleTimeString('en-GB').slice(0, -3)}</span> <br />
     Sunrise Azimuth: <span class="ta-right">${(sunRisePos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</span><br />
@@ -116,6 +117,7 @@ function update(err) {
     Sunrise: <span class="ta-right">${sunrise.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
     Sunset: <span class="ta-right">${sunset.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
   `
+  resizeWindow()
 }
 
 ipcRenderer.on('fetch-error', (sender, err) => { update(err) })
