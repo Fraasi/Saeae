@@ -62,7 +62,7 @@ function buildContextMenu() {
       label: `Saeae v${app.getVersion()} by Fraasi`,
       icon: path.join(__dirname, 'assets/fraasi-16x16.png'),
       click() {
-        shell.openExternal('https://github.com/Fraasi/Saeae')
+        shell.openExternal('https://github.com/Fraasi/Saeae#readme')
       },
     },
     {
