@@ -64,15 +64,12 @@ function update(json) {
 }
 
 ipcRenderer.on('fetch-error', (sender, err) => {
-  console.log('fetchError', err)
   update(err)
 })
+
 ipcRenderer.on('update-info', (sender, json) => {
-  console.log('json', json)
   const numString = Math.round(json.main.temp).toString()
   const dataUrl = createTempImage(numString)
   ipcRenderer.send('update-tray-data-url', dataUrl)
   update(json)
 })
-
-ipcRenderer.on('log', (main, input) => console.log('input', input))

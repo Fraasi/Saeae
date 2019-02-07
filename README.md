@@ -5,7 +5,7 @@ Electron app to show weather temperature in the notification area/system tray.
 Windows release only at this time (sorry).
 
 ### Install
-Download installer from above release button link. Running the installer should put a shortcut to your desktop and launch the app. To have it run on startup, you can put the shortcut here (win10) `C:\Users\<USER_NAME>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`.  
+Download installer from the release button link above. Running the installer should put a shortcut to your desktop and launch the app. To have it run on startup, you can put the shortcut here (win10) `C:\Users\<USER_NAME>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`.  
 
 ### Usage  
 Left click tray icon to show/hide weather info window.  
@@ -29,27 +29,20 @@ are all valid inputs for the city of Dresden in Germany.
 No umlauts: ä -> ae, ö -> oe, ü -> ue.  
 
 ### Other  
-There's no minus or plus sign in the tray to keep the font size as big and clear as possible, so red color for over 0&deg;C & blue for under.  
+There's no minus or plus sign in the tray to keep the font size as big and clear as possible, so red color for over 0&deg;C and blue for under.  
 The sun and moon information are calculated using [sunCalc](https://github.com/mourner/suncalc) & [lune.js](https://github.com/ryanseys/lune) and might not be entirely accurate. 
 
 
 ### Pics
 
 Weather info window   
-![Tray pic](pics/2018-12-18_2114.png)
+![left click](pics/2019-02-07_1319.png)
 
 Astral info window  
-![right click](pics/2018-12-18_2120.png)  
+![double left click](pics/2019-02-07_1321.png)  
 
 Right click menu  
-![right click](pics/2018-12-18_2122.png)  
-
-
-## Todo
-- [ ] test
-- [ ] if fullmoon over, show next month?
-- [ ] update readme & pics
-
+![right click](pics/2019-02-07_1208.png)  
 
 
 <!-- icons from https://www.s-ings.com/typicons/ & material.io/tools/icons-->

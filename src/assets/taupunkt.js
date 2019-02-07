@@ -37,6 +37,5 @@ export default function taupunkt(t, r) {
   const td = (b * v) / (a - v);
 
   // return only dew point
-  // console.log(td.toFixed(1))
   return td;
 }

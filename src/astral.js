@@ -27,7 +27,6 @@ function getData(lat, lon) {
   const date = new Date()
   const day = date.getDate()
   const month = date.getMonth()
-  // console.log('suntimes params: ', date, lat, lon)
   return {
     date,
     illumination: SunCalc.getMoonIllumination(date),
@@ -37,8 +36,6 @@ function getData(lat, lon) {
     sunPosition: SunCalc.getPosition(date, lat, lon),
     zodiac: getZodiacSign(day, month + 1),
     luneJS: phase_hunt(date),
-    // luneJS: phase_hunt(new Date(date.setMonth(month + 1))),
-    // hmm, if fullmoon over, show next month?
   }
 }
 
@@ -81,7 +78,6 @@ function update(err) {
     sun.innerHTML = ''
     return
   }
-  console.log('Data', data)
 
   cityEl.innerHTML = `${city} - `
   time.innerHTML = data.date.toLocaleString('en-GB').slice(0, -3)

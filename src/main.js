@@ -13,12 +13,11 @@ dotenv.config()
 const store = new Store({
   name: 'saeae',
   defaults: {
-    storePath: app.getPath('userData'),
-    weatherCity: 'Tampere',
+    weatherCity: 'helsinki',
     lat: 61.5,
     lon: 23.76,
     cityId: 634964,
-    lastInput: 'tampere',
+    lastInput: '',
   },
 })
 
@@ -94,7 +93,6 @@ function fetchWeather(input) {
   tray.setImage(path.join(__dirname, './assets/weather-cloudy.png'))
   const queryOrId = isNaN(parseInt(input, 10)) ? 'q' : 'id'
   const url = `https://api.openweathermap.org/data/2.5/weather?${queryOrId}=${input}&units=metric&appid=${process.env.OPENWEATHER_APIKEY}`
-  // weatherWindow.webContents.send('log', { input, url })
   fetch(url)
     .then(response => response.json())
     .then((json) => {
