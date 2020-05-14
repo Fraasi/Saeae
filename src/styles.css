@@ -1,4 +1,4 @@
-@import('./assets/SEGOEUI.TTF');
+@import('./SEGOEUI.TTF');
 
 body {
   font-family: 'Segoe UI', Cambria, Georgia, Times, serif;
@@ -44,7 +44,7 @@ body {
   0% {
     opacity: 1;
     transform: scale(0,0);
-  } 
+  }
   100% {
     transform: scale(40,40);
     opacity: 0;

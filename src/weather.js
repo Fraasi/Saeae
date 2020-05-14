@@ -1,7 +1,7 @@
-import { ipcRenderer, shell } from 'electron'
-import createTempImage from './assets/create-temp-image'
-import taupunkt from './assets/taupunkt'
-import resizeWindow from './assets/resizeWindow'
+const { ipcRenderer, shell } = require('electron')
+const createTempImage = require('./utils/create-temp-image')
+const taupunkt = require('./utils/taupunkt')
+const resizeWindow = require('./utils/resizeWindow')
 
 function parseTime(time) {
   return (time < 10) ? `0${time}` : time

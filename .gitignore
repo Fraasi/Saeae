@@ -1,6 +1,6 @@
 node_modules
 out
 .env
-assets/numerical-icon.png
+src/images/numerical-icon.png
 saeae-temperature*
 semver-test.js

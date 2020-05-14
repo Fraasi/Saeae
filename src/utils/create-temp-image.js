@@ -1,5 +1,5 @@
 
-export default function createTempImage(num) {
+module.exports = function createTempImage(num) {
   let ctx
   let minus = false
 

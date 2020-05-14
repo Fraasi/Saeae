@@ -1,14 +1,17 @@
-import {
+const {
   app, Menu, Tray, shell, BrowserWindow, ipcMain, nativeImage,
-} from 'electron'
-import path from 'path'
-import fetch from 'node-fetch'
-import prompt from 'electron-prompt'
-import Positioner from 'electron-positioner'
-import Store from 'electron-store'
-import dotenv from 'dotenv'
-import deBounce from 'futility/lib/deBounce'
+} = require('electron')
+const path = require('path')
+const fetch = require('node-fetch')
+const prompt = require('electron-prompt')
+const Store = require('electron-store')
+const deBounce = require('futility/lib/deBounce')
+const Positioner = require('./utils/electron-positioner-fixed.js')
+const { is } = require('electron-util')
+const debug = require('electron-debug')
+debug({showDevTools: true})
 
+const dotenv = require('dotenv')
 dotenv.config()
 const store = new Store({
   name: 'saeae',
@@ -21,10 +24,7 @@ const store = new Store({
   },
 })
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
-  app.quit()
-}
+console.log(path.join(__dirname, 'preload.js'), path.resolve(__dirname, 'preload.js'))
 
 let astralWindow
 let weatherWindow
@@ -43,7 +43,7 @@ function promptCity() {
       type: 'text',
       placeholder: `last input: ${store.get('lastInput')}`,
     },
-    icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
+    icon: path.join(__dirname, 'images/weather-cloudy-black.png'),
     customStylesheet: path.join(__dirname, 'styles.css'),
   })
     .then((input) => { // null if window was closed or user clicked Cancel
@@ -59,7 +59,7 @@ function buildContextMenu() {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: `Saeae v${app.getVersion()} by Fraasi`,
-      icon: path.join(__dirname, 'assets/fraasi-16x16.png'),
+      icon: path.join(__dirname, 'images/fraasi-16x16.png'),
       click() {
         shell.openExternal('https://github.com/Fraasi/Saeae#readme')
       },
@@ -90,7 +90,7 @@ function buildContextMenu() {
 }
 
 function fetchWeather(input) {
-  tray.setImage(path.join(__dirname, './assets/weather-cloudy.png'))
+  tray.setImage(path.join(__dirname, './images/weather-cloudy.png'))
   const queryOrId = isNaN(parseInt(input, 10)) ? 'q' : 'id'
   const url = `https://api.openweathermap.org/data/2.5/weather?${queryOrId}=${input}&units=metric&appid=${process.env.OPENWEATHER_APIKEY}`
   fetch(url)
@@ -125,7 +125,7 @@ function fetchWeather(input) {
 
       store.set('weatherCity', '<error>')
       tray.setToolTip('Bad weather, click for error info')
-      const badWeather = path.join(__dirname, 'assets/weather-downpour.png')
+      const badWeather = path.join(__dirname, 'images/weather-downpour.png')
       tray.setImage(badWeather)
       weatherWindow.webContents.send('fetch-error', error)
       astralWindow.webContents.send('fetch-error', error)
@@ -135,16 +135,21 @@ function fetchWeather(input) {
 function createApp() {
   // weatherWindow
   weatherWindow = new BrowserWindow({
-    width: 330, // 330
-    height: 297, // 297
-    icon: path.join(__dirname, 'assets/weather-cloudy-black.png'),
+    width: is.development ? 600 : 330,
+    height: is.development ? 500 : 297,
+    icon: path.join(__dirname, 'images/weather-cloudy-black.png'),
     title: 'Saeae Weather',
     backgroundColor: 'rgb(51 ,51, 71)',
     show: false,
     resizable: false,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      devTools: is.development ? true :  false,
+      nodeIntegration: true,
+      contextIsolation: false
+    }
   })
   weatherWindow.loadURL(`file://${__dirname}/weather.html`)
-  // weatherWindow.webContents.openDevTools()
   weatherWindow.on('close', (e) => {
     if (!close) {
       e.preventDefault()
@@ -162,16 +167,21 @@ function createApp() {
 
   // astralWindow
   astralWindow = new BrowserWindow({
-    width: 330, // 330
-    height: 483, // 483
-    icon: path.join(__dirname, 'assets/baseline_brightness_high_black_18dp.png'),
+    width: is.development ? 600 : 330, // 330
+    height: is.development ? 500 : 483, // 483
+    icon: path.join(__dirname, 'images/baseline_brightness_high_black_18dp.png'),
     title: 'Saeae Astral',
     backgroundColor: 'rgb(51 ,51, 71)',
     show: false,
     resizable: false,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      devTools: is.development ? true :  false,
+      nodeIntegration: true,
+      contextIsolation: false
+    }
   })
   astralWindow.loadURL(`file://${__dirname}/astral.html`)
-  // astralWindow.webContents.openDevTools()
   astralWindow.on('close', (e) => {
     if (!close) {
       e.preventDefault()
@@ -190,7 +200,7 @@ function createApp() {
   })
 
   // tray
-  tray = new Tray(path.join(__dirname, './assets/weather-cloudy.png'))
+  tray = new Tray(path.join(__dirname, './images/weather-cloudy.png'))
   buildContextMenu()
 
   let dblClick = false

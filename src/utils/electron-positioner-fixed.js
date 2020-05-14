@@ -1,5 +1,11 @@
 'use strict'
 
+// API Changed: electron.screen in the renderer process should be accessed via remote
+// Deprecated
+// require('electron').screen
+// Replace with
+// require('electron').remote.screen
+
 module.exports = class Positioner {
   constructor (browserWindow) {
     this.browserWindow = browserWindow

@@ -1,8 +1,8 @@
-import { ipcRenderer, shell } from 'electron'
-import SunCalc from 'suncalc'
-import Store from 'electron-store'
-import { phase_hunt } from './assets/lune.js'
-import resizeWindow from './assets/resizeWindow'
+const { ipcRenderer, shell } = require('electron')
+const SunCalc = require('suncalc')
+const Store = require('electron-store')
+const { phase_hunt } = require('./utils/lune.js')
+const resizeWindow = require('./utils/resizeWindow.js')
 
 const store = new Store({ name: 'saeae' })
 
