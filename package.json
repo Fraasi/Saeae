@@ -1,93 +1,90 @@
 {
-  "name": "saeae",
-  "productName": "Saeae",
-  "version": "1.0.0",
-  "author": {
-    "name": "Fraasi",
-    "email": "fraasi.gh@gmail.com",
-    "url": "https://github.com/fraasi)"
-  },
-  "description": "Weather app in your tray",
-  "main": "src/main.js",
-  "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "eslint src --color"
-  },
-  "keywords": [
-    "weather",
-    "sää",
-    "saeae",
-    "tray",
-    "temperature",
-    "sun",
-    "moon"
-  ],
-  "license": "MIT",
-  "config": {
-    "forge": {
-      "make_targets": {
-        "win32": [
-          "squirrel"
-        ],
-        "darwin": [
-          "zip"
-        ],
-        "linux": [
-          "deb",
-          "rpm"
-        ]
-      },
-      "electronPackagerConfig": {
-        "packageManager": "npm",
-        "asar": true,
-        "icon": "./src/assets/fraasi-64x64.ico"
-      },
-      "electronWinstallerConfig": {
-        "name": "saeae"
-      },
-      "electronInstallerDebian": {},
-      "electronInstallerRedhat": {},
-      "github_repository": {
-        "owner": "",
-        "name": ""
-      },
-      "windowsStoreConfig": {
-        "packageName": "",
-        "name": "saeae"
-      }
-    }
-  },
-  "private": true,
-  "homepage": "https://github.com/fraasi/saeae",
-  "bugs": "https://github.com/fraasi/saeae/issues",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fraasi/saeae.git"
-  },
-  "dependencies": {
-    "dotenv": "^6.2.0",
-    "electron-compile": "^6.4.3",
-    "electron-positioner": "^4.1.0",
-    "electron-prompt": "^1.3.0",
-    "electron-squirrel-startup": "^1.0.0",
-    "electron-store": "^2.0.0",
-    "futility": "github:fraasi/futility",
-    "node-fetch": "^2.3.0",
-    "suncalc": "^1.8.0"
-  },
-  "devDependencies": {
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "electron-forge": "^5.2.4",
-    "electron-prebuilt-compile": "3.0.10",
-    "eslint": "^5.10.0",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-react": "^7.10.0"
-  }
+	"name": "saeae",
+	"productName": "Saeae",
+	"version": "1.0.0",
+	"author": {
+		"name": "Fraasi",
+		"email": "fraasi.gh@gmail.com",
+		"url": "https://github.com/fraasi)"
+	},
+	"description": "Weather app in your tray",
+	"main": "src/main.js",
+	"private": true,
+	"license": "MIT",
+	"homepage": "https://github.com/fraasi/saeae",
+	"bugs": "https://github.com/fraasi/saeae/issues",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/fraasi/saeae.git"
+	},
+	"keywords": [
+		"weather",
+		"sää",
+		"saeae",
+		"tray",
+		"temperature",
+		"sun",
+		"moon"
+	],
+	"scripts": {
+		"postinstall": "electron-builder install-app-deps",
+		"lint": "eslint src --color",
+		"test": "npm run lint",
+		"start": "electron .",
+		"pack": "electron-builder --dir",
+		"dist": "electron-builder --macos --linux --windows",
+		"release": "np"
+	},
+	"dependencies": {
+		"dotenv": "^6.2.0",
+		"electron-context-menu": "^0.15.0",
+		"electron-debug": "^3.0.1",
+		"electron-prompt": "^1.5.1",
+		"electron-store": "^5.1.0",
+		"electron-unhandled": "^3.0.0",
+		"electron-updater": "^4.0.6",
+		"electron-util": "^0.13.1",
+		"futility": "github:fraasi/futility",
+		"node-fetch": "^2.3.0",
+		"suncalc": "^1.8.0"
+	},
+	"devDependencies": {
+		"electron": "^8.2.5",
+		"electron-builder": "^22.6.0",
+		"eslint": "^7.0.0",
+		"np": "^5.0.3"
+	},
+	"np": {
+		"publish": false,
+		"releaseDraft": false
+	},
+	"build": {
+		"appId": "com.company.AppName",
+		"mac": {
+			"category": "public.app-category.social-networking",
+			"darkModeSupport": true
+		},
+		"dmg": {
+			"iconSize": 160,
+			"contents": [
+				{
+					"x": 180,
+					"y": 170
+				},
+				{
+					"x": 480,
+					"y": 170,
+					"type": "link",
+					"path": "/Applications"
+				}
+			]
+		},
+		"linux": {
+			"target": [
+				"AppImage",
+				"deb"
+			],
+			"category": "Network;Chat"
+		}
+	}
 }
