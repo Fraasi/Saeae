@@ -1,7 +1,11 @@
+const path = require('path')
+// require('dotenv').config({
+//   debug: true,
+//   path: path.join(__dirname, '/.env')
+// })
 const {
   app, Menu, Tray, shell, BrowserWindow, ipcMain, nativeImage,
 } = require('electron')
-const path = require('path')
 const fetch = require('node-fetch')
 const prompt = require('electron-prompt')
 const Store = require('electron-store')
@@ -11,8 +15,8 @@ const { is } = require('electron-util')
 const debug = require('electron-debug')
 debug({showDevTools: true})
 
-const dotenv = require('dotenv')
-dotenv.config()
+const { OPENWEATHER_APIKEY } = require('../env.js')
+
 const store = new Store({
   name: 'saeae',
   defaults: {
@@ -24,7 +28,6 @@ const store = new Store({
   },
 })
 
-console.log(path.join(__dirname, 'preload.js'), path.resolve(__dirname, 'preload.js'))
 
 let astralWindow
 let weatherWindow
@@ -92,7 +95,7 @@ function buildContextMenu() {
 function fetchWeather(input) {
   tray.setImage(path.join(__dirname, './images/weather-cloudy.png'))
   const queryOrId = isNaN(parseInt(input, 10)) ? 'q' : 'id'
-  const url = `https://api.openweathermap.org/data/2.5/weather?${queryOrId}=${input}&units=metric&appid=${process.env.OPENWEATHER_APIKEY}`
+  const url = `https://api.openweathermap.org/data/2.5/weather?${queryOrId}=${input}&units=metric&appid=${OPENWEATHER_APIKEY}`
   fetch(url)
     .then(response => response.json())
     .then((json) => {
@@ -141,14 +144,15 @@ function createApp() {
     title: 'Saeae Weather',
     backgroundColor: 'rgb(51 ,51, 71)',
     show: false,
-    resizable: false,
+    resizable: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      devTools: is.development ? true :  false,
+      devTools: true,
       nodeIntegration: true,
       contextIsolation: false
     }
   })
+  weatherWindow.webContents.openDevTools()
   weatherWindow.loadURL(`file://${__dirname}/weather.html`)
   weatherWindow.on('close', (e) => {
     if (!close) {

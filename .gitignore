@@ -4,3 +4,5 @@ out
 src/images/numerical-icon.png
 saeae-temperature*
 semver-test.js
+dist
+env.js
