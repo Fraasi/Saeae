@@ -33,13 +33,15 @@
 		"start": "electron .",
 		"pack": "electron-builder --dir",
 		"dist": "electron-builder --windows",
-		"release": "np"
+		"release": "np",
+		"prune": "npm prune --production"
 	},
 	"dependencies": {
 		"electron-context-menu": "^2.0.1",
 		"electron-debug": "^3.0.1",
 		"electron-prompt": "^1.5.1",
 		"electron-store": "^5.1.0",
+		"electron-traywindow-positioner": "^1.1.0",
 		"electron-unhandled": "^3.0.0",
 		"electron-updater": "^4.0.6",
 		"electron-util": "^0.14.1",
@@ -58,43 +60,24 @@
 		"releaseDraft": false
 	},
 	"build": {
-		"appId": "electron.saeae",
+		"files": [
+			"src/",
+			"env.js",
+			"node_modules/",
+			"package.json"
+		],
+		"appId": "com.electron.${name}",
 		"directories": {
 			"output": "dist"
 		},
-		"icon": "src/images/fraasi-256x256.png",
 		"win": {
+			"icon": "src/images/fraasi-256x256.png",
 			"target": [
-				{
-					"target": "nsis",
-					"arch": [
-						"x64"
-					]
-				},
 				{
 					"target": "portable",
 					"arch": [
 						"x64"
 					]
-				}
-			]
-		},
-		"mac": {
-			"category": "public.app-category.social-networking",
-			"darkModeSupport": true
-		},
-		"dmg": {
-			"iconSize": 160,
-			"contents": [
-				{
-					"x": 180,
-					"y": 170
-				},
-				{
-					"x": 480,
-					"y": 170,
-					"type": "link",
-					"path": "/Applications"
 				}
 			]
 		},

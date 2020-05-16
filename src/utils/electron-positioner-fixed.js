@@ -1,5 +1,5 @@
 'use strict'
-
+// https://github.com/electron/electron/blob/master/docs/breaking-changes.md#api-changed-electronscreen-in-the-renderer-process-should-be-accessed-via-remote
 // API Changed: electron.screen in the renderer process should be accessed via remote
 // Deprecated
 // require('electron').screen
@@ -102,9 +102,9 @@ module.exports = class Positioner {
 
   _getScreenSize (trayPosition) {
     if (trayPosition) {
-      return (_isRenderer()) ? {width: this.electronScreen.width, height: this.electronScreen.height, x: 0, y: 0} : this.electronScreen.getDisplayMatching(trayPosition).workArea
+      return (_isRenderer()) ? {width: this.electronScreen.width, height: this.electronScreen.availHeight, x: 0, y: 0} : this.electronScreen.getDisplayMatching(trayPosition).workArea
     } else {
-      return (_isRenderer()) ? {width: this.electronScreen.width, height: this.electronScreen.height, x: 0, y: 0} : this.electronScreen.getDisplayNearestPoint(this.electronScreen.getCursorScreenPoint()).workArea
+      return (_isRenderer()) ? {width: this.electronScreen.width, height: this.electronScreen.availHeight, x: 0, y: 0} : this.electronScreen.getDisplayNearestPoint(this.electronScreen.getCursorScreenPoint()).workArea
     }
   }
 

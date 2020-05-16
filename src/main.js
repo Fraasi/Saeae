@@ -10,7 +10,8 @@ const fetch = require('node-fetch')
 const prompt = require('electron-prompt')
 const Store = require('electron-store')
 const deBounce = require('futility/lib/deBounce')
-const Positioner = require('./utils/electron-positioner-fixed.js')
+// const Positioner = require('./utils/electron-positioner-fixed.js')
+const positioner = require('electron-traywindow-positioner')
 const { is } = require('electron-util')
 const debug = require('electron-debug')
 debug({showDevTools: true})
@@ -136,6 +137,8 @@ function fetchWeather(input) {
 }
 
 function createApp() {
+  tray = new Tray(path.join(__dirname, './images/weather-cloudy.png'))
+
   // weatherWindow
   weatherWindow = new BrowserWindow({
     width: is.development ? 600 : 330,
@@ -143,7 +146,7 @@ function createApp() {
     icon: path.join(__dirname, 'images/weather-cloudy-black.png'),
     title: 'Saeae Weather',
     backgroundColor: 'rgb(51 ,51, 71)',
-    show: false,
+    show: is.development ? true : false,
     resizable: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -165,8 +168,8 @@ function createApp() {
     if (close) weatherWindow = null
   })
   weatherWindow.setMenu(null)
-  const weatherPos = new Positioner(weatherWindow)
-  weatherPos.move('bottomRight')
+  // const weatherPos = new Positioner(weatherWindow)
+  // weatherPos.move('bottomRight')
   weatherWindow.webContents.on('did-finish-load', fetchWeather.bind(null, store.get('weatherCity')))
 
   // astralWindow
@@ -197,15 +200,16 @@ function createApp() {
     if (close) astralWindow = null
   })
   astralWindow.setMenu(null)
-  const astroPos = new Positioner(astralWindow)
-  astroPos.move('bottomRight')
+  // const astroPos = new Positioner(astralWindow)
+  // astroPos.move('bottomRight')
   astralWindow.webContents.on('did-finish-load', () => {
     astralWindow.webContents.send('update-info', null)
   })
 
   // tray
-  tray = new Tray(path.join(__dirname, './images/weather-cloudy.png'))
   buildContextMenu()
+  positioner.position(weatherWindow, tray.getBounds())
+  positioner.position(astralWindow, tray.getBounds())
 
   let dblClick = false
   tray.on('click', () => {
@@ -232,6 +236,6 @@ app.on('activate', () => {
 
 ipcMain.on('update-tray-data-url', (event, dataUrl) => {
   const url = nativeImage.createFromDataURL(dataUrl)
-  url.resize({ width: 16, height: 16 })
+  url.resize({ width: 18, height: 18 })
   tray.setImage(url)
 })
