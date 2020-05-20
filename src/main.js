@@ -10,7 +10,6 @@ const fetch = require('node-fetch')
 const prompt = require('electron-prompt')
 const Store = require('electron-store')
 const deBounce = require('futility/lib/deBounce')
-// const Positioner = require('./utils/electron-positioner-fixed.js')
 const positioner = require('electron-traywindow-positioner')
 const { is } = require('electron-util')
 const debug = require('electron-debug')
@@ -59,7 +58,7 @@ function promptCity() {
     .catch(console.error)
 }
 
-function buildContextMenu() {
+function buildTrayContextMenu() {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: `Saeae v${app.getVersion()} by Fraasi`,
@@ -123,7 +122,8 @@ function fetchWeather(input) {
           See error below.
         `,
         bugReport: 'You can file a bug report at ',
-        errMsg: err.message.replace(/&appid=.+2eb/, ''), // hide api in error message
+        // hide api in error message
+        errMsg: err.message.replace(/&appid=.+2eb/, ''),
         errStack: err.stack.replace(/&appid=.+2eb/, ''),
       }
 
@@ -138,6 +138,7 @@ function fetchWeather(input) {
 
 function createApp() {
   tray = new Tray(path.join(__dirname, './images/weather-cloudy.png'))
+  buildTrayContextMenu()
 
   // weatherWindow
   weatherWindow = new BrowserWindow({
@@ -155,7 +156,7 @@ function createApp() {
       contextIsolation: false
     }
   })
-  weatherWindow.webContents.openDevTools()
+  // weatherWindow.webContents.openDevTools()
   weatherWindow.loadURL(`file://${__dirname}/weather.html`)
   weatherWindow.on('close', (e) => {
     if (!close) {
@@ -168,8 +169,6 @@ function createApp() {
     if (close) weatherWindow = null
   })
   weatherWindow.setMenu(null)
-  // const weatherPos = new Positioner(weatherWindow)
-  // weatherPos.move('bottomRight')
   weatherWindow.webContents.on('did-finish-load', fetchWeather.bind(null, store.get('weatherCity')))
 
   // astralWindow
@@ -200,14 +199,10 @@ function createApp() {
     if (close) astralWindow = null
   })
   astralWindow.setMenu(null)
-  // const astroPos = new Positioner(astralWindow)
-  // astroPos.move('bottomRight')
   astralWindow.webContents.on('did-finish-load', () => {
     astralWindow.webContents.send('update-info', null)
   })
 
-  // tray
-  buildContextMenu()
   positioner.position(weatherWindow, tray.getBounds())
   positioner.position(astralWindow, tray.getBounds())
 
