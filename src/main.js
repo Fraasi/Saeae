@@ -13,7 +13,7 @@ const deBounce = require('futility/lib/deBounce')
 const positioner = require('electron-traywindow-positioner')
 const { is } = require('electron-util')
 const debug = require('electron-debug')
-debug({showDevTools: true})
+debug({showDevTools: true, devToolsMode: 'detach'})
 
 const { OPENWEATHER_APIKEY } = require('../env.js')
 
@@ -142,13 +142,14 @@ function createApp() {
 
   // weatherWindow
   weatherWindow = new BrowserWindow({
-    width: is.development ? 600 : 330,
-    height: is.development ? 500 : 297,
+    width: 330,
+    height: 297,
     icon: path.join(__dirname, 'images/weather-cloudy-black.png'),
     title: 'Saeae Weather',
     backgroundColor: 'rgb(51 ,51, 71)',
     show: is.development ? true : false,
     resizable: true,
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       devTools: true,
@@ -173,8 +174,8 @@ function createApp() {
 
   // astralWindow
   astralWindow = new BrowserWindow({
-    width: is.development ? 600 : 330, // 330
-    height: is.development ? 500 : 483, // 483
+    width: 330, // 330
+    height: 483, // 483
     icon: path.join(__dirname, 'images/baseline_brightness_high_black_18dp.png'),
     title: 'Saeae Astral',
     backgroundColor: 'rgb(51 ,51, 71)',
