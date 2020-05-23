@@ -37,6 +37,7 @@
 		"prune": "npm prune --production"
 	},
 	"dependencies": {
+		"custom-electron-titlebar": "^3.2.2-hotfix62",
 		"electron-context-menu": "^2.0.1",
 		"electron-debug": "^3.0.1",
 		"electron-prompt": "^1.5.1",

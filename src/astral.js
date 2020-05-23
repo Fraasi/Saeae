@@ -1,4 +1,5 @@
 const { ipcRenderer, shell } = require('electron')
+const customTitlebar = require('custom-electron-titlebar');
 const SunCalc = require('suncalc')
 const Store = require('electron-store')
 const { phase_hunt } = require('./utils/lune.js')
@@ -6,6 +7,13 @@ const resizeWindow = require('./utils/resizeWindow.js')
 
 const store = new Store({ name: 'saeae' })
 
+new customTitlebar.Titlebar({
+  backgroundColor: customTitlebar.Color.fromHex('#444'),
+  icon: 'images/baseline_brightness_high_black_18dp.png',
+  maximizable: false,
+  titleHorizontalAlignment: 'left',
+  menu: null
+});
 
 function getZodiacSign(day, month) {
   if ((month === 1 && day <= 20) || (month === 12 && day >= 22)) return 'Capricorn'

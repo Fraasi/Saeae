@@ -1,4 +1,4 @@
-@import('./SEGOEUI.TTF');
+@import './SEGOEUI.TTF';
 
 body {
   font-family: 'Segoe UI', Cambria, Georgia, Times, serif;
@@ -9,6 +9,7 @@ body {
 }
 
 #bg-radial {
+  margin: 8px;
   width: inherit;
   height: inherit;
   background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
@@ -55,7 +56,7 @@ body {
   cursor: pointer;
 }
 
-.titlebar
+/* .titlebar
 {
     display: block;
     position: relative;
@@ -175,4 +176,4 @@ body {
 .titlebar-light .titlebar-close:hover
 {
     background-color: rgba(232, 17, 35, 0.9);
-}
+} */

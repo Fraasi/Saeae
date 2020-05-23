@@ -1,10 +1,9 @@
-// const { remote } = require('electron')
-
 module.exports = function resizeWindow() {
-  const padding = 18 // title bar height without menu
-  const heightDiff = (document.body.clientHeight - document.documentElement.clientHeight) + padding
-  window.resizeBy(0, heightDiff)
-  // const position = new Positioner(remote.getCurrentWindow())
-  // position.move('bottomRight')
-
+  const contentEl = document.querySelector('#bg-radial')
+  const contentHeight = contentEl.clientHeight
+  const contentWidth = contentEl.clientWidth
+  const titlebarHeight = 30
+  const margs = 8 * 2
+  const newHeight = contentHeight + titlebarHeight + margs
+  window.resizeTo(contentWidth + margs, newHeight)
 }

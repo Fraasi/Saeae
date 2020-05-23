@@ -1,10 +1,6 @@
 const path = require('path')
-// require('dotenv').config({
-//   debug: true,
-//   path: path.join(__dirname, '/.env')
-// })
 const {
-  app, Menu, Tray, shell, BrowserWindow, ipcMain, nativeImage,
+  app, Menu, Tray, shell, BrowserWindow, ipcMain, nativeImage
 } = require('electron')
 const fetch = require('node-fetch')
 const prompt = require('electron-prompt')
@@ -27,7 +23,6 @@ const store = new Store({
     lastInput: '',
   },
 })
-
 
 let astralWindow
 let weatherWindow
@@ -148,16 +143,17 @@ function createApp() {
     title: 'Saeae Weather',
     backgroundColor: 'rgb(51 ,51, 71)',
     show: is.development ? true : false,
-    resizable: true,
+    resizable: false,
     frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       devTools: true,
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      // allowRunningInsecureContent: true,
+      allowDisplayingInsecureContent: true
     }
   })
-  // weatherWindow.webContents.openDevTools()
   weatherWindow.loadURL(`file://${__dirname}/weather.html`)
   weatherWindow.on('close', (e) => {
     if (!close) {
@@ -180,12 +176,16 @@ function createApp() {
     title: 'Saeae Astral',
     backgroundColor: 'rgb(51 ,51, 71)',
     show: false,
-    resizable: false,
+    resizable: true,
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       devTools: is.development ? true :  false,
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      // 'web-security': false
+      // allowRunningInsecureContent: true,
+      allowDisplayingInsecureContent: true
     }
   })
   astralWindow.loadURL(`file://${__dirname}/astral.html`)

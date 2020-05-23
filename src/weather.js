@@ -1,7 +1,17 @@
 const { ipcRenderer, shell } = require('electron')
+const customTitlebar = require('custom-electron-titlebar');
 const createTempImage = require('./utils/create-temp-image')
 const taupunkt = require('./utils/taupunkt')
 const resizeWindow = require('./utils/resizeWindow')
+
+
+new customTitlebar.Titlebar({
+  backgroundColor: customTitlebar.Color.fromHex('#444'),
+  icon: 'images/weather-cloudy-black.png',
+  maximizable: false,
+  titleHorizontalAlignment: 'left',
+  menu: null
+});
 
 function parseTime(time) {
   return (time < 10) ? `0${time}` : time
