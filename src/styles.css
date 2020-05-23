@@ -15,7 +15,7 @@ body {
 }
 
 .city.link {
-  width: 120px;
+  max-width: 140px;
   display: inline-block;
   white-space: nowrap;
   text-overflow: ellipsis;

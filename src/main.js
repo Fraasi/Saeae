@@ -33,7 +33,7 @@ let closeApp = false
 function promptCity() {
   prompt({
     alwaysOnTop: true,
-    height: 150,
+    height: 170,
     title: 'Saeae - input new city or city id',
     label: `Current city: ${store.get('weatherCity')}`,
     type: 'input',
