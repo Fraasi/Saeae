@@ -9,7 +9,7 @@ const deBounce = require('futility/lib/deBounce')
 const positioner = require('electron-traywindow-positioner')
 const { is } = require('electron-util')
 const debug = require('electron-debug')
-debug({showDevTools: true, devToolsMode: 'detach'})
+debug({ showDevTools: true, devToolsMode: 'detach' })
 
 const { OPENWEATHER_APIKEY } = require('../env.js')
 
@@ -28,7 +28,7 @@ let astralWindow
 let weatherWindow
 let tray = null
 let updateInterval
-let close = false
+let closeApp = false
 
 function promptCity() {
   prompt({
@@ -78,7 +78,7 @@ function buildTrayContextMenu() {
     {
       label: 'Quit app',
       click() {
-        close = true
+        closeApp = true
         tray.destroy()
         app.quit()
       },
@@ -147,23 +147,23 @@ function createApp() {
     frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      devTools: true,
+      // devTools: true,
       nodeIntegration: true,
       contextIsolation: false,
       // allowRunningInsecureContent: true,
-      allowDisplayingInsecureContent: true
+      // allowDisplayingInsecureContent: true
     }
   })
   weatherWindow.loadURL(`file://${__dirname}/weather.html`)
   weatherWindow.on('close', (e) => {
-    if (!close) {
+    if (!closeApp) {
       e.preventDefault()
       weatherWindow.hide()
       return false
     }
   })
   weatherWindow.on('closed', () => {
-    if (close) weatherWindow = null
+    if (closeApp) weatherWindow = null
   })
   weatherWindow.setMenu(null)
   weatherWindow.webContents.on('did-finish-load', fetchWeather.bind(null, store.get('weatherCity')))
@@ -176,28 +176,25 @@ function createApp() {
     title: 'Saeae Astral',
     backgroundColor: 'rgb(51 ,51, 71)',
     show: false,
-    resizable: true,
+    resizable: false,
     frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      devTools: is.development ? true :  false,
+      // devTools: is.development ? true : false,
       nodeIntegration: true,
       contextIsolation: false,
-      // 'web-security': false
-      // allowRunningInsecureContent: true,
-      allowDisplayingInsecureContent: true
     }
   })
   astralWindow.loadURL(`file://${__dirname}/astral.html`)
   astralWindow.on('close', (e) => {
-    if (!close) {
+    if (!closeApp) {
       e.preventDefault()
       astralWindow.hide()
       return false
     }
   })
   astralWindow.on('closed', () => {
-    if (close) astralWindow = null
+    if (closeApp) astralWindow = null
   })
   astralWindow.setMenu(null)
   astralWindow.webContents.on('did-finish-load', () => {
@@ -235,3 +232,5 @@ ipcMain.on('update-tray-data-url', (event, dataUrl) => {
   url.resize({ width: 18, height: 18 })
   tray.setImage(url)
 })
+
+ipcMain.on('prompt-city', () => { promptCity() })

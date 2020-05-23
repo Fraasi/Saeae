@@ -64,11 +64,14 @@ function _q(id) {
 }
 
 const cityEl = _q('.city')
-const time = _q('.time')
-const moon = _q('.moon')
-const sun = _q('.sun')
+const timeEl = _q('.time')
+const moonEl = _q('.moon')
+const sunEl = _q('.sun')
 
-time.addEventListener('click', () => {
+cityEl.addEventListener('click', () => {
+  ipcRenderer.send('prompt-city')
+})
+timeEl.addEventListener('click', () => {
   shell.openExternal('https://www.timeanddate.com/moon/phases/')
 })
 
@@ -79,20 +82,20 @@ function update(err) {
   const data = getData(latitude, longitude)
   if (err) {
     cityEl.innerHTML = 'Error - '
-    time.innerHTML = data.date.toLocaleString('en-GB').slice(0, -3)
-    moon.innerHTML = `
+    timeEl.innerHTML = data.date.toLocaleString('en-GB').slice(0, -3)
+    moonEl.innerHTML = `
     message: ${err.errMsg} <br /> stack: ${err.errStack}
     `
-    sun.innerHTML = ''
+    sunEl.innerHTML = ''
     return
   }
 
   cityEl.innerHTML = `${city} - `
-  time.innerHTML = data.date.toLocaleString('en-GB').slice(0, -3)
+  timeEl.innerHTML = data.date.toLocaleString('en-GB').slice(0, -3)
 
   const { moonPosition, moonTimes, illumination, zodiac, luneJS } = data
 
-  moon.innerHTML = `
+  moonEl.innerHTML = `
     Moon Phase: <span class="ta-right">${getPhase(illumination.phase)}</span> <br />
     Moon Illumination: <span class="ta-right">${(illumination.fraction * 100).toFixed(1)}%</span> <br />
     Moon Azimuth: <span class="ta-right">${(moonPosition.azimuth * 180 / Math.PI + 180).toFixed(1)/* to degrees */}&deg;</span> <br />
@@ -111,7 +114,7 @@ function update(err) {
   const sunRisePos = SunCalc.getPosition(sunrise, latitude, longitude)
   const sunSetPos = SunCalc.getPosition(sunset, latitude, longitude)
 
-  sun.innerHTML = `
+  sunEl.innerHTML = `
     GoldenHour AM: <span class="ta-right">${sunriseEnd.toLocaleTimeString('en-GB').slice(0, -3)} - ${goldenHourEnd == 'Invalid Date' ? 'N/A' : goldenHourEnd.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
     GoldenHour PM: <span class="ta-right">${goldenHour == 'Invalid Date' ? 'N/A' : goldenHour.toLocaleTimeString('en-GB').slice(0, -3)} - ${sunsetStart.toLocaleTimeString('en-GB').slice(0, -3)}</span> <br />
     Sunrise Azimuth: <span class="ta-right">${(sunRisePos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</span><br />

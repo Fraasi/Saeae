@@ -13,7 +13,8 @@ Double click to show/hide astral info window.
 Right click icon for menu to change city, quit app or get back to this readme.  
 
 On weather window, you can click the title date to open forecast for your city in your default browser.  
-On astral window, click the title date to get to more info about moon phases. 
+On astral window, click the title date to get to more info about moon phases.  
+On both windows clicking on the city name opens the prompt to change the city.
 
 Data is updated on launch or when the city is changed and then automatically every twenty minutes.  
 

@@ -1,5 +1,4 @@
 @import './SEGOEUI.TTF';
-
 body {
   font-family: 'Segoe UI', Cambria, Georgia, Times, serif;
   font-size: 16px;
@@ -15,6 +14,14 @@ body {
   background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
+.city.link {
+  width: 120px;
+  display: inline-block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+}
+
 .ta-right {
   float: right;
 }
@@ -26,15 +33,19 @@ body {
 }
 
 .link:after {
-	content: "";
-	position: absolute;
-	background: rgba(255, 255, 255, 0.4);
-	top: 50%;
-	left: 50%;
-	width: 5px;
-	height: 5px;
-	border-radius: 100%;
-	opacity: 0;
+  content: "";
+  position: absolute;
+  background: rgba(255, 255, 255, 0.4);
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 100%;
+  opacity: 0;
+}
+
+.link:hover {
+  cursor: pointer;
 }
 
 .link:hover:after {
@@ -44,136 +55,10 @@ body {
 @keyframes ripple {
   0% {
     opacity: 1;
-    transform: scale(0,0);
+    transform: scale(0, 0);
   }
   100% {
-    transform: scale(40,40);
+    transform: scale(40, 40);
     opacity: 0;
-   }
- }
-
-.link:hover {
-  cursor: pointer;
+  }
 }
-
-/* .titlebar
-{
-    display: block;
-    position: relative;
-    height: 32px;
-    padding: 0;
-}
-
-.titlebar.draggable
-{
-    -webkit-app-region: drag;
-}
-
-.titlebar-controls
-{
-    float: right;
-    text-align: left;
-}
-
-.titlebar:after,
-.titlebar-controls:after
-{
-    content: ' ';
-    display: table;
-    clear: both;
-}
-
-.titlebar-minimize,
-.titlebar-resize,
-.titlebar-close
-{
-    float: left;
-    width: 45px;
-    height: 31px;
-    margin: 1px 1px 0 0;
-    text-align: center;
-    line-height: 29px;
-
-    -webkit-transition: background-color .2s;
-    -moz-transition: background-color .2s;
-    -ms-transition: background-color .2s;
-    -o-transition: background-color .2s;
-    transition: background-color .2s;
-}
-
-.titlebar.draggable .titlebar-minimize,
-.titlebar.draggable .titlebar-resize,
-.titlebar.draggable .titlebar-close
-{
-    -webkit-app-region: no-drag;
-}
-
-.titlebar-minimize svg,
-.titlebar-resize svg.maximize-svg,
-.titlebar-resize svg.fullscreen-svg,
-.titlebar-close svg
-{
-    width: 10px;
-    height: 10px;
-    shape-rendering: crispEdges;
-}
-
-.titlebar-close svg polygon
-{
-    -webkit-transition: fill .2s;
-    -moz-transition: fill .2s;
-    -ms-transition: fill .2s;
-    -o-transition: fill .2s;
-    transition: fill .2s;
-}
-
-.titlebar:not(.fullscreen) svg.maximize-svg
-{
-    display: none;
-}
-
-.titlebar.fullscreen svg.fullscreen-svg
-{
-    display: none;
-}
-
-.titlebar-minimize:hover,
-.titlebar-resize:hover,
-.titlebar-fullscreen:hover
-{
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.titlebar-light .titlebar-minimize:hover,
-.titlebar-light .titlebar-resize:hover,
-.titlebar-light .titlebar-fullscreen:hover
-{
-    background-color: rgba(0, 0, 0, 0.1);
-}
-
-.titlebar-close:hover
-{
-    background-color: rgba(232, 17, 35, 0.9);
-}
-
-.titlebar-close:hover svg polygon
-{
-    fill: rgba(255, 255, 255, 1);
-}
-
-.titlebar-light .titlebar-close:hover
-{
-    fill: rgba(0, 0, 0, 1);
-}
-
-.titlebar-light svg polygon,
-.titlebar-light svg rect,
-.titlebar-light svg > path
-{
-    fill: rgba(255, 255, 255, 1);
-}
-
-.titlebar-light .titlebar-close:hover
-{
-    background-color: rgba(232, 17, 35, 0.9);
-} */

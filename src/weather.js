@@ -21,16 +21,19 @@ function _qs(id) {
   return document.querySelector(id)
 }
 
-const city = _qs('.city')
-const time = _qs('.time')
+const cityEl = _qs('.city')
+const timeEl = _qs('.time')
 const weatherEl = _qs('.weather')
-const githubLink = _qs('.github')
+const githubEl = _qs('.github')
 let cityId
 
-time.addEventListener('click', () => {
+cityEl.addEventListener('click', () => {
+  ipcRenderer.send('prompt-city')
+})
+timeEl.addEventListener('click', () => {
   shell.openExternal(`https://openweathermap.org/city/${cityId}`)
 })
-githubLink.addEventListener('click', () => {
+githubEl.addEventListener('click', () => {
   shell.openExternal('https://github.com/Fraasi/Saeae/issues')
 })
 
@@ -40,8 +43,8 @@ function update(json) {
   cityId = id
   // if error
   if (json.errMsg) {
-    city.innerHTML = 'Error - '
-    time.innerHTML = date
+    cityEl.innerHTML = 'Error - '
+    timeEl.innerHTML = date
     weatherEl.innerHTML = `
       ${json.errText}
       <hr>
@@ -49,13 +52,13 @@ function update(json) {
       <hr>
       ${json.bugReport}
       `
-    githubLink.style.display = 'inline-grid'
-    githubLink.innerHTML = 'github.com/Fraasi/Saeae/issues'
+    githubEl.style.display = 'inline-grid'
+    githubEl.innerHTML = 'github.com/Fraasi/Saeae/issues'
     return
   }
 
-  city.innerHTML = `${name} - `
-  time.innerHTML = date
+  cityEl.innerHTML = `${name} - `
+  timeEl.innerHTML = date
   weatherEl.innerHTML = `
     ${weather[0].description.charAt(0).toUpperCase() + weather[0].description.slice(1)}<br />
     Temperature: <span class="ta-right">${main.temp.toFixed(1)}°C</span><br />
@@ -68,8 +71,8 @@ function update(json) {
     Sunrise: <span class="ta-right">${parseTime(new Date(sys.sunrise * 1000).getHours())}:${parseTime(new Date(sys.sunrise * 1000).getMinutes())}</span><br />
     Sunset: <span class="ta-right">${parseTime(new Date(sys.sunset * 1000).getHours())}:${parseTime(new Date(sys.sunset * 1000).getMinutes())}</span>
   `
-  githubLink.innerHTML = ''
-  githubLink.style.display = 'none'
+  githubEl.innerHTML = ''
+  githubEl.style.display = 'none'
   resizeWindow()
 }
 
