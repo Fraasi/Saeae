@@ -13,16 +13,23 @@ debug({ showDevTools: true, devToolsMode: 'detach' })
 
 const { OPENWEATHER_APIKEY } = require('../env.js')
 
-const store = new Store({
-  name: 'saeae',
+const storeSchema = {
+  name: { type: 'string' },
+  city: { type: 'string' },
+  cityId: { type: 'number' },
+  lat: { type: 'number' },
+  lon: { type: 'number' },
+  lastInput: { type: 'string' },
   defaults: {
-    weatherCity: 'helsinki',
+    name: 'saeae',
+    city: 'helsinki',
+    cityId: 634964,
     lat: 61.5,
     lon: 23.76,
-    cityId: 634964,
     lastInput: '',
   },
-})
+}
+const store = new Store(storeSchema)
 
 let astralWindow
 let weatherWindow
@@ -35,7 +42,7 @@ function promptCity() {
     alwaysOnTop: true,
     height: 170,
     title: 'Saeae - input new city or city id',
-    label: `Current city: ${store.get('weatherCity')}`,
+    label: `Current city: ${store.get('city')}`,
     type: 'input',
     inputAttrs: {
       type: 'text',
@@ -46,7 +53,7 @@ function promptCity() {
   })
     .then((input) => { // null if window was closed or user clicked Cancel
       if (input === null) return
-      if (input === '') input = store.get('lastInput') ? store.get('lastInput') : store.get('weatherCity')
+      if (input === '') input = store.get('lastInput') ? store.get('lastInput') : store.get('cCity')
       else store.set('lastInput', input)
       fetchWeather(input)
     })
@@ -97,16 +104,16 @@ function fetchWeather(input) {
       clearInterval(updateInterval)
       if (json.cod !== 200) throw new Error(`${json.cod}, ${json.message}`)
       store.set({
+        city: json.name,
+        cityId: json.id,
         lat: json.coord.lat,
         lon: json.coord.lon,
-        cityId: json.id,
-        weatherCity: json.name,
       })
       tray.setToolTip(`Saeae for ${json.name} ${json.main.temp.toFixed(1)}°C`)
 
       weatherWindow.webContents.send('update-info', json)
       astralWindow.webContents.send('update-info', json)
-      updateInterval = setInterval(fetchWeather.bind(null, store.get('weatherCity')), 1000 * 60 * 20)
+      updateInterval = setInterval(fetchWeather.bind(null, store.get('city')), 1000 * 60 * 20)
     })
     .catch((err) => {
       const error = {
@@ -122,7 +129,7 @@ function fetchWeather(input) {
         errStack: err.stack.replace(/&appid=.+2eb/, ''),
       }
 
-      store.set('weatherCity', '<error>')
+      store.set('city', '<error>')
       tray.setToolTip('Bad weather, click for error info')
       const badWeather = path.join(__dirname, 'images/weather-downpour.png')
       tray.setImage(badWeather)
@@ -166,7 +173,7 @@ function createApp() {
     if (closeApp) weatherWindow = null
   })
   weatherWindow.setMenu(null)
-  weatherWindow.webContents.on('did-finish-load', fetchWeather.bind(null, store.get('weatherCity')))
+  weatherWindow.webContents.on('did-finish-load', fetchWeather.bind(null, store.get('city')))
 
   // astralWindow
   astralWindow = new BrowserWindow({

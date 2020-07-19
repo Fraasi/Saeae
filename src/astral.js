@@ -76,7 +76,7 @@ timeEl.addEventListener('click', () => {
 })
 
 function update(err) {
-  const city = store.get('weatherCity')
+  const city = store.get('city')
   const latitude = store.get('lat')
   const longitude = store.get('lon')
   const data = getData(latitude, longitude)
