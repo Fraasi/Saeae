@@ -52,12 +52,7 @@
 	"devDependencies": {
 		"electron": "^9.1.0",
 		"electron-builder": "^22.7.0",
-		"eslint": "^7.4.0",
-		"np": "^6.3.0"
-	},
-	"np": {
-		"publish": false,
-		"releaseDraft": false
+		"eslint": "^7.4.0"
 	},
 	"build": {
 		"files": [
