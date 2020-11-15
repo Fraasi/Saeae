@@ -50,10 +50,11 @@ function promptCity() {
     },
     icon: path.join(__dirname, 'images/weather-cloudy-black.png'),
     customStylesheet: path.join(__dirname, 'styles.css'),
+    menuBarVisible: false, // default in 1.6.0
   })
     .then((input) => { // null if window was closed or user clicked Cancel
       if (input === null) return
-      if (input === '') input = store.get('lastInput') ? store.get('lastInput') : store.get('cCity')
+      if (input === '') input = store.get('lastInput') ? store.get('lastInput') : store.get('city')
       else store.set('lastInput', input)
       fetchWeather(input)
     })
@@ -83,7 +84,7 @@ function buildTrayContextMenu() {
     },
     { type: 'separator' },
     {
-      label: 'Quit app',
+      label: 'Quit Saeae',
       click() {
         closeApp = true
         tray.destroy()
@@ -124,11 +125,11 @@ function fetchWeather(input) {
           See error below.
         `,
         bugReport: 'You can file a bug report at ',
-        // hide api in error message
+        // hide appid in error message
         errMsg: err.message.replace(/&appid=.+2eb/, ''),
         errStack: err.stack.replace(/&appid=.+2eb/, ''),
       }
-
+      // TODO: hmmm... necessary?
       store.set('city', '<error>')
       tray.setToolTip('Bad weather, click for error info')
       const badWeather = path.join(__dirname, 'images/weather-downpour.png')
