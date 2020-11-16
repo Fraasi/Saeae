@@ -1,17 +1,12 @@
-const { ipcRenderer, shell } = require('electron')
-const customTitlebar = require('custom-electron-titlebar');
-const createTempImage = require('./utils/create-temp-image')
-const taupunkt = require('./utils/taupunkt')
-const resizeWindow = require('./utils/resizeWindow')
-
-
-new customTitlebar.Titlebar({
-  backgroundColor: customTitlebar.Color.fromHex('#444'),
-  icon: 'images/weather-cloudy-black.png',
-  maximizable: false,
-  titleHorizontalAlignment: 'left',
-  menu: null
-});
+import createTempImage from './utils/create-temp-image.js'
+import taupunkt from './utils/taupunkt.js'
+import resizeWindow from './utils/resizeWindow.js'
+const {
+  ipcOn,
+  ipcSend,
+  openExternal,
+} = window.api
+console.log('api:', window.api)
 
 function parseTime(time) {
   return (time < 10) ? `0${time}` : time
@@ -28,20 +23,20 @@ const githubEl = _qs('.github')
 let cityId
 
 cityEl.addEventListener('click', () => {
-  ipcRenderer.send('prompt-city')
+  ipcSend('prompt-city')
 })
 timeEl.addEventListener('click', () => {
-  shell.openExternal(`https://openweathermap.org/city/${cityId}`)
+  openExternal(`https://openweathermap.org/city/${cityId}`)
 })
 githubEl.addEventListener('click', () => {
-  shell.openExternal('https://github.com/Fraasi/Saeae/issues')
+  openExternal('https://github.com/Fraasi/Saeae/issues')
 })
 
 function update(json) {
   const date = new Date().toLocaleString('en-GB').slice(0, -3)
-  const { name, weather, main, sys, wind, id } = json
+  const { name: cityName, weather, main, sys, wind, id } = json
   cityId = id
-  // if error
+
   if (json.errMsg) {
     cityEl.innerHTML = 'Error - '
     timeEl.innerHTML = date
@@ -57,7 +52,7 @@ function update(json) {
     return
   }
 
-  cityEl.innerHTML = `${name} - `
+  cityEl.innerHTML = `${cityName} - `
   timeEl.innerHTML = date
   weatherEl.innerHTML = `
     ${weather[0].description.charAt(0).toUpperCase() + weather[0].description.slice(1)}<br />
@@ -76,13 +71,15 @@ function update(json) {
   resizeWindow()
 }
 
-ipcRenderer.on('fetch-error', (sender, err) => {
+ipcOn('fetch-error', (sender, err) => {
+  console.log('err:', err)
   update(err)
 })
 
-ipcRenderer.on('update-info', (sender, json) => {
+ipcOn('update-info', (sender, json) => {
+  console.log('json:', json)
   const numString = Math.round(json.main.temp).toString()
   const dataUrl = createTempImage(numString)
-  ipcRenderer.send('update-tray-data-url', dataUrl)
+  ipcSend('update-tray-data-url', dataUrl)
   update(json)
 })

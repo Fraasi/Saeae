@@ -1,4 +1,4 @@
-module.exports = function resizeWindow() {
+export default function resizeWindow() {
   const contentEl = document.querySelector('#bg-radial')
   const contentHeight = contentEl.clientHeight
   const contentWidth = contentEl.clientWidth

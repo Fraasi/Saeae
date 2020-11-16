@@ -1,19 +1,13 @@
-const { ipcRenderer, shell } = require('electron')
-const customTitlebar = require('custom-electron-titlebar');
-const SunCalc = require('suncalc')
-const Store = require('electron-store')
-const { phase_hunt } = require('./utils/lune.js')
-const resizeWindow = require('./utils/resizeWindow.js')
+import resizeWindow from './utils/resizeWindow.js'
+const {
+  SunCalc,
+  phase_hunt,
+  ipcSend,
+  ipcOn,
+   openExternal,
+ } = window.api
+console.log('astral api:', window.api)
 
-const store = new Store({ name: 'saeae' })
-
-new customTitlebar.Titlebar({
-  backgroundColor: customTitlebar.Color.fromHex('#444'),
-  icon: 'images/baseline_brightness_high_black_18dp.png',
-  maximizable: false,
-  titleHorizontalAlignment: 'left',
-  menu: null
-});
 
 function getZodiacSign(day, month) {
   if ((month === 1 && day <= 20) || (month === 12 && day >= 22)) return 'Capricorn'
@@ -69,28 +63,28 @@ const moonEl = _q('.moon')
 const sunEl = _q('.sun')
 
 cityEl.addEventListener('click', () => {
-  ipcRenderer.send('prompt-city')
+  ipcSend('prompt-city')
 })
 timeEl.addEventListener('click', () => {
-  shell.openExternal('https://www.timeanddate.com/moon/phases/')
+  openExternal('https://www.timeanddate.com/moon/phases/')
 })
 
-function update(err) {
-  const city = store.get('city')
-  const latitude = store.get('lat')
-  const longitude = store.get('lon')
-  const data = getData(latitude, longitude)
-  if (err) {
+function update(json) {
+  console.log('json:', json)
+  const { name: cityName, coord: { lat, lon} } = json
+  const data = getData(lat, lon)
+
+  if (json && json.errMsg) {
     cityEl.innerHTML = 'Error - '
     timeEl.innerHTML = data.date.toLocaleString('en-GB').slice(0, -3)
     moonEl.innerHTML = `
-    message: ${err.errMsg} <br /> stack: ${err.errStack}
+    message: ${json.errMsg} <br /> stack: ${json.errStack}
     `
     sunEl.innerHTML = ''
     return
   }
 
-  cityEl.innerHTML = `${city} - `
+  cityEl.innerHTML = `${cityName} - `
   timeEl.innerHTML = data.date.toLocaleString('en-GB').slice(0, -3)
 
   const { moonPosition, moonTimes, illumination, zodiac, luneJS } = data
@@ -111,8 +105,8 @@ function update(err) {
   const {
     goldenHour, goldenHourEnd, sunriseEnd, sunsetStart, sunrise, sunset, solarNoon,
   } = data.sunTimes
-  const sunRisePos = SunCalc.getPosition(sunrise, latitude, longitude)
-  const sunSetPos = SunCalc.getPosition(sunset, latitude, longitude)
+  const sunRisePos = SunCalc.getPosition(sunrise, lat, lon)
+  const sunSetPos = SunCalc.getPosition(sunset, lat, lon)
 
   sunEl.innerHTML = `
     GoldenHour AM: <span class="ta-right">${sunriseEnd.toLocaleTimeString('en-GB').slice(0, -3)} - ${goldenHourEnd == 'Invalid Date' ? 'N/A' : goldenHourEnd.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
@@ -127,5 +121,5 @@ function update(err) {
   resizeWindow()
 }
 
-ipcRenderer.on('fetch-error', (sender, err) => { update(err) })
-ipcRenderer.on('update-info', () => { update() })
+ipcOn('fetch-error', (sender, err) => { update(err) })
+ipcOn('update-info', (sender, json) => { if (json) update(json) })

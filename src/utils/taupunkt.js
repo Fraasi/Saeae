@@ -2,7 +2,7 @@
 // from http://myscope.net/taupunkttemperatur/
 
 // Taupunkt Berechnung
-module.exports = function taupunkt(t, r) {
+export default function taupunkt(t, r) {
   // t = Luft-Temperatur (°C)
   // r = relative Luftfeuchtigkeit (%)
   // Konstante

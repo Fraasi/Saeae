@@ -14,18 +14,19 @@ debug({ showDevTools: true, devToolsMode: 'detach' })
 const { OPENWEATHER_APIKEY } = require('../env.js')
 
 const storeSchema = {
-  name: { type: 'string' },
-  city: { type: 'string' },
-  cityId: { type: 'number' },
-  lat: { type: 'number' },
-  lon: { type: 'number' },
-  lastInput: { type: 'string' },
+  name: 'saeae',
+  schema: {
+    cityName: { type: 'string' },
+    cityId: { type: 'number' },
+    lat: { type: 'number' },
+    lon: { type: 'number' },
+    lastInput: { type: 'string' },
+  },
   defaults: {
-    name: 'saeae',
-    city: 'helsinki',
-    cityId: 634964,
-    lat: 61.5,
-    lon: 23.76,
+    cityName: 'Helsinki',
+    cityId: 658226,
+    lat: 60.18,
+    lon: 24.93,
     lastInput: '',
   },
 }
@@ -40,9 +41,10 @@ let closeApp = false
 function promptCity() {
   prompt({
     alwaysOnTop: true,
+    skipTaskbar: false,
     height: 170,
     title: 'Saeae - input new city or city id',
-    label: `Current city: ${store.get('city')}`,
+    label: `Current city: ${store.get('cityName')}`,
     type: 'input',
     inputAttrs: {
       type: 'text',
@@ -54,7 +56,7 @@ function promptCity() {
   })
     .then((input) => { // null if window was closed or user clicked Cancel
       if (input === null) return
-      if (input === '') input = store.get('lastInput') ? store.get('lastInput') : store.get('city')
+      if (input === '') input = store.get('lastInput') ? store.get('lastInput') : store.get('cityName')
       else store.set('lastInput', input)
       fetchWeather(input)
     })
@@ -105,7 +107,7 @@ function fetchWeather(input) {
       clearInterval(updateInterval)
       if (json.cod !== 200) throw new Error(`${json.cod}, ${json.message}`)
       store.set({
-        city: json.name,
+        cityName: json.name,
         cityId: json.id,
         lat: json.coord.lat,
         lon: json.coord.lon,
@@ -114,9 +116,10 @@ function fetchWeather(input) {
 
       weatherWindow.webContents.send('update-info', json)
       astralWindow.webContents.send('update-info', json)
-      updateInterval = setInterval(fetchWeather.bind(null, store.get('city')), 1000 * 60 * 20)
+      updateInterval = setInterval(fetchWeather.bind(null, store.get('cityId')), 1000 * 60 * 20)
     })
     .catch((err) => {
+      console.log('fetxh-err:', err)
       const error = {
         errText: `
           Bad Weather at the intertubes.<br />
@@ -130,7 +133,7 @@ function fetchWeather(input) {
         errStack: err.stack.replace(/&appid=.+2eb/, ''),
       }
       // TODO: hmmm... necessary?
-      store.set('city', '<error>')
+      // store.set('cityName', '<error>')
       tray.setToolTip('Bad weather, click for error info')
       const badWeather = path.join(__dirname, 'images/weather-downpour.png')
       tray.setImage(badWeather)
@@ -140,6 +143,7 @@ function fetchWeather(input) {
 }
 
 function createApp() {
+
   tray = new Tray(path.join(__dirname, './images/weather-cloudy.png'))
   buildTrayContextMenu()
 
@@ -153,13 +157,13 @@ function createApp() {
     show: is.development ? true : false,
     resizable: false,
     frame: false,
+    titleBarStyle: 'hidden',
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'weather-preload.js'),
       // devTools: true,
-      nodeIntegration: true,
-      contextIsolation: false,
-      // allowRunningInsecureContent: true,
-      // allowDisplayingInsecureContent: true
+      contextIsolation: true,
+      worldSafeExecuteJavaScript: true,
+      enableRemoteModule: true, // custom titlebar needs this
     }
   })
   weatherWindow.loadURL(`file://${__dirname}/weather.html`)
@@ -174,7 +178,7 @@ function createApp() {
     if (closeApp) weatherWindow = null
   })
   weatherWindow.setMenu(null)
-  weatherWindow.webContents.on('did-finish-load', fetchWeather.bind(null, store.get('city')))
+  weatherWindow.webContents.on('did-finish-load', fetchWeather.bind(null, store.get('cityId')))
 
   // astralWindow
   astralWindow = new BrowserWindow({
@@ -187,10 +191,10 @@ function createApp() {
     resizable: false,
     frame: false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      // devTools: is.development ? true : false,
-      nodeIntegration: true,
-      contextIsolation: false,
+      preload: path.join(__dirname, 'astral-preload.js'),
+      contextIsolation: true,
+      worldSafeExecuteJavaScript: true,
+      enableRemoteModule: true,
     }
   })
   astralWindow.loadURL(`file://${__dirname}/astral.html`)
