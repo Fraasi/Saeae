@@ -18,9 +18,11 @@
 		"url": "https://github.com/fraasi/saeae.git"
 	},
 	"keywords": [
-		"weather",
 		"sää",
-		"saeae",
+    "saeae",
+    "electron",
+    "weather",
+    "app",
 		"tray",
 		"temperature",
 		"sun",
@@ -50,7 +52,7 @@
 	"devDependencies": {
 		"electron": "^9.3.4",
 		"electron-builder": "^22.9.1",
-		"eslint": "^7.13.0"
+		"eslint": "^7.14.0"
 	},
 	"build": {
 		"files": [

@@ -3,15 +3,16 @@ const {
   ipcRenderer,
   shell,
 } = require("electron");
-const customTitlebar = require('custom-electron-titlebar');
+const { Titlebar, Color } = require('custom-electron-titlebar');
 
 window.addEventListener('DOMContentLoaded', () => {
-  new customTitlebar.Titlebar({
-    backgroundColor: customTitlebar.Color.fromHex('#444'),
+  new Titlebar({
+    backgroundColor: Color.fromHex('#404040'),
     icon: 'images/weather-cloudy-black.png',
     maximizable: false,
     titleHorizontalAlignment: 'left',
-    menu: null
+    menu: null,
+    shadow: true,
   })
 })
 

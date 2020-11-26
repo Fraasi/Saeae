@@ -3,15 +3,27 @@ body {
   font-family: 'Segoe UI', Cambria, Georgia, Times, serif;
   font-size: 16px;
   color: whitesmoke;
-  background-color: #333842;
+  background-color: #2B2B2B;
   word-break: break-word;
+}
+
+/* custom titlebar */
+.titlebar, div.titlebar.cet-windows.inactive {
+  background-color: #404040 !important;
+}
+div.titlebar.cet-windows.inactive .window-title {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+fieldset {
+  border-radius: 6px;
 }
 
 #bg-radial {
   margin: 8px;
   width: inherit;
   height: inherit;
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
 .city.link {

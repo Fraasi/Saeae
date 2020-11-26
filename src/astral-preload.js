@@ -9,11 +9,12 @@ const { phase_hunt } = require('./utils/lune.js')
 
 window.addEventListener('DOMContentLoaded', () => {
   new customTitlebar.Titlebar({
-    backgroundColor: customTitlebar.Color.fromHex('#444'),
+    backgroundColor: customTitlebar.Color.fromHex('#404040'),
     icon: 'images/baseline_brightness_high_black_18dp.png',
     maximizable: false,
     titleHorizontalAlignment: 'left',
-    menu: null
+    menu: null,
+    shadow: true,
   })
 })
 
