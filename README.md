@@ -1,7 +1,9 @@
 ## Saeae (Sää)  
 Electron app to show weather temperature in the notification area/system tray.  
 
-[![https://github.com/Fraasi/Saeae/releases/latest](https://img.shields.io/github/release/fraasi/saeae.svg)](https://github.com/Fraasi/Saeae/releases/latest)  
+[![https://github.com/Fraasi/Saeae/releases/latest](https://img.shields.io/github/release/fraasi/saeae.svg)](https://github.com/Fraasi/Saeae/releases/latest) ![GitHub release (latest by date)](https://img.shields.io/github/downloads/fraasi/saeae/latest/total) ![GitHub all releases](https://img.shields.io/github/downloads/fraasi/saeae/total?label=total%20downloads)
+
+
 Windows release only at this time (sorry).
 
 ### Install
