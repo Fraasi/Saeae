@@ -1,3 +1,4 @@
+require('dotenv').config()
 const path = require('path')
 const {
   app, Menu, Tray, shell, BrowserWindow, ipcMain, nativeImage
@@ -11,7 +12,7 @@ const { is } = require('electron-util')
 const debug = require('electron-debug')
 debug({ showDevTools: true, devToolsMode: 'detach' })
 
-const { OPENWEATHER_APIKEY } = require('../env.js')
+const OPENWEATHER_APIKEY = process.env.OPENWEATHER_APIKEY
 
 const storeSchema = {
   name: 'saeae',

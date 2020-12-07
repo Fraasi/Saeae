@@ -32,12 +32,13 @@
 		"postinstall": "electron-builder install-app-deps",
 		"lint": "eslint src --color",
 		"start": "electron .",
-    "pack": "electron-builder --dir",
-    "predist": "rm -rf ./dist",
+		"pack": "electron-builder --dir",
+		"predist": "rm -rf ./dist",
 		"dist": "electron-builder -wl"
 	},
 	"dependencies": {
 		"custom-electron-titlebar": "^3.2.5",
+		"dotenv": "^8.2.0",
 		"electron-context-menu": "^2.3.0",
 		"electron-debug": "^3.1.0",
 		"electron-prompt": "^1.6.0",
@@ -54,8 +55,8 @@
 		"eslint": "^7.15.0"
 	},
 	"build": {
-    "appId": "com.${name}.saeae",
-    "copyright": "Copyright © 2020 ${author}",
+		"appId": "com.${name}.saeae",
+		"copyright": "Copyright © 2020 ${author}",
 		"files": [
 			"src/",
 			"env.js",
@@ -78,7 +79,7 @@
 			]
 		},
 		"linux": {
-      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+			"artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
 			"icon": "src/images/fraasi-256x256.png",
 			"target": [
 				"AppImage",

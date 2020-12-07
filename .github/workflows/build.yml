@@ -1,5 +1,4 @@
 name: Build/release
-
 on:
   workflow_dispatch:
     inputs:
@@ -7,11 +6,14 @@ on:
         description: "Make a release (true/false)"
         required: true
         default: "false"
+      artifacts:
+        description: "Build artifacts (true/false)"
+        required: true
+        default: "false"
 
 jobs:
   release:
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -26,6 +28,8 @@ jobs:
           node-version: "12.x"
 
       - name: Build/release Electron app
+        env:
+          OPENWEATHER_APIKEY: ${{ secrets.OPENWEATHER_APIKEY }}
         uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.github_token }}
@@ -35,12 +39,12 @@ jobs:
           # release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
       - name: Upload artifacts
+        if: ${{ github.event.inputs.artifacts == 'true' }}
         uses: actions/upload-artifact@v2
         with:
-          name: files
+          name: builds
           path: |
             dist/Saeae*.exe
             dist/Saeae*.AppImage
             dist/Saeae*.deb
             !dist/win-unpacked/
-
