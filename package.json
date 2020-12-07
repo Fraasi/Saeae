@@ -32,8 +32,9 @@
 		"postinstall": "electron-builder install-app-deps",
 		"lint": "eslint src --color",
 		"start": "electron .",
-		"pack": "electron-builder --dir",
-		"dist": "electron-builder --windows"
+    "pack": "electron-builder --dir",
+    "predist": "rm -rf ./dist",
+		"dist": "electron-builder -wl"
 	},
 	"dependencies": {
 		"custom-electron-titlebar": "^3.2.5",
