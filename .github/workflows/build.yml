@@ -37,5 +37,10 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: dist
-          path: dist/
+          name: files
+          path: |
+            dist/Saeae*.exe
+            dist/Saeae*.AppImage
+            dist/Saeae*.deb
+            !dist/win-unpacked/
+
