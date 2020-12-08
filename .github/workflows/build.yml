@@ -28,8 +28,6 @@ jobs:
           node-version: "12.x"
 
       - name: Build/release Electron app
-        env:
-          OPENWEATHER_APIKEY: ${{ secrets.OPENWEATHER_APIKEY }}
         uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.github_token }}
@@ -37,6 +35,8 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           # release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        env:
+          OPENWEATHER_APIKEY: ${{ secrets.OPENWEATHER_APIKEY }}
 
       - name: Upload artifacts
         if: ${{ github.event.inputs.artifacts == 'true' }}
