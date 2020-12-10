@@ -21,9 +21,6 @@ jobs:
         os: [ubuntu-latest, windows-latest]
 
     steps:
-      - name: envs
-        run: echo "key" "$OPENWEATHER_APIKEY"
-
       - name: Check out Git repository
         uses: actions/checkout@v1
 
@@ -31,6 +28,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "12.x"
+
+      - name: set .env file
+        run: |
+          echo "OPENWEATHER_APIKEY=${{ secrets.OPENWEATHER_APIKEY }}" > .env
+          ls
+        shell: bash
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
