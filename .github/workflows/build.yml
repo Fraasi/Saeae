@@ -29,13 +29,12 @@ jobs:
         with:
           node-version: "12.x"
 
-      - name: set .env file
+      - name: Build/release Electron app
         run: |
-          echo "OPENWEATHER_APIKEY=${{ env.OPENWEATHER_APIKEY }}" > ./.env
+          echo "Set .env file"
+          echo "OPENWEATHER_APIKEY=${{ env.OPENWEATHER_APIKEY }}" > ${{ GITHUB_WORKSPACE }}/.env
           ls
         shell: bash
-
-      - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.github_token }}
