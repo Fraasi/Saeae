@@ -31,7 +31,7 @@ jobs:
 
       - name: set env
         run: |
-          echo "OPENWEATHER_APIKEY=${{ env.OPENWEATHER_APIKEY }}" > ${{ GITHUB_WORKSPACE }}/.env
+          echo "OPENWEATHER_APIKEY=${{ env.OPENWEATHER_APIKEY }}" > ${{ env.GITHUB_WORKSPACE }}/.env
           ls
         shell: bash
 
