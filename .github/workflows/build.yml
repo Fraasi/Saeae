@@ -31,7 +31,7 @@ jobs:
 
       - name: set .env file
         run: |
-          echo "OPENWEATHER_APIKEY=${{ secrets.OPENWEATHER_APIKEY }}" > .env
+          echo "OPENWEATHER_APIKEY=${{ env.OPENWEATHER_APIKEY }}" > ./.env
           ls
         shell: bash
 
