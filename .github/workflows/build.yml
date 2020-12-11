@@ -34,12 +34,17 @@ jobs:
         env:
           WORKSPACE: ${{ env.GITHUB_WORKSPACE }}
         run: |
-          echo "OPENWEATHER_APIKEY=${{ secrets.OPENWEATHER_APIKEY }}" >> $GITHUB_ENV
-        # echo "OPENWEATHER_APIKEY=${{ secrets.OPENWEATHER_APIKEY }}" > .env
+          touch .env
+          echo "OPENWEATHER_APIKEY=${{ secrets.OPENWEATHER_APIKEY }}" >> .env
+          cat .env
+          ls
+        # echo "OPENWEATHER_APIKEY=${{ secrets.OPENWEATHER_APIKEY }}" >> $GITHUB_ENV
         # ls
         # echo "OPENWEATHER_APIKEY=$OPENWEATHER_APIKEY" > "$WORKSPACE/.env"
 
       - name: Build/release Electron app
+        env:
+          OPENWEATHER_APIKEY: ${{ secrets.OPENWEATHER_APIKEY }}
         uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.github_token }}
