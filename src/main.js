@@ -99,12 +99,6 @@ function buildTrayContextMenu() {
 }
 
 function fetchWeather(input) {
-  weatherWindow.webContents.send('fetch-envs', {
-    processEnv: process.env,
-    processEnvApikey: process.env.OPENWEATHER_APIKEY
-  })
-
-
   tray.setImage(path.join(__dirname, './images/weather-cloudy.png'))
   const queryOrId = isNaN(parseInt(input, 10)) ? 'q' : 'id'
   const url = `https://api.openweathermap.org/data/2.5/weather?${queryOrId}=${input}&units=metric&appid=${OPENWEATHER_APIKEY}`
@@ -121,6 +115,7 @@ function fetchWeather(input) {
       })
       tray.setToolTip(`Saeae for ${json.name} ${json.main.temp.toFixed(1)}°C`)
 
+      weatherWindow.webContents.send('debug-log', JSON.stringify(process.env))
       weatherWindow.webContents.send('update-info', json)
       astralWindow.webContents.send('update-info', json)
       updateInterval = setInterval(fetchWeather.bind(null, store.get('cityId')), 1000 * 60 * 20)

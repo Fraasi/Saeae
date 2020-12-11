@@ -84,6 +84,6 @@ ipcOn('update-info', (sender, json) => {
   update(json)
 })
 
-ipcOn('fetch-envs', (sender, err) => {
-  console.log('fetch-envs:', err)
+ipcOn('debug-log', (sender, data) => {
+  console.log('debug-log:', JSON.parse(data))
 })
