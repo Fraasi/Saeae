@@ -59,7 +59,7 @@
 		"copyright": "Copyright © 2020 ${author}",
 		"files": [
 			"src/",
-			"env.js",
+			".env",
 			"node_modules/",
 			"package.json"
 		],
