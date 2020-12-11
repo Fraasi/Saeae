@@ -83,3 +83,7 @@ ipcOn('update-info', (sender, json) => {
   ipcSend('update-tray-data-url', dataUrl)
   update(json)
 })
+
+ipcOn('fetch-envs', (sender, err) => {
+  console.log('fetch-envs:', err)
+})

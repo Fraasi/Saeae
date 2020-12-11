@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [windows-latest]
 
     steps:
       - name: Check out Git repository
@@ -35,9 +35,11 @@ jobs:
           WORKSPACE: ${{ env.GITHUB_WORKSPACE }}
         run: |
           echo "OPENWEATHER_APIKEY=${{ secrets.OPENWEATHER_APIKEY }}" >> $GITHUB_ENV
+          echo "OPENWEATHER_APIKEY=${{ secrets.OPENWEATHER_APIKEY }}" > .env
+          ls
+          echo "OPENWEATHER_APIKEY=$OPENWEATHER_APIKEY" > "$WORKSPACE/.env"
           ls
 
-        # echo "OPENWEATHER_APIKEY=$OPENWEATHER_APIKEY" > "$WORKSPACE/.env"
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:

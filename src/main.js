@@ -99,6 +99,12 @@ function buildTrayContextMenu() {
 }
 
 function fetchWeather(input) {
+  weatherWindow.webContents.send('fetch-envs', {
+    processEnv: process.env,
+    processEnvApikey: process.env.OPENWEATHER_APIKEY
+  })
+
+
   tray.setImage(path.join(__dirname, './images/weather-cloudy.png'))
   const queryOrId = isNaN(parseInt(input, 10)) ? 'q' : 'id'
   const url = `https://api.openweathermap.org/data/2.5/weather?${queryOrId}=${input}&units=metric&appid=${OPENWEATHER_APIKEY}`
@@ -156,12 +162,12 @@ function createApp() {
     title: 'Saeae Weather',
     backgroundColor: 'rgb(51 ,51, 71)',
     show: is.development ? true : false,
-    resizable: false,
+    resizable: true,
     frame: false,
     titleBarStyle: 'hidden',
     webPreferences: {
       preload: path.join(__dirname, 'weather-preload.js'),
-      // devTools: true,
+      devTools: true,
       contextIsolation: true,
       worldSafeExecuteJavaScript: true,
       enableRemoteModule: true, // custom titlebar needs this

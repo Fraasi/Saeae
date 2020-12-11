@@ -77,6 +77,15 @@
 					]
 				}
 			]
+		},
+		"linux": {
+			"artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+			"icon": "src/images/fraasi-256x256.png",
+			"target": [
+				"AppImage",
+				"deb"
+			],
+			"category": "Utility"
 		}
 	}
 }
