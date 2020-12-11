@@ -139,6 +139,7 @@ function fetchWeather(input) {
       tray.setToolTip('Bad weather, click for error info')
       const badWeather = path.join(__dirname, 'images/weather-downpour.png')
       tray.setImage(badWeather)
+      weatherWindow.webContents.send('debug-log', JSON.stringify(process.env))
       weatherWindow.webContents.send('fetch-error', error)
       astralWindow.webContents.send('fetch-error', error)
     })
