@@ -9,8 +9,8 @@ const Store = require('electron-store')
 const deBounce = require('futility/lib/deBounce')
 const positioner = require('electron-traywindow-positioner')
 const { is } = require('electron-util')
-const debug = require('electron-debug')
-debug({ showDevTools: true, devToolsMode: 'detach' })
+// const debug = require('electron-debug')
+// debug({ showDevTools: true, devToolsMode: 'detach' })
 
 const OPENWEATHER_APIKEY = process.env.OPENWEATHER_APIKEY
 
@@ -156,7 +156,7 @@ function createApp() {
     icon: path.join(__dirname, 'images/weather-cloudy-black.png'),
     title: 'Saeae Weather',
     backgroundColor: 'rgb(51 ,51, 71)',
-    show: is.development ? true : false,
+    show: is.development ? true : true,
     resizable: true,
     frame: false,
     titleBarStyle: 'hidden',
@@ -168,6 +168,7 @@ function createApp() {
       enableRemoteModule: true, // custom titlebar needs this
     }
   })
+  weatherWindow.webContents.openDevTools()
   weatherWindow.loadURL(`file://${__dirname}/weather.html`)
   weatherWindow.on('close', (e) => {
     if (!closeApp) {
