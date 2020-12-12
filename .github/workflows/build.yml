@@ -30,8 +30,10 @@ jobs:
 
       - name: set env
         shell: bash
+        env:
+          API_KEY: ${{ secrets.OPENWEATHER_APIKEY }}
         run: |
-          echo "module.exports = { OPENWEATHER_APIKEY: ${{ secrets.OPENWEATHER_APIKEY }} }" > env.js
+          echo "module.exports = { OPENWEATHER_APIKEY: $API_KEY }" > env.js
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
