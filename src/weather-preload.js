@@ -29,7 +29,7 @@ contextBridge.exposeInMainWorld(
     }
   },
   ipcOn: (channel, func) => {
-    let validChannels = ['fetch-error', 'update-info', 'debug-log']
+    let validChannels = ['fetch-error', 'update-info']
     if (validChannels.includes(channel)) {
       ipcRenderer.on(channel, (...args) => func(...args))
     }

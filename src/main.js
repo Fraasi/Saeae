@@ -1,4 +1,3 @@
-require('dotenv').config()
 const path = require('path')
 const {
   app, Menu, Tray, shell, BrowserWindow, ipcMain, nativeImage
@@ -9,10 +8,10 @@ const Store = require('electron-store')
 const deBounce = require('futility/lib/deBounce')
 const positioner = require('electron-traywindow-positioner')
 const { is } = require('electron-util')
-// const debug = require('electron-debug')
-// debug({ showDevTools: true, devToolsMode: 'detach' })
+const debug = require('electron-debug')
+debug({ showDevTools: true, devToolsMode: 'detach' })
 
-const OPENWEATHER_APIKEY = process.env.OPENWEATHER_APIKEY
+const { OPENWEATHER_APIKEY } = require('../env.js')
 
 const storeSchema = {
   name: 'saeae',
@@ -115,13 +114,12 @@ function fetchWeather(input) {
       })
       tray.setToolTip(`Saeae for ${json.name} ${json.main.temp.toFixed(1)}°C`)
 
-      weatherWindow.webContents.send('debug-log', JSON.stringify(process.env))
       weatherWindow.webContents.send('update-info', json)
       astralWindow.webContents.send('update-info', json)
       updateInterval = setInterval(fetchWeather.bind(null, store.get('cityId')), 1000 * 60 * 20)
     })
     .catch((err) => {
-      console.log('fetxh-err:', err)
+      console.log('fetch-err:', err)
       const error = {
         errText: `
           Bad Weather at the intertubes.<br />
@@ -134,12 +132,9 @@ function fetchWeather(input) {
         errMsg: err.message.replace(/&appid=.+2eb/, ''),
         errStack: err.stack.replace(/&appid=.+2eb/, ''),
       }
-      // TODO: hmmm... necessary?
-      // store.set('cityName', '<error>')
       tray.setToolTip('Bad weather, click for error info')
       const badWeather = path.join(__dirname, 'images/weather-downpour.png')
       tray.setImage(badWeather)
-      weatherWindow.webContents.send('debug-log', JSON.stringify(process.env))
       weatherWindow.webContents.send('fetch-error', error)
       astralWindow.webContents.send('fetch-error', error)
     })
@@ -157,19 +152,17 @@ function createApp() {
     icon: path.join(__dirname, 'images/weather-cloudy-black.png'),
     title: 'Saeae Weather',
     backgroundColor: 'rgb(51 ,51, 71)',
-    show: is.development ? true : true,
-    resizable: true,
+    show: is.development ? true : false,
+    resizable: false,
     frame: false,
     titleBarStyle: 'hidden',
     webPreferences: {
       preload: path.join(__dirname, 'weather-preload.js'),
-      devTools: true,
       contextIsolation: true,
       worldSafeExecuteJavaScript: true,
       enableRemoteModule: true, // custom titlebar needs this
     }
   })
-  weatherWindow.webContents.openDevTools()
   weatherWindow.loadURL(`file://${__dirname}/weather.html`)
   weatherWindow.on('close', (e) => {
     if (!closeApp) {

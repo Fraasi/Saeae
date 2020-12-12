@@ -83,7 +83,3 @@ ipcOn('update-info', (sender, json) => {
   ipcSend('update-tray-data-url', dataUrl)
   update(json)
 })
-
-ipcOn('debug-log', (sender, data) => {
-  console.log('debug-log:', JSON.parse(data))
-})
