@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [windows-latest]
 
     steps:
 
@@ -28,19 +28,20 @@ jobs:
         with:
           node-version: "12.x"
 
-      - name: set env
+      - name: set env & build
         shell: bash
         env:
-          API_KEY: ${{ secrets.OPENWEATHER_APIKEY }}
+          OPENWEATHER_APIKEY: ${{ secrets.OPENWEATHER_APIKEY }}
         run: |
-          export OPENWEATHER_APIKEY=$API_KEY
+# export OPENWEATHER_APIKEY=$API_KEY
+          npm run dist
         # echo "module.exports = { OPENWEATHER_APIKEY: $API_KEY }" > env.js
 
-      - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          github_token: ${{ secrets.github_token }}
-          release: ${{ github.event.inputs.release == 'true'}}
+      # - name: Build/release Electron app
+      #   uses: samuelmeuli/action-electron-builder@v1
+      #   with:
+      #     github_token: ${{ secrets.github_token }}
+      #     release: ${{ github.event.inputs.release == 'true'}}
         # env:
           # OPENWEATHER_APIKEY: ${{ secrets.OPENWEATHER_APIKEY }}
           # If the commit is tagged with a version (e.g. "v1.0.0"),
