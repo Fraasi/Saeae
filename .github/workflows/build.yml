@@ -33,7 +33,6 @@ jobs:
         env:
           OPENWEATHER_APIKEY: ${{ secrets.OPENWEATHER_APIKEY }}
         run: |
-# export OPENWEATHER_APIKEY=$API_KEY
           npm run dist
         # echo "module.exports = { OPENWEATHER_APIKEY: $API_KEY }" > env.js
 
