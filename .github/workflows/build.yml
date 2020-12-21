@@ -32,8 +32,7 @@ jobs:
         shell: bash
         env:
           OPENWEATHER_APIKEY: ${{ secrets.OPENWEATHER_APIKEY }}
-        run: |
-          npm run dist
+        run: electron-builder -w
         # echo "module.exports = { OPENWEATHER_APIKEY: $API_KEY }" > env.js
 
       # - name: Build/release Electron app
