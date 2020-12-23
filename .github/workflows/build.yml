@@ -2,10 +2,10 @@ name: Build/release
 on:
   workflow_dispatch:
     inputs:
-      release:
-        description: "Make a release (true/false)"
-        required: true
-        default: "false"
+      # release:
+      #   description: "Make a release (true/false)"
+      #   required: true
+      #   default: "false"
       artifacts:
         description: "Build artifacts (true/false)"
         required: true
@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-latest, ubuntu-latest]
 
     steps:
 
@@ -28,13 +28,14 @@ jobs:
         with:
           node-version: "12.x"
 
-      - name: set env & build
+      - name: Build
         shell: bash
         env:
-          API_KEY: ${{ secrets.OPENWEATHER_APIKEY }}
+          API_KEY: '${{ secrets.OPENWEATHER_APIKEY }}'
+          # goddamn quotes
         run: |
           npm ci
-          echo "module.exports.OPENWEATHER_APIKEY = '$API_KEY'" > env.js
+          echo "module.exports.OPENWEATHER_APIKEY = $API_KEY" > env.js
           cat env.js
           npm run dist
 
