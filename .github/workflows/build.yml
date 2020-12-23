@@ -32,11 +32,10 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          API_KEY: '${{ secrets.OPENWEATHER_APIKEY }}'
-          # goddamn quotes
+          API_KEY: ${{ secrets.OPENWEATHER_APIKEY }}
         run: |
           npm ci
-          echo "module.exports.OPENWEATHER_APIKEY = $API_KEY" > env.js
+          echo "module.exports.OPENWEATHER_APIKEY = '$API_KEY'" > env.js
           cat env.js
           npm run dist
 
