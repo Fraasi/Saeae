@@ -34,7 +34,7 @@
 		"start": "electron .",
 		"pack": "electron-builder --dir",
 		"predist": "rm -rf ./dist",
-		"dist": "electron-builder -w"
+		"dist": "electron-builder"
 	},
 	"dependencies": {
 		"custom-electron-titlebar": "^3.2.5",
