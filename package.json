@@ -79,7 +79,7 @@
 		"nsis": {
 			"artifactName": "${productName}-v${version}-${os}-${arch}.${ext}",
 			"oneClick": false,
-			"allowChangeInstallationDirectory": true,
+			"allowToChangeInstallationDirectory": true,
 			"license": "LICENSE.txt",
 			"installerIcon": "src/images/fraasi-256x256.png",
 			"unInstallerIcon": "src/images/fraasi-256x256.png"
