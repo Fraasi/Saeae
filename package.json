@@ -33,7 +33,6 @@
 		"lint": "eslint src --color",
 		"start": "electron .",
 		"pack": "electron-builder --dir",
-		"predist": "rm -rf ./dist",
 		"dist": "electron-builder"
 	},
 	"dependencies": {
@@ -66,20 +65,28 @@
 			"output": "dist"
 		},
 		"win": {
-			"artifactName": "${productName}-${version}-${os}-${arch}-portable.${ext}",
+			"artifactName": "${productName}-v${version}-${os}-${arch}-portable.${ext}",
 			"icon": "src/images/fraasi-256x256.png",
 			"target": [
 				{
-					"target": "portable",
+					"target": ["portable", "nsis"],
 					"arch": [
 						"x64"
 					]
 				}
 			]
 		},
+		"nsis": {
+			"artifactName": "${productName}-v${version}-${os}-${arch}.${ext}",
+			"oneClick": false,
+			"allowChangeInstallationDirectory": true,
+			"license": "LICENSE.txt",
+			"installerIcon": "src/images/fraasi-256x256.png",
+			"unInstallerIcon": "src/images/fraasi-256x256.png"
+		},
 		"linux": {
-			"artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
-			"icon": "src/images/fraasi-256x256.png",
+			"artifactName": "${productName}-v${version}-${os}-${arch}.${ext}",
+			"icon": "build/icons/fraasi-256x256.png",
 			"target": [
 				"AppImage",
 				"deb"
