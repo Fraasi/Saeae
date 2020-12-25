@@ -65,16 +65,20 @@
 			"output": "dist"
 		},
 		"win": {
-			"artifactName": "${productName}-v${version}-${os}-${arch}-portable.${ext}",
 			"icon": "src/images/fraasi-256x256.png",
 			"target": [
 				{
-					"target": ["portable", "nsis"],
-					"arch": [
-						"x64"
-					]
+					"target": "portable",
+					"arch": [ "x64" ]
+				},
+				{
+					"target": "nsis",
+					"arch": [ "x64" ]
 				}
 			]
+		},
+		"portable": {
+			"artifactName": "${productName}-v${version}-${os}-${arch}-portable.${ext}"
 		},
 		"nsis": {
 			"artifactName": "${productName}-v${version}-${os}-${arch}-Setup.${ext}",
