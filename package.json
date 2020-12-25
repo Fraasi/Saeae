@@ -77,12 +77,12 @@
 			]
 		},
 		"nsis": {
-			"artifactName": "${productName}-v${version}-${os}-${arch}.${ext}",
+			"artifactName": "${productName}-v${version}-${os}-${arch}-Setup.${ext}",
 			"oneClick": false,
 			"allowToChangeInstallationDirectory": true,
 			"license": "LICENSE.txt",
 			"installerIcon": "src/images/fraasi-256x256.png",
-			"unInstallerIcon": "src/images/fraasi-256x256.png"
+			"uninstallerIcon": "src/images/fraasi-256x256.png"
 		},
 		"linux": {
 			"artifactName": "${productName}-v${version}-${os}-${arch}.${ext}",
