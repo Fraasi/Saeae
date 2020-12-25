@@ -66,19 +66,11 @@
 		},
 		"win": {
 			"icon": "src/images/fraasi-256x256.png",
-			"target": [
-				{
-					"target": "portable",
-					"arch": [ "x64" ]
-				},
-				{
-					"target": "nsis",
-					"arch": [ "x64" ]
-				}
-			]
+			"target": [ "portable", "nsis" ]
 		},
 		"portable": {
-			"artifactName": "${productName}-v${version}-${os}-${arch}-portable.${ext}"
+			"artifactName": "${productName}-v${version}-${os}-${arch}-portable.${ext}",
+			"arch": [ "x64" ]
 		},
 		"nsis": {
 			"artifactName": "${productName}-v${version}-${os}-${arch}-Setup.${ext}",
@@ -86,7 +78,8 @@
 			"allowToChangeInstallationDirectory": true,
 			"license": "LICENSE.txt",
 			"installerIcon": "src/images/fraasi-256x256.png",
-			"uninstallerIcon": "src/images/fraasi-256x256.png"
+			"uninstallerIcon": "src/images/fraasi-256x256.png",
+			"arch": [ "x64" ]
 		},
 		"linux": {
 			"artifactName": "${productName}-v${version}-${os}-${arch}.${ext}",
