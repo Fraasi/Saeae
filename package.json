@@ -62,31 +62,41 @@
 			"package.json"
 		],
 		"directories": {
-			"output": "dist"
+			"output": "dist",
+			"buildResources": "./resources"
 		},
 		"win": {
-			"icon": "src/images/fraasi-256x256.png",
-			"target": [ "portable", "nsis" ]
-		},
-		"portable": {
+			"icon": "resources/images/fraasi-256x256.png",
 			"artifactName": "${productName}-v${version}-${os}-${arch}-portable.${ext}",
-			"arch": [ "x64" ]
+			"target": [
+				{
+					"target": "portable",
+					"arch": [ "x64" ]
+				},
+				{
+					"target": "nsis",
+					"arch": [ "x64" ]
+				}
+			]
 		},
 		"nsis": {
 			"artifactName": "${productName}-v${version}-${os}-${arch}-Setup.${ext}",
 			"oneClick": false,
 			"allowToChangeInstallationDirectory": true,
-			"license": "LICENSE.txt",
-			"installerIcon": "src/images/fraasi-256x256.png",
-			"uninstallerIcon": "src/images/fraasi-256x256.png",
-			"arch": [ "x64" ]
+			"license": "LICENSE.txt"
 		},
 		"linux": {
 			"artifactName": "${productName}-v${version}-${os}-${arch}.${ext}",
-			"icon": "build/icons/fraasi-256x256.png",
+			"icon": "resources/images/fraasi-256x256.png",
 			"target": [
-				"AppImage",
-				"deb"
+				{
+					"target": "deb",
+					"arch": [ "x64" ]
+				},
+				{
+					"target": "AppImage",
+					"arch": [ "x64" ]
+				}
 			],
 			"category": "Utility"
 		}
