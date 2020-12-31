@@ -54,8 +54,8 @@
 		"eslint": "^7.15.0"
 	},
 	"build": {
-		"appId": "com.fraasi.saeae",
-		"copyright": "Copyright © 2020 ${author}",
+		"appId": "fi.fraasi.saeae",
+		"copyright": "Copyright © 2021 Fraasi",
 		"files": [
 			"src/",
 			"env.js",
