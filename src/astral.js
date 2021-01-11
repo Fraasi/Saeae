@@ -4,9 +4,10 @@ const {
   phase_hunt,
   ipcSend,
   ipcOn,
-   openExternal,
- } = window.api
+  openExternal,
+} = window.api
 console.log('astral api:', window.api)
+window.resizeWindow = resizeWindow
 
 
 function getZodiacSign(day, month) {
@@ -71,7 +72,7 @@ timeEl.addEventListener('click', () => {
 
 function update(json) {
   console.log('json:', json)
-  const { name: cityName, coord: { lat, lon} } = json
+  const { name: cityName, coord: { lat, lon } } = json
   const data = getData(lat, lon)
 
   if (json && json.errMsg) {
@@ -90,16 +91,17 @@ function update(json) {
   const { moonPosition, moonTimes, illumination, zodiac, luneJS } = data
 
   moonEl.innerHTML = `
-    Moon Phase: <span class="ta-right">${getPhase(illumination.phase)}</span> <br />
-    Moon Illumination: <span class="ta-right">${(illumination.fraction * 100).toFixed(1)}%</span> <br />
-    Moon Azimuth: <span class="ta-right">${(moonPosition.azimuth * 180 / Math.PI + 180).toFixed(1)/* to degrees */}&deg;</span> <br />
-    Moon Altitude: <span class="ta-right">${(moonPosition.altitude * 180 / Math.PI).toFixed(1)}&deg;</span> <br />
-    Moon Distance: <span class="ta-right">${moonPosition.distance.toFixed(1)} km</span> <br />
-    Moonrise: <span class="ta-right">${moonTimes.rise ? moonTimes.rise.toLocaleTimeString('en-GB').slice(0, -3) : 'N/A'}</span> <br />
-    Moonset: <span class="ta-right">${moonTimes.set ? moonTimes.set.toLocaleTimeString('en-GB').slice(0, -3) : 'N/A'}</span> <br />
-    New Moon: <span class="ta-right">${luneJS.nextnew_date.toLocaleString('en-GB').slice(0, -3)}</span> <br />
-    Full Moon <span class="ta-right">${luneJS.full_date.toLocaleString('en-GB').slice(0, -3)}</span> <br />
-    Zodiac: <span class="ta-right">${zodiac}</span> <br /><hr />
+    Moon Phase: <span class="float-right">${getPhase(illumination.phase)}</span> <br />
+    Moon Illumination: <span class="float-right">${(illumination.fraction * 100).toFixed(1)}%</span> <br />
+    Moon Azimuth: <span class="float-right">${(moonPosition.azimuth * 180 / Math.PI + 180).toFixed(1)/* to degrees */}&deg;</span> <br />
+    Moon Altitude: <span class="float-right">${(moonPosition.altitude * 180 / Math.PI).toFixed(1)}&deg;</span> <br />
+    Moon Distance: <span class="float-right">${moonPosition.distance.toFixed(1)} km</span> <br />
+    Moonrise: <span class="float-right">${moonTimes.rise ? moonTimes.rise.toLocaleTimeString('en-GB').slice(0, -3) : 'N/A'}</span> <br />
+    Moonset: <span class="float-right">${moonTimes.set ? moonTimes.set.toLocaleTimeString('en-GB').slice(0, -3) : 'N/A'}</span> <br />
+    New Moon: <span class="float-right">${luneJS.nextnew_date.toLocaleString('en-GB').slice(0, -3)}</span> <br />
+    Full Moon <span class="float-right">${luneJS.full_date.toLocaleString('en-GB').slice(0, -3)}</span> <br />
+    Zodiac: <span class="float-right">${zodiac}</span>
+    <div class="hr"><img src="images/flare.svg"></div>
   `
 
   const {
@@ -109,14 +111,14 @@ function update(json) {
   const sunSetPos = SunCalc.getPosition(sunset, lat, lon)
 
   sunEl.innerHTML = `
-    GoldenHour AM: <span class="ta-right">${sunriseEnd.toLocaleTimeString('en-GB').slice(0, -3)} - ${goldenHourEnd == 'Invalid Date' ? 'N/A' : goldenHourEnd.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
-    GoldenHour PM: <span class="ta-right">${goldenHour == 'Invalid Date' ? 'N/A' : goldenHour.toLocaleTimeString('en-GB').slice(0, -3)} - ${sunsetStart.toLocaleTimeString('en-GB').slice(0, -3)}</span> <br />
-    Sunrise Azimuth: <span class="ta-right">${(sunRisePos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</span><br />
-    Sunset Azimuth: <span class="ta-right">${(sunSetPos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</span><br />
-    Sun Altitude: <span class="ta-right">${(data.sunPosition.altitude * 180 / Math.PI).toFixed(1)}&deg;</span><br />
-    Solar noon: <span class="ta-right">${solarNoon.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
-    Sunrise: <span class="ta-right">${sunrise.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
-    Sunset: <span class="ta-right">${sunset.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
+    GoldenHour AM: <span class="float-right">${sunriseEnd.toLocaleTimeString('en-GB').slice(0, -3)} - ${goldenHourEnd == 'Invalid Date' ? 'N/A' : goldenHourEnd.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
+    GoldenHour PM: <span class="float-right">${goldenHour == 'Invalid Date' ? 'N/A' : goldenHour.toLocaleTimeString('en-GB').slice(0, -3)} - ${sunsetStart.toLocaleTimeString('en-GB').slice(0, -3)}</span> <br />
+    Sunrise Azimuth: <span class="float-right">${(sunRisePos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</span><br />
+    Sunset Azimuth: <span class="float-right">${(sunSetPos.azimuth * 180 / Math.PI + 180).toFixed(1)}&deg;</span><br />
+    Sun Altitude: <span class="float-right">${(data.sunPosition.altitude * 180 / Math.PI).toFixed(1)}&deg;</span><br />
+    Solar noon: <span class="float-right">${solarNoon.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
+    Sunrise: <span class="float-right">${sunrise.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
+    Sunset: <span class="float-right">${sunset.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
   `
   resizeWindow()
 }

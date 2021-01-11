@@ -12,7 +12,6 @@ const debug = require('electron-debug')
 debug({ showDevTools: true, devToolsMode: 'detach' })
 
 const { OPENWEATHER_APIKEY } = require('../env.js')
-// const OPENWEATHER_APIKEY = process.env.OPENWEATHER_APIKEY
 
 const storeSchema = {
   name: 'saeae',
@@ -99,7 +98,7 @@ function buildTrayContextMenu() {
 }
 
 function fetchWeather(input) {
-  tray.setImage(path.join(__dirname, './images/weather-cloudy.png'))
+  tray.setImage(path.join(__dirname, './images/cloud-download-outline.png'))
   const queryOrId = isNaN(parseInt(input, 10)) ? 'q' : 'id'
   const url = `https://api.openweathermap.org/data/2.5/weather?${queryOrId}=${input}&units=metric&appid=${OPENWEATHER_APIKEY}`
   fetch(url)
@@ -134,7 +133,7 @@ function fetchWeather(input) {
         errStack: err.stack.replace(/&appid=.+2eb/, ''),
       }
       tray.setToolTip('Bad weather, click for error info')
-      const badWeather = path.join(__dirname, 'images/weather-downpour.png')
+      const badWeather = path.join(__dirname, 'images/cloud-off-outline.png')
       tray.setImage(badWeather)
       weatherWindow.webContents.send('fetch-error', error)
       astralWindow.webContents.send('fetch-error', error)
@@ -150,7 +149,7 @@ function createApp() {
   weatherWindow = new BrowserWindow({
     width: 330,
     height: 297,
-    icon: path.join(__dirname, 'images/weather-cloudy-black.png'),
+    // icon: path.join(__dirname, 'images/weather-cloudy-black.png'),
     title: 'Saeae Weather',
     backgroundColor: 'rgb(51 ,51, 71)',
     show: is.development ? true : false,
@@ -182,7 +181,7 @@ function createApp() {
   astralWindow = new BrowserWindow({
     width: 330, // 330
     height: 483, // 483
-    icon: path.join(__dirname, 'images/baseline_brightness_high_black_18dp.png'),
+    // icon: path.join(__dirname, 'images/baseline_brightness_high_black_18dp.png'),
     title: 'Saeae Astral',
     backgroundColor: 'rgb(51 ,51, 71)',
     show: false,

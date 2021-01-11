@@ -56,15 +56,15 @@ function update(json) {
   timeEl.innerHTML = date
   weatherEl.innerHTML = `
     ${weather[0].description.charAt(0).toUpperCase() + weather[0].description.slice(1)}<br />
-    Temperature: <span class="ta-right">${main.temp.toFixed(1)}°C</span><br />
-    Clouds: <span class="ta-right">${json.clouds.all}%</span><br />
-    Visibility: <span class="ta-right">${json.visibility ? json.visibility : 'N/A'}m</span><br />
-    Humidity: <span class="ta-right">${main.humidity}%</span><br />
-    Dew point: <span class="ta-right">${Math.round(taupunkt(main.temp, main.humidity))}°C</span><br />
-    Pressure: <span class="ta-right">${main.pressure}hPa</span><br />
-    Wind: <span class="ta-right">${wind.speed}m/s @ ${wind.deg ? wind.deg : 'N/A'}°</span><br />
-    Sunrise: <span class="ta-right">${parseTime(new Date(sys.sunrise * 1000).getHours())}:${parseTime(new Date(sys.sunrise * 1000).getMinutes())}</span><br />
-    Sunset: <span class="ta-right">${parseTime(new Date(sys.sunset * 1000).getHours())}:${parseTime(new Date(sys.sunset * 1000).getMinutes())}</span>
+    Temperature: <span class="float-right">${main.temp.toFixed(1)}°C</span><br />
+    Clouds: <span class="float-right">${json.clouds.all}%</span><br />
+    Visibility: <span class="float-right">${json.visibility ? json.visibility : 'N/A'}m</span><br />
+    Humidity: <span class="float-right">${main.humidity}%</span><br />
+    Dew point: <span class="float-right">${Math.round(taupunkt(main.temp, main.humidity))}°C</span><br />
+    Pressure: <span class="float-right">${main.pressure}hPa</span><br />
+    Wind: <span class="float-right">${wind.speed}m/s @ ${wind.deg ? wind.deg : 'N/A'}°</span><br />
+    Sunrise: <span class="float-right">${parseTime(new Date(sys.sunrise * 1000).getHours())}:${parseTime(new Date(sys.sunrise * 1000).getMinutes())}</span><br />
+    Sunset: <span class="float-right">${parseTime(new Date(sys.sunset * 1000).getHours())}:${parseTime(new Date(sys.sunset * 1000).getMinutes())}</span>
   `
   githubEl.innerHTML = ''
   githubEl.style.display = 'none'
