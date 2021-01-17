@@ -9,8 +9,12 @@ const deBounce = require('futility/lib/deBounce')
 const positioner = require('electron-traywindow-positioner')
 const { is } = require('electron-util')
 const debug = require('electron-debug')
-debug({ showDevTools: true, devToolsMode: 'detach' })
 
+try {
+	require('electron-reloader')(module);
+} catch {}
+console.log('yay')
+debug({ showDevTools: true, devToolsMode: 'detach' })
 const { OPENWEATHER_APIKEY } = require('../env.js')
 
 const storeSchema = {
@@ -98,7 +102,7 @@ function buildTrayContextMenu() {
 }
 
 function fetchWeather(input) {
-  tray.setImage(path.join(__dirname, './images/cloud-download-outline.png'))
+  tray.setImage(path.join(__dirname, './images/cloud-sync-outline.png'))
   const queryOrId = isNaN(parseInt(input, 10)) ? 'q' : 'id'
   const url = `https://api.openweathermap.org/data/2.5/weather?${queryOrId}=${input}&units=metric&appid=${OPENWEATHER_APIKEY}`
   fetch(url)

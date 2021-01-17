@@ -51,6 +51,7 @@
 	"devDependencies": {
 		"electron": "^9.4.0",
 		"electron-builder": "^22.9.1",
+		"electron-reloader": "^1.2.0",
 		"eslint": "^7.15.0"
 	},
 	"build": {
