@@ -58,6 +58,13 @@ function _q(id) {
   return document.querySelector(id)
 }
 
+function getDayLength(milliseconds) {
+  const totalMinutes = Math.round(milliseconds / 1000 / 60)
+  const minutes = totalMinutes % 60
+  const hours = Math.trunc(totalMinutes / 60)
+  return `${hours}h ${minutes}min`
+}
+
 const cityEl = _q('.city')
 const timeEl = _q('.time')
 const moonEl = _q('.moon')
@@ -71,9 +78,9 @@ timeEl.addEventListener('click', () => {
 })
 
 function update(json) {
-  console.log('json:', json)
   const { name: cityName, coord: { lat, lon } } = json
   const data = getData(lat, lon)
+  console.log('data:', data, 'json:', json)
 
   if (json && json.errMsg) {
     cityEl.innerHTML = 'Error - '
@@ -119,6 +126,7 @@ function update(json) {
     Solar noon: <span class="float-right">${solarNoon.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
     Sunrise: <span class="float-right">${sunrise.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
     Sunset: <span class="float-right">${sunset.toLocaleTimeString('en-GB').slice(0, -3)}</span><br />
+    Daylength: <span class="float-right">${getDayLength(sunset - sunrise)}</span><br />
   `
   resizeWindow()
 }

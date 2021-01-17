@@ -13,7 +13,6 @@ const debug = require('electron-debug')
 try {
 	require('electron-reloader')(module);
 } catch {}
-console.log('yay')
 debug({ showDevTools: true, devToolsMode: 'detach' })
 const { OPENWEATHER_APIKEY } = require('../env.js')
 
@@ -184,7 +183,7 @@ function createApp() {
   // astralWindow
   astralWindow = new BrowserWindow({
     width: 330, // 330
-    height: 483, // 483
+    height: 515, // old: 483, new 502
     // icon: path.join(__dirname, 'images/baseline_brightness_high_black_18dp.png'),
     title: 'Saeae Astral',
     backgroundColor: 'rgb(51 ,51, 71)',
