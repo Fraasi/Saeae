@@ -94,7 +94,6 @@ fieldset {
   display: block;
   content: '';
   height: 3px;
-  /* border-radius: 5px; */
   background: linear-gradient(to left, #707070, transparent)
 }
 .hr:after {

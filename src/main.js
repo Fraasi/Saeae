@@ -45,15 +45,15 @@ function promptCity() {
   prompt({
     alwaysOnTop: true,
     skipTaskbar: false,
-    height: 170,
-    title: 'Saeae - input new city or city id',
+    height: 180,
+    title: '&nbsp;Saeae - input new city or city id',
     label: `Current city: ${store.get('cityName')}`,
     type: 'input',
     inputAttrs: {
       type: 'text',
       placeholder: `last input: ${store.get('lastInput')}`,
     },
-    icon: path.join(__dirname, 'images/weather-cloudy-black.png'),
+    icon: path.join(__dirname, 'images/cloud-outline.png'),
     customStylesheet: path.join(__dirname, 'styles.css'),
     menuBarVisible: false, // default in 1.6.0
   })
@@ -145,7 +145,7 @@ function fetchWeather(input) {
 
 function createApp() {
 
-  tray = new Tray(path.join(__dirname, './images/weather-cloudy.png'))
+  tray = new Tray(path.join(__dirname, './images/cloud-outline.png'))
   buildTrayContextMenu()
 
   // weatherWindow
