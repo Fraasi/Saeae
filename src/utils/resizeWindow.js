@@ -3,7 +3,7 @@ export default function resizeWindow() {
   const contentHeight = contentEl.clientHeight
   const contentWidth = contentEl.clientWidth
   const titlebarHeight = 30
-  const margs = 8 * 2
+  const margs = 9 * 2
   const newHeight = contentHeight + titlebarHeight + margs
   window.resizeTo(contentWidth + margs, newHeight)
 }

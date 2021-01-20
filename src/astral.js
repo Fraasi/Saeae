@@ -108,7 +108,6 @@ function update(json) {
     New Moon: <span class="float-right">${luneJS.nextnew_date.toLocaleString('en-GB').slice(0, -3)}</span> <br />
     Full Moon <span class="float-right">${luneJS.full_date.toLocaleString('en-GB').slice(0, -3)}</span> <br />
     Zodiac: <span class="float-right">${zodiac}</span>
-    <div class="hr"><img src="images/flare.svg"></div>
   `
 
   const {

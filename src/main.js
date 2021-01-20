@@ -151,8 +151,7 @@ function createApp() {
   // weatherWindow
   weatherWindow = new BrowserWindow({
     width: 330,
-    height: 297,
-    // icon: path.join(__dirname, 'images/weather-cloudy-black.png'),
+    height: 300,
     title: 'Saeae Weather',
     backgroundColor: 'rgb(51 ,51, 71)',
     show: is.development ? true : false,
@@ -182,9 +181,8 @@ function createApp() {
 
   // astralWindow
   astralWindow = new BrowserWindow({
-    width: 330, // 330
-    height: 515, // old: 483, new 502
-    // icon: path.join(__dirname, 'images/baseline_brightness_high_black_18dp.png'),
+    width: 330,
+    height: 530, // old: 483,
     title: 'Saeae Astral',
     backgroundColor: 'rgb(51 ,51, 71)',
     show: false,
