@@ -2,12 +2,13 @@
 
 :root {
   --background_color: rgb(40, 40, 45);
+  --text_color: whitesmoke;
 }
 
 body {
   font-family: 'Segoe UI', Cambria, Georgia, Times, serif;
   font-size: 16px;
-  color: whitesmoke;
+  color: var(--text_color);
   background-color: var(--background_color);
   word-break: break-word;
 }
@@ -83,6 +84,7 @@ fieldset {
 
 /* horizontal rule */
 .hr {
+  filter: brightness(0.6);
   margin: 10px 0px;
   height: 20px;
   display: grid;
@@ -94,8 +96,8 @@ fieldset {
   display: block;
   content: '';
   height: 3px;
-  background: linear-gradient(to left, #707070, transparent)
+  background: linear-gradient(to left, var(--text_color), transparent)
 }
 .hr:after {
-	background: linear-gradient(to right, #707070, transparent)
+	background: linear-gradient(to right, var(--text_color), transparent)
 }
