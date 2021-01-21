@@ -9,10 +9,39 @@ const deBounce = require('futility/lib/deBounce')
 const positioner = require('electron-traywindow-positioner')
 const { is } = require('electron-util')
 const debug = require('electron-debug')
+const { autoUpdater } = require("electron-updater")
+const log = require('electron-log')
 
-try {
-	require('electron-reloader')(module);
-} catch {}
+autoUpdater.logger = log
+autoUpdater.logger.transports.file.level = 'info'
+log.info('App starting...')
+
+autoUpdater.on('checking-for-update', () => {
+  log.info('Checking for update...')
+})
+autoUpdater.on('update-available', () => {
+  log.info('Update available.')
+})
+autoUpdater.on('update-not-available', () => {
+  log.info('Update not available.')
+})
+autoUpdater.on('error', (err) => {
+  log.error('Error in auto-updater. ' + err)
+})
+autoUpdater.on('download-progress', (progressObj) => {
+  let log_message = "Download speed: " + progressObj.bytesPerSecond
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%'
+  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')'
+  log.info(log_message)
+})
+autoUpdater.on('update-downloaded', () => {
+  log.info('Update downloaded')
+});
+
+
+try { // doesn't break in ptoduction build
+  require('electron-reloader')(module);
+} catch { }
 debug({ showDevTools: true, devToolsMode: 'detach' })
 const { OPENWEATHER_APIKEY } = require('../env.js')
 
@@ -46,7 +75,7 @@ function promptCity() {
     alwaysOnTop: true,
     skipTaskbar: false,
     height: 180,
-    title: '&nbsp;Saeae - input new city or city id',
+    title: 'Saeae - input new city or city id',
     label: `Current city: ${store.get('cityName')}`,
     type: 'input',
     inputAttrs: {
@@ -231,7 +260,10 @@ function createApp() {
   })
 }
 
-app.on('ready', createApp)
+app.on('ready', () => {
+  createApp()
+  autoUpdater.checkForUpdatesAndNotify()
+})
 
 app.on('activate', () => {
   if (weatherWindow === null) createApp()
