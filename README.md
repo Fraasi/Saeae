@@ -3,11 +3,16 @@ Electron app to show weather temperature in the notification area/system tray.
 
 [![https://github.com/Fraasi/Saeae/releases/latest](https://img.shields.io/github/release/fraasi/saeae.svg)](https://github.com/Fraasi/Saeae/releases/latest) ![GitHub release (latest by date)](https://img.shields.io/github/downloads/fraasi/saeae/latest/total) ![GitHub all releases](https://img.shields.io/github/downloads/fraasi/saeae/total?label=total%20downloads)
 
-
-Windows release only at this time (sorry).
+### Table of contents
+* [Install](#Install)
+* [Usage](#Usage)
+* [City input](#City-input)
+* [Other](#Other)
+* [Pics](#Pics)
 
 ### Install
-Download installer from the release button link above. Running the installer should put a shortcut to your desktop and launch the app. To have it run on startup, you can put the shortcut here (win10) `C:\Users\<USER_NAME>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`.  
+Windows & linux [releases](https://github.com/Fraasi/Saeae/releases) available.
+Downloading and running the installer should put a shortcut to your desktop and launch the app. To have it run on startup, you can put the shortcut here (win10) `C:\Users\<USER_NAME>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`.  
 
 ### Usage  
 Left click tray icon to show/hide weather info window.  
