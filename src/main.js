@@ -9,34 +9,7 @@ const deBounce = require('futility/lib/deBounce')
 const positioner = require('electron-traywindow-positioner')
 const { is } = require('electron-util')
 const debug = require('electron-debug')
-const { autoUpdater } = require("electron-updater")
-const log = require('electron-log')
-
-autoUpdater.logger = log
-autoUpdater.logger.transports.file.level = 'info'
-log.info('App starting...')
-
-autoUpdater.on('checking-for-update', () => {
-  log.info('Checking for update...')
-})
-autoUpdater.on('update-available', () => {
-  log.info('Update available.')
-})
-autoUpdater.on('update-not-available', () => {
-  log.info('Update not available.')
-})
-autoUpdater.on('error', (err) => {
-  log.error('Error in auto-updater. ' + err)
-})
-autoUpdater.on('download-progress', (progressObj) => {
-  let log_message = "Download speed: " + progressObj.bytesPerSecond
-  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%'
-  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')'
-  log.info(log_message)
-})
-autoUpdater.on('update-downloaded', () => {
-  log.info('Update downloaded')
-});
+const { autoUpdater } = require('./utils/updater.js')
 
 
 try { // doesn't break in ptoduction build
@@ -262,7 +235,7 @@ function createApp() {
 
 app.on('ready', () => {
   createApp()
-  autoUpdater.checkForUpdatesAndNotify()
+  autoUpdater.checkForUpdates()
 })
 
 app.on('activate', () => {
