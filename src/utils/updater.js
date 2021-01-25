@@ -15,13 +15,8 @@ function updater() {
 
   log.info('App starting...')
 
-  // autoUpdater.on('checking-for-update', () => {
-  //   log.info('Checking for update...')
-  // })
-
   autoUpdater.on('update-available', (releaseInfo) => {
     const { version, releaseNotes } = releaseInfo
-    // log.info(`Update available: v${version}`)
     dialog.showMessageBox({
       type: 'info',
       title: 'Saeae update',
@@ -38,17 +33,6 @@ function updater() {
         }
       })
   })
-
-  // autoUpdater.on('update-not-available', () => {
-  //   log.info('Update not available.')
-  // })
-
-  // autoUpdater.on('download-progress', (progressObj) => {
-  //   let log_message = "Download speed: " + progressObj.bytesPerSecond
-  //   log_message = log_message + ' - Downloaded ' + progressObj.percent + '%'
-  //   log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')'
-  //   log.info(log_message)
-  // })
 
   autoUpdater.on('update-downloaded', () => {
     autoUpdater.quitAndInstall()
