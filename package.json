@@ -72,7 +72,7 @@
 		"publish": [
 			{
 				"provider": "github",
-				"releaseType": "draft",
+				"releaseType": "prerelease",
 				"publishAutoUpdate": true
 			}
 		],
