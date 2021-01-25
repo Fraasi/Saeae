@@ -57,7 +57,6 @@ function promptCity() {
     },
     icon: path.join(__dirname, 'images/cloud-outline.png'),
     customStylesheet: path.join(__dirname, 'styles.css'),
-    menuBarVisible: false, // default in 1.6.0
   })
     .then((input) => { // null if window was closed or user clicked Cancel
       if (input === null) return
