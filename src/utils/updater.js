@@ -1,7 +1,7 @@
 const { app, dialog } = require('electron')
-const { autoUpdater } = require("electron-updater")
+const { autoUpdater, CancellationToken } = require("electron-updater")
 const log = require('electron-log')
-
+const cancellationToken = new CancellationToken()
 
 /**
  * returns configured autoUpdater
@@ -15,23 +15,23 @@ function updater() {
 
   log.info('App starting...')
 
-  autoUpdater.on('checking-for-update', () => {
-    log.info('Checking for update...')
-  })
+  // autoUpdater.on('checking-for-update', () => {
+  //   log.info('Checking for update...')
+  // })
 
   autoUpdater.on('update-available', (releaseInfo) => {
-    const { version, releaseNotes, releaseName, releaseDate } = releaseInfo
-    log.info(`Update available: ${releaseName + version + releaseDate}`, releaseNotes)
+    const { version, releaseNotes } = releaseInfo
+    // log.info(`Update available: v${version}`)
     dialog.showMessageBox({
       type: 'info',
       title: 'Saeae update',
       message: `New version found v${version}`,
       detail: `release notes: ${releaseNotes}`,
-      buttons: ['download & install', 'cancel'],
+      buttons: ['download and install', 'cancel'],
     })
       .then(({ response }) => {
         if (response === 0) {
-          autoUpdater.downloadUpdate('cancelToken')
+          autoUpdater.downloadUpdate(cancellationToken)
             .then(pathToFile => {
               log.info(`update downloaded to ${pathToFile}`)
             })
@@ -39,19 +39,19 @@ function updater() {
       })
   })
 
-  autoUpdater.on('update-not-available', () => {
-    log.info('Update not available.')
-  })
+  // autoUpdater.on('update-not-available', () => {
+  //   log.info('Update not available.')
+  // })
 
-  autoUpdater.on('download-progress', (progressObj) => {
-    let log_message = "Download speed: " + progressObj.bytesPerSecond
-    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%'
-    log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')'
-    log.info(log_message)
-  })
+  // autoUpdater.on('download-progress', (progressObj) => {
+  //   let log_message = "Download speed: " + progressObj.bytesPerSecond
+  //   log_message = log_message + ' - Downloaded ' + progressObj.percent + '%'
+  //   log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')'
+  //   log.info(log_message)
+  // })
 
-  autoUpdater.on('update-downloaded', (info) => {
-    log.info('Update downloaded', info)
+  autoUpdater.on('update-downloaded', () => {
+    log.info('Update downloaded, quitAndInstall')
     autoUpdater.quitAndInstall()
   })
 
@@ -60,7 +60,7 @@ function updater() {
     dialog.showMessageBox({
       type: 'error',
       title: 'Saeae update error',
-      message: `Something went wrong updating Saeae`,
+      message: `Something went wrong, will try again next time app launches`,
       detail: `Log file can be found at ${app.getAppPath()}`,
       buttons: ['ok'],
     })
