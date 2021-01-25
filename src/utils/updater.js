@@ -61,7 +61,7 @@ function updater() {
       type: 'error',
       title: 'Saeae update error',
       message: `Something went wrong, will try again next time app launches`,
-      detail: `Log file can be found at ${app.getAppPath()}`,
+      detail: `Log file can be found at ${app.getPath('logs')}`,
       buttons: ['ok'],
     })
   })
