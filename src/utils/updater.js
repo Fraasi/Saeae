@@ -51,8 +51,8 @@ function updater() {
   // })
 
   autoUpdater.on('update-downloaded', () => {
-    log.info('Update downloaded, quitAndInstall')
     autoUpdater.quitAndInstall()
+    app.exit()
   })
 
   autoUpdater.on('error', (err) => {
