@@ -1,4 +1,7 @@
 ## Saeae (Sää)  
+
+(**Note:** this is in `'active'` development at the moment...)  
+
 Electron app to show weather temperature in the notification area/system tray.  
 
 [![https://github.com/Fraasi/Saeae/releases/latest](https://img.shields.io/github/release/fraasi/saeae.svg)](https://github.com/Fraasi/Saeae/releases/latest) ![GitHub release (latest by date)](https://img.shields.io/github/downloads/fraasi/saeae/latest/total) ![GitHub all releases](https://img.shields.io/github/downloads/fraasi/saeae/total?label=total%20downloads)
@@ -11,7 +14,7 @@ Electron app to show weather temperature in the notification area/system tray.
 * [Pics](#Pics)
 
 ### Install
-Windows & linux [releases](https://github.com/Fraasi/Saeae/releases) available.
+Windows installer and portable & L inux debian and appimage [releases](https://github.com/Fraasi/Saeae/releases) available.  
 Downloading and running the installer should put a shortcut to your desktop and launch the app. To have it run on startup, you can put the shortcut here (win10) `C:\Users\<USER_NAME>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`.  
 
 ### Usage  
@@ -25,7 +28,7 @@ On both windows clicking on the city name opens the prompt to change the city.
 
 Data is updated on launch or when the city is changed and then automatically every twenty minutes.  
 
-**Note:** This app does not detect your location. After install you must manually change the default city to your own. The app will remember your city across restarts.
+**Note:** This app does not detect your location (Geolocation API is way too imprecise). After install you must manually change the default city to your own. The app will remember your city across restarts.
 
 ### City input  
 For the city input, you can use just a city name, a city name with country code separated by comma or city id number from openweathermap.org.  
@@ -44,13 +47,13 @@ The sun and moon information are calculated using [sunCalc](https://github.com/m
 ### Pics
 
 Weather info window   
-![left click](pics/2019-02-07_1319.png)
+![left click](pics/weather_pic.jpg)
 
 Astral info window  
-![double left click](pics/2019-02-07_1321.png)  
+![double left click](pics/astral_pic.jpg)  
 
 Right click menu  
-![right click](pics/2019-02-07_1208.png)  
+![right click](pics/right_click.jpg)  
 
 
 <!-- icons from https://www.s-ings.com/typicons/ & material.io/tools/icons-->
