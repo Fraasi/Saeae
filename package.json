@@ -97,7 +97,8 @@
 		"nsis": {
 			"artifactName": "${productName}-v${version}-${os}-${arch}-setup.${ext}",
 			"oneClick": false,
-			"allowToChangeInstallationDirectory": true
+			"allowToChangeInstallationDirectory": true,
+			"deleteAppDataOnUninstall": true
 		},
 		"linux": {
 			"artifactName": "${productName}-v${version}-${os}-${arch}.${ext}",
@@ -116,7 +117,8 @@
 					]
 				}
 			],
-			"category": "Utility"
+			"category": "Utility",
+			"synopsis": "Weather app in your tray"
 		}
 	}
 }
