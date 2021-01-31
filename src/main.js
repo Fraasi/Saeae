@@ -10,6 +10,9 @@ const positioner = require('electron-traywindow-positioner')
 const { is } = require('electron-util')
 const debug = require('electron-debug')
 const { autoUpdater } = require('./utils/updater.js')
+const { mainLog } =require('./utils/logger.js')
+
+mainLog.info('App starting...')
 
 
 try { // doesn't break in ptoduction build
@@ -124,6 +127,7 @@ function fetchWeather(input) {
     })
     .catch((err) => {
       console.log('fetch-err:', err)
+      // ENOTFOUND (DNS lookup failed): Indicates a DNS failure of either EAI_NODATA or EAI_NONAME. This is not a standard POSIX error.
       const error = {
         errText: `
           Bad Weather at the intertubes.<br />

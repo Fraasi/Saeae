@@ -1,6 +1,6 @@
 const { app, dialog } = require('electron')
 const { autoUpdater, CancellationToken } = require("electron-updater")
-const log = require('electron-log')
+const { updaterLog, logFilePath } = require('./logger.js')
 const cancellationToken = new CancellationToken()
 
 /**
@@ -8,12 +8,9 @@ const cancellationToken = new CancellationToken()
  */
 function updater() {
 
-  autoUpdater.logger = log
-  autoUpdater.logger.transports.file.level = 'info'
+  autoUpdater.logger = updaterLog
   autoUpdater.allowPrerelease = true // alpha, beta ...
   autoUpdater.autoDownload = false
-
-  log.info('App starting...')
 
   autoUpdater.on('update-available', (releaseInfo) => {
     const { version, releaseNotes } = releaseInfo
@@ -28,7 +25,7 @@ function updater() {
         if (response === 0) {
           autoUpdater.downloadUpdate(cancellationToken)
             .then(pathToFile => {
-              log.info(`update downloaded to ${pathToFile}`)
+              updaterLog.info(`update downloaded to ${pathToFile}`)
             })
         }
       })
@@ -40,12 +37,14 @@ function updater() {
   })
 
   autoUpdater.on('error', (err) => {
-    log.error('Error in auto-updater. ' + err)
+    // ENOENT: dev-app-update.yml file missing
+    // skip update error dialog in developement
+    if (err.message.includes('ENOENT')) return
     dialog.showMessageBox({
       type: 'error',
       title: 'Saeae update error',
       message: `Something went wrong, will try again next time app launches`,
-      detail: `Log file can be found at ${app.getPath('logs')}`,
+      detail: `Log file can be found at ${logFilePath}`,
       buttons: ['ok'],
     })
   })

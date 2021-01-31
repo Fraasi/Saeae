@@ -1,6 +1,6 @@
 ## Saeae (Sää)  
 
-(**Note:** this is in `'active'` development at the moment...)  
+(In 'active' development at the moment...)  
 
 Electron app to show weather temperature in the notification area/system tray.  
 
@@ -14,8 +14,9 @@ Electron app to show weather temperature in the notification area/system tray.
 * [Pics](#Pics)
 
 ### Install
-Windows installer and portable & L inux debian and appimage [releases](https://github.com/Fraasi/Saeae/releases) available.  
+Windows installer and portable & Linux debian and appimage [releases](https://github.com/Fraasi/Saeae/releases) available.  
 Downloading and running the installer should put a shortcut to your desktop and launch the app. To have it run on startup, you can put the shortcut here (win10) `C:\Users\<USER_NAME>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`.  
+<!-- windows setup & portable & Appimage now have autoupdater (1.2.7-beta), which should notify if there is a new release and give a choice to download it or not -->
 
 ### Usage  
 Left click tray icon to show/hide weather info window.  
