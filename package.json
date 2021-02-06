@@ -1,124 +1,127 @@
 {
-	"name": "saeae",
-	"productName": "Saeae",
-	"version": "1.2.8-beta",
-	"author": {
-		"name": "Fraasi",
-		"email": "fraasi.gh@gmail.com",
-		"url": "https://github.com/fraasi"
-	},
-	"description": "Weather app in your tray",
-	"main": "src/main.js",
-	"private": true,
-	"license": "MIT",
-	"homepage": "https://github.com/fraasi/saeae",
-	"bugs": "https://github.com/fraasi/saeae/issues",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/fraasi/saeae.git"
-	},
-	"keywords": [
-		"sää",
-		"saeae",
-		"electron",
-		"weather",
-		"app",
-		"tray",
-		"temperature",
-		"sun",
-		"moon"
-	],
-	"scripts": {
-		"postinstall": "electron-builder install-app-deps",
-		"lint": "eslint src --color",
-		"start": "electron .",
-		"pack": "electron-builder --dir",
-		"predist": "rm -rf ./dist",
-		"dist": "electron-builder -p always"
-	},
-	"dependencies": {
-		"custom-electron-titlebar": "^3.2.6",
-		"electron-context-menu": "^2.4.0",
-		"electron-debug": "^3.2.0",
-		"electron-log": "^4.3.1",
-		"electron-prompt": "^1.6.1",
-		"electron-store": "^7.0.0",
-		"electron-traywindow-positioner": "^1.1.0",
-		"electron-updater": "^4.3.5",
-		"electron-util": "^0.14.2",
-		"futility": "github:fraasi/futility",
-		"node-fetch": "^2.6.1",
-		"suncalc": "^1.8.0"
-	},
-	"devDependencies": {
-		"electron": "^11.2.1",
-		"electron-builder": "^22.9.1",
-		"electron-reloader": "^1.2.0",
-		"eslint": "^7.18.0"
-	},
-	"build": {
-		"appId": "fi.fraasi.saeae",
-		"copyright": "Copyright © 2021 Fraasi",
-		"files": [
-			"src/",
-			"env.js",
-			"node_modules/",
-			"package.json"
-		],
-		"directories": {
-			"output": "dist",
-			"buildResources": "./resources"
-		},
-		"publish": [
-			{
-				"provider": "github",
-				"releaseType": "prerelease",
-				"publishAutoUpdate": true
-			}
-		],
-		"win": {
-			"icon": "resources/images/fraasi-256x256.png",
-			"artifactName": "${productName}-v${version}-${os}-${arch}-portable.${ext}",
-			"target": [
-				{
-					"target": "portable",
-					"arch": [
-						"x64"
-					]
-				},
-				{
-					"target": "nsis",
-					"arch": [
-						"x64"
-					]
-				}
-			]
-		},
-		"nsis": {
-			"artifactName": "${productName}-v${version}-${os}-${arch}-setup.${ext}",
-			"oneClick": false,
-			"allowToChangeInstallationDirectory": true,
-			"deleteAppDataOnUninstall": true
-		},
-		"linux": {
-			"artifactName": "${productName}-v${version}-${os}-${arch}.${ext}",
-			"icon": "resources/images/fraasi-256x256.png",
-			"target": [
-				{
-					"target": "deb",
-					"arch": [
-						"x64"
-					]
-				},
-				{
-					"target": "AppImage",
-					"arch": [
-						"x64"
-					]
-				}
-			],
-			"category": "Utility",
-			"synopsis": "Weather app in your tray"
-		}
-	}
+  "name": "saeae",
+  "productName": "Saeae",
+  "version": "1.2.7-beta",
+  "author": {
+    "name": "Fraasi",
+    "email": "fraasi.gh@gmail.com",
+    "url": "https://github.com/fraasi"
+  },
+  "description": "Weather app in your tray",
+  "main": "src/main.js",
+  "private": true,
+  "license": "MIT",
+  "homepage": "https://github.com/fraasi/saeae",
+  "bugs": "https://github.com/fraasi/saeae/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fraasi/saeae.git"
+  },
+  "keywords": [
+    "sää",
+    "saeae",
+    "electron",
+    "weather",
+    "app",
+    "tray",
+    "temperature",
+    "sun",
+    "moon"
+  ],
+  "scripts": {
+    "postinstall": "electron-builder install-app-deps",
+    "lint": "eslint src --color",
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "predist": "rm -rf ./dist",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "custom-electron-titlebar": "^3.2.6",
+    "electron-context-menu": "^2.4.0",
+    "electron-debug": "^3.2.0",
+    "electron-log": "^4.3.1",
+    "electron-prompt": "^1.6.1",
+    "electron-store": "^7.0.0",
+    "electron-traywindow-positioner": "^1.1.0",
+    "electron-updater": "^4.3.5",
+    "electron-util": "^0.14.2",
+    "futility": "github:fraasi/futility",
+    "node-fetch": "^2.6.1",
+    "suncalc": "^1.8.0"
+  },
+  "devDependencies": {
+    "electron": "^11.2.1",
+    "electron-builder": "^22.9.1",
+    "electron-reloader": "^1.2.0",
+    "eslint": "^7.18.0"
+  },
+  "build": {
+    "appId": "fi.fraasi.saeae",
+    "copyright": "Copyright © 2021 Fraasi",
+    "files": [
+      "src/",
+      "env.js",
+      "node_modules/",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist",
+      "buildResources": "./resources"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "releaseType": "prerelease",
+        "publishAutoUpdate": true
+      }
+    ],
+    "win": {
+      "icon": "resources/images/fraasi-256x256.png",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "${productName}-v${version}-${os}-${arch}-portable.${ext}",
+      "splashImage": "resources/images/splashimage-256x256.bmp"
+    },
+    "nsis": {
+      "artifactName": "${productName}-v${version}-${os}-${arch}-setup.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true
+    },
+    "linux": {
+      "artifactName": "${productName}-v${version}-${os}-${arch}.${ext}",
+      "icon": "resources/images/fraasi-256x256.png",
+      "target": [
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "Utility",
+      "synopsis": "Weather app in your tray"
+    }
+  }
 }
