@@ -1,7 +1,6 @@
-const { app, dialog } = require('electron')
-const { autoUpdater, CancellationToken } = require("electron-updater")
+const { dialog, shell } = require('electron')
+const { autoUpdater } = require("electron-updater")
 const { updaterLog, logFilePath } = require('./logger.js')
-const cancellationToken = new CancellationToken()
 
 /**
  * returns configured autoUpdater
@@ -17,23 +16,15 @@ function updater() {
     dialog.showMessageBox({
       type: 'info',
       title: 'Saeae update',
-      message: `New version found v${version}`,
-      detail: `release notes: ${releaseNotes}`,
-      buttons: ['download and install', 'cancel'],
+      message: `New version found: v${version}`,
+      detail: `${releaseNotes.replace(/<[a-z0-9 /"=*]+>/g, '')}`,
+      buttons: ['Take me to downloads', 'Cancel'],
     })
       .then(({ response }) => {
         if (response === 0) {
-          autoUpdater.downloadUpdate(cancellationToken)
-            .then(pathToFile => {
-              updaterLog.info(`update downloaded to ${pathToFile}`)
-            })
+          shell.openExternal('https://github.com/Fraasi/Saeae/releases')
         }
       })
-  })
-
-  autoUpdater.on('update-downloaded', () => {
-    autoUpdater.quitAndInstall()
-    app.exit()
   })
 
   autoUpdater.on('error', (err) => {
@@ -43,7 +34,7 @@ function updater() {
     dialog.showMessageBox({
       type: 'error',
       title: 'Saeae update error',
-      message: `Something went wrong, will try again next time app launches`,
+      message: `Something went wrong fetching update info, will try again next time app launches`,
       detail: `Log file can be found at ${logFilePath}`,
       buttons: ['ok'],
     })
