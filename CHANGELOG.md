@@ -1,4 +1,4 @@
-## v1.4.0 ??
+## v1.4.0
 
 * **feat**: splash-image to portable version (so you know that it launched on first click)
 * **feat**: you can now click the city name in either window to prompt for city change
